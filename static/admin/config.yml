@@ -3,7 +3,7 @@
 backend:
   name: github
   repo: citizens-track-ai/toolkit
-  branch: main
+  branch: staging
   open_authoring: true
   auth_scope: public_repo
 
