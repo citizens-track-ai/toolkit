@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ (printf "%s/" .Section) | relLangURL }}">{{ .Section | humanize | title }}</a>
+  <span>/</span>
+  <strong>{{ .Title }}</strong>
+</nav>
+
+<article class="page-header">
+  <span class="collection-badge">{{ .Section | humanize | title }}</span>
+  <h1 class="page-title">{{ .Title }}</h1>
+  {{ with .Params.description }}
+    <p style="font-size: 1.15rem; color: var(--color-slate); margin: 0; line-height: 1.6;">
+      {{ . }}
+    </p>
+  {{ end }}
+</article>
+
+<div class="element-block">
+  <div class="element-block-content" style="font-size: 1.05rem; line-height: 1.7;">
+    {{ .Content }}
+  </div>
+</div>
+
+{{ end }}

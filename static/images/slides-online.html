@@ -1,0 +1,3089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>AI in the Picture: Activity Resource | Citizens' Track // AI</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='45' fill='%2340A9FF'/%3E%3C/svg%3E">
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  
+  <style>
+    /* Brand Tokens from BRAND_GUIDELINES.md */
+    :root {
+      --brand-cerulean: #40A9FF;
+      --brand-fjord: #00447C;
+      --brand-spring-wood: #EFEEE5;
+      --brand-ebony-clay: #242C36;
+      --brand-coral: #FF5F6F;
+      --brand-reef-teal: #00D8B4;
+      --brand-goldenrod: #FFC440;
+      --brand-deep-redwood: #7C0018;
+
+      --bg-canvas: #161C24;
+      --bg-surface: #202731;
+      --bg-surface-elevated: #28323E;
+      --text-main: #EFEEE5;
+      --text-muted: rgba(239, 238, 229, 0.75);
+      --border-subtle: rgba(239, 238, 229, 0.14);
+      --font-family: 'Parkinsans', Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    .reveal {
+      font-family: var(--font-family);
+      color: var(--text-main);
+      background-color: var(--bg-canvas);
+    }
+
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal .slides section {
+      padding: 0;
+      height: 100%;
+      top: 0 !important;
+    }
+
+    /* Fixed Persistent Navigation Header */
+    .deck-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 64px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.75rem;
+      background: linear-gradient(180deg, rgba(22, 28, 36, 0.95) 0%, rgba(22, 28, 36, 0.7) 80%, transparent 100%);
+      pointer-events: none;
+    }
+
+    .deck-topbar * {
+      pointer-events: auto;
+    }
+
+    .deck-brand-link {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      text-decoration: none;
+      color: var(--text-main);
+    }
+
+    .deck-brand-logo {
+      display: block;
+    }
+
+    .deck-title-badge {
+      font-size: 0.85rem;
+      font-weight: 700;
+      background: rgba(0, 68, 124, 0.6);
+      border: 1px solid rgba(64, 169, 255, 0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      color: var(--brand-cerulean);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .deck-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .deck-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(36, 44, 54, 0.85);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.45rem 0.9rem;
+      font-family: var(--font-family);
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      text-decoration: none;
+      backdrop-filter: blur(8px);
+    }
+
+    .deck-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+      color: #FFFFFF;
+      transform: translateY(-1px);
+    }
+
+    .deck-btn.primary {
+      background: var(--brand-cerulean);
+      color: var(--brand-ebony-clay);
+      border-color: var(--brand-cerulean);
+      font-weight: 700;
+    }
+
+    .deck-btn.primary:hover {
+      background: #68bdff;
+      color: #000000;
+    }
+
+    .deck-btn kbd {
+      font-family: inherit;
+      font-size: 0.72rem;
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+      padding: 0.1rem 0.35rem;
+      color: var(--brand-cerulean);
+    }
+
+    /* Jump-to-Number HUD / Prompt */
+    #jump-hud {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0.95);
+      background: rgba(32, 39, 49, 0.96);
+      border: 2px solid var(--brand-cerulean);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.65), 0 0 40px rgba(64, 169, 255, 0.3);
+      border-radius: 18px;
+      padding: 2.2rem 2.8rem;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.2rem;
+      backdrop-filter: blur(16px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+      min-width: 360px;
+      text-align: center;
+    }
+
+    #jump-hud.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    #jump-hud.shake {
+      animation: hudShake 0.4s ease;
+      border-color: var(--brand-coral);
+    }
+
+    @keyframes hudShake {
+      0%, 100% { transform: translate(-50%, -50%); }
+      20%, 60% { transform: translate(calc(-50% - 10px), -50%); }
+      40%, 80% { transform: translate(calc(-50% + 10px), -50%); }
+    }
+
+    .hud-title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--brand-cerulean);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    .hud-display {
+      font-size: 3.5rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      min-height: 4.2rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.35);
+      border-radius: 12px;
+      padding: 0 1.5rem;
+      width: 100%;
+      border: 1px solid var(--border-subtle);
+    }
+
+    .hud-display .cursor {
+      display: inline-block;
+      width: 4px;
+      height: 3rem;
+      background: var(--brand-cerulean);
+      margin-left: 6px;
+      animation: blink 0.9s infinite;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0; }
+    }
+
+    .hud-hint {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .hud-hint span {
+      color: var(--brand-cerulean);
+      font-weight: 600;
+    }
+
+    /* SLIDE 1: INDEX SHEET (Pure 5x5 Image Grid) */
+    .slide-index-container {
+      width: 100%;
+      height: 100%;
+      padding: 4.5rem 2.5rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      overflow-y: auto;
+      box-sizing: border-box;
+    }
+
+    .index-hero {
+      margin-bottom: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .index-hero-text h1 {
+      font-size: 2.1rem;
+      font-weight: 800;
+      margin: 0;
+      color: #FFFFFF;
+      line-height: 1.15;
+    }
+
+    .index-hero-text h1 span {
+      color: var(--brand-cerulean);
+    }
+
+    /* Clean 5x5 Image Grid without text/titles */
+    .matrix-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0.75rem;
+      width: 100%;
+      margin-top: 0.25rem;
+    }
+
+    .matrix-card-cell {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 10px;
+      padding: 0.35rem;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .matrix-card-cell:hover {
+      background: var(--bg-surface-elevated);
+      border-color: var(--brand-cerulean);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), 0 0 15px rgba(64, 169, 255, 0.3);
+      z-index: 10;
+    }
+
+    .cell-thumb-wrap {
+      width: 100%;
+      height: 125px;
+      border-radius: 7px;
+      overflow: hidden;
+      background: #000000;
+      position: relative;
+    }
+
+    .cell-thumb-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.25s ease;
+    }
+
+    .matrix-card-cell:hover .cell-thumb-wrap img {
+      transform: scale(1.06);
+    }
+
+    .cell-num-badge {
+      position: absolute;
+      top: 6px;
+      left: 6px;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--brand-ebony-clay);
+      background: var(--brand-cerulean);
+      padding: 0.15rem 0.45rem;
+      border-radius: 5px;
+      letter-spacing: 0.02em;
+      z-index: 2;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+
+    /* SLIDE TYPE A: FULL IMAGE VIEW */
+    .slide-full-image {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #11161D;
+      overflow: hidden;
+    }
+
+    .full-image-frame {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 70px 2rem 75px;
+    }
+
+    .full-image-frame img {
+      max-width: 100%;
+      max-height: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 15px 45px rgba(0, 0, 0, 0.8);
+      cursor: zoom-in;
+    }
+
+    .full-image-meta-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 68px;
+      background: linear-gradient(0deg, rgba(17, 22, 29, 0.98) 0%, rgba(17, 22, 29, 0.8) 70%, transparent 100%);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 2rem;
+      z-index: 50;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .full-meta-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .full-num-pill {
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--brand-ebony-clay);
+      background: var(--brand-cerulean);
+      padding: 0.25rem 0.65rem;
+      border-radius: 8px;
+    }
+
+    .full-meta-titles h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      margin: 0;
+      color: #FFFFFF;
+    }
+
+    .full-meta-titles p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin: 2px 0 0;
+    }
+
+    .full-meta-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    /* SLIDE TYPE B: DETAILS & ATTRIBUTION VIEW */
+    .slide-details-container {
+      width: 100vw;
+      height: 100vh;
+      display: grid;
+      grid-template-columns: 420px 1fr;
+      padding: 75px 2.5rem 2rem;
+      gap: 2.2rem;
+      box-sizing: border-box;
+      background: radial-gradient(circle at top right, rgba(0, 68, 124, 0.25), transparent 70%), var(--bg-canvas);
+      overflow-y: auto;
+    }
+
+    .details-left-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .details-thumb-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s ease;
+    }
+
+    .details-thumb-card:hover {
+      border-color: var(--brand-cerulean);
+      transform: translateY(-2px);
+    }
+
+    .details-thumb-card img {
+      width: 100%;
+      height: 270px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .details-thumb-card .overlay-expand {
+      position: absolute;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.45);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.95rem;
+      gap: 0.5rem;
+    }
+
+    .details-thumb-card:hover .overlay-expand {
+      opacity: 1;
+    }
+
+    .details-meta-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.25rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      font-size: 0.88rem;
+    }
+
+    .meta-row {
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .meta-row-label {
+      font-size: 0.72rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--brand-cerulean);
+      letter-spacing: 0.05em;
+    }
+
+    .meta-row-value {
+      color: var(--text-main);
+      font-weight: 600;
+      line-height: 1.35;
+    }
+
+    .details-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 1.4rem;
+      overflow-y: auto;
+      padding-right: 0.75rem;
+    }
+
+    .details-header {
+      border-bottom: 1px solid var(--border-subtle);
+      padding-bottom: 1rem;
+    }
+
+    .details-header-top {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .details-num-pill {
+      font-size: 0.9rem;
+      font-weight: 800;
+      color: var(--brand-ebony-clay);
+      background: var(--brand-cerulean);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .details-title {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: #FFFFFF;
+      line-height: 1.15;
+      margin: 0 0 0.4rem;
+    }
+
+    .details-artist {
+      font-size: 1.15rem;
+      color: var(--brand-cerulean);
+      font-weight: 600;
+      margin: 0;
+    }
+
+    .details-section-box {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 16px;
+      padding: 1.5rem 1.75rem;
+    }
+
+    .section-title {
+      font-size: 0.88rem;
+      text-transform: uppercase;
+      font-weight: 700;
+      color: var(--brand-cerulean);
+      letter-spacing: 0.06em;
+      margin-bottom: 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .statement-text {
+      font-size: 1.05rem;
+      line-height: 1.68;
+      color: #EFEEE5;
+      white-space: pre-line;
+      font-weight: 400;
+    }
+
+    .attribution-quote {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      color: var(--brand-spring-wood);
+      background: rgba(0, 68, 124, 0.25);
+      border-left: 4px solid var(--brand-cerulean);
+      padding: 0.85rem 1.15rem;
+      border-radius: 0 8px 8px 0;
+      margin: 0.65rem 0 1rem;
+    }
+
+    .attribution-quote a {
+      color: var(--brand-cerulean);
+      text-decoration: underline;
+    }
+
+    /* Custom Reveal Controls Overrides */
+    .reveal .controls {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .reveal .progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .reveal .progress span {
+      background: var(--brand-cerulean);
+    }
+
+    /* Scrollbar styling */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(0, 0, 0, 0.2);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--brand-cerulean);
+    }
+
+    @media (max-width: 1200px) {
+      .slide-details-container {
+        grid-template-columns: 1fr;
+        padding-top: 75px;
+      }
+      .details-thumb-card img {
+        height: 220px;
+      }
+      .matrix-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .matrix-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Persistent Top Navigation Bar -->
+  <header class="deck-topbar">
+    <a href="#/index" class="deck-brand-link" title="Return to Index">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 310.83 83.18" width="112" height="30" class="deck-brand-logo">
+  <g transform="translate(-68.95, -238.43)">
+    <path d="M 136.4375 285.320312 C 135.386719 286.371094 134.640625 287.617188 134.179688 288.933594 L 125.09375 279.851562 L 134.179688 270.769531 C 134.640625 272.085938 135.378906 273.328125 136.4375 274.378906 C 140.160156 278.105469 146.191406 278.105469 149.914062 274.378906 C 153.640625 270.65625 153.640625 264.625 149.914062 260.902344 C 146.230469 257.214844 140.265625 257.183594 136.542969 260.808594 L 121.296875 276.046875 L 115.09375 269.839844 L 130.25 254.675781 C 131.964844 252.953125 133.023438 250.582031 133.023438 247.957031 C 133.023438 242.691406 128.757812 238.425781 123.492188 238.425781 C 118.226562 238.425781 113.960938 242.691406 113.960938 247.957031 C 113.960938 252.128906 116.648438 255.660156 120.378906 256.953125 L 111.292969 266.035156 L 102.210938 256.953125 C 105.941406 255.660156 108.628906 252.121094 108.628906 247.957031 C 108.628906 242.691406 104.363281 238.425781 99.097656 238.425781 C 93.828125 238.425781 89.566406 242.691406 89.566406 247.957031 C 89.566406 250.582031 90.621094 252.953125 92.339844 254.675781 L 107.496094 269.839844 L 101.292969 276.046875 L 86.046875 260.808594 C 82.316406 257.183594 76.359375 257.214844 72.671875 260.902344 C 68.984375 264.589844 68.949219 270.65625 72.671875 274.378906 C 76.398438 278.105469 82.429688 278.105469 86.152344 274.378906 C 87.203125 273.328125 87.949219 272.085938 88.40625 270.769531 L 97.492188 279.851562 L 88.40625 288.933594 C 87.949219 287.617188 87.207031 286.371094 86.152344 285.320312 C 82.429688 281.597656 76.398438 281.597656 72.671875 285.320312 C 68.949219 289.046875 68.949219 295.078125 72.671875 298.800781 C 76.359375 302.488281 82.320312 302.519531 86.046875 298.894531 L 101.292969 283.65625 L 107.496094 289.859375 L 92.339844 305.023438 C 90.621094 306.746094 89.566406 309.121094 89.566406 311.746094 C 89.566406 317.011719 93.828125 321.277344 99.097656 321.277344 C 104.363281 321.277344 108.628906 317.011719 108.628906 311.746094 C 108.628906 307.574219 105.941406 304.042969 102.210938 302.75 L 111.292969 293.664062 L 120.378906 302.75 C 116.648438 304.042969 113.960938 307.578125 113.960938 311.746094 C 113.960938 317.011719 118.226562 321.277344 123.492188 321.277344 C 128.757812 321.277344 133.023438 317.011719 133.023438 311.746094 C 133.023438 309.121094 131.964844 306.746094 130.25 305.023438 L 115.09375 289.859375 L 121.296875 283.65625 L 136.542969 298.894531 C 140.273438 302.519531 146.230469 302.488281 149.914062 298.800781 C 153.640625 295.078125 153.640625 289.046875 149.914062 285.320312 C 146.191406 281.597656 140.160156 281.597656 136.4375 285.320312 M 111.289062 286.0625 L 105.078125 279.855469 L 111.28125 273.652344 L 117.492188 279.855469 Z M 111.289062 286.0625 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 191.824219 274.796875 C 189.546875 274.796875 187.425781 274.390625 185.457031 273.578125 C 183.492188 272.765625 181.761719 271.621094 180.261719 270.136719 C 178.765625 268.65625 177.601562 266.910156 176.777344 264.894531 C 175.949219 262.882812 175.535156 260.660156 175.535156 258.226562 C 175.535156 255.824219 175.949219 253.613281 176.777344 251.601562 C 177.601562 249.589844 178.765625 247.84375 180.261719 246.359375 C 181.761719 244.878906 183.492188 243.730469 185.457031 242.917969 C 187.425781 242.109375 189.546875 241.703125 191.824219 241.703125 C 194.195312 241.703125 196.371094 242.101562 198.355469 242.894531 C 200.335938 243.691406 202.050781 244.863281 203.503906 246.40625 C 204.953125 247.953125 206.023438 249.847656 206.710938 252.09375 L 202.636719 253.359375 C 201.761719 250.894531 200.421875 248.964844 198.609375 247.578125 C 196.800781 246.191406 194.570312 245.496094 191.917969 245.496094 C 189.640625 245.496094 187.59375 246.015625 185.785156 247.0625 C 183.976562 248.109375 182.546875 249.582031 181.503906 251.484375 C 180.457031 253.390625 179.933594 255.636719 179.933594 258.226562 C 179.933594 260.816406 180.449219 263.070312 181.480469 264.988281 C 182.507812 266.910156 183.929688 268.390625 185.738281 269.4375 C 187.546875 270.480469 189.578125 271.003906 191.824219 271.003906 C 194.289062 271.003906 196.496094 270.347656 198.445312 269.039062 C 200.398438 267.726562 201.855469 265.917969 202.824219 263.609375 L 206.941406 264.542969 C 206.195312 266.730469 205.070312 268.578125 203.574219 270.089844 C 202.074219 271.605469 200.320312 272.765625 198.308594 273.578125 C 196.292969 274.390625 194.132812 274.796875 191.824219 274.796875 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 213.214844 248.769531 L 217.519531 248.769531 L 217.519531 274.46875 L 213.214844 274.46875 Z M 215.367188 244.652344 C 214.464844 244.652344 213.683594 244.355469 213.027344 243.761719 C 212.371094 243.167969 212.046875 242.4375 212.046875 241.5625 C 212.046875 240.65625 212.363281 239.910156 213.003906 239.316406 C 213.644531 238.722656 214.433594 238.425781 215.367188 238.425781 C 216.273438 238.425781 217.054688 238.722656 217.707031 239.316406 C 218.363281 239.910156 218.691406 240.65625 218.691406 241.5625 C 218.691406 242.4375 218.363281 243.167969 217.707031 243.761719 C 217.054688 244.355469 216.273438 244.652344 215.367188 244.652344 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 224.871094 250.640625 L 224.871094 248.769531 C 225.523438 248.769531 226.03125 248.59375 226.390625 248.230469 C 226.75 247.875 226.929688 247.351562 226.929688 246.664062 L 226.929688 242.359375 L 231.28125 242.359375 L 231.28125 245.914062 C 231.28125 246.351562 231.195312 246.773438 231.023438 247.179688 C 230.855469 247.585938 230.597656 247.929688 230.253906 248.210938 C 229.910156 248.488281 229.503906 248.675781 229.035156 248.769531 Z M 233.203125 274.796875 C 231.421875 274.796875 229.933594 274.195312 228.730469 272.996094 C 227.53125 271.792969 226.929688 270.207031 226.929688 268.242188 L 226.929688 252.328125 L 222.578125 252.328125 L 222.578125 248.769531 L 237.132812 248.769531 L 237.132812 252.328125 L 231.28125 252.328125 L 231.28125 268.429688 C 231.28125 269.242188 231.507812 269.863281 231.960938 270.300781 C 232.414062 270.738281 232.953125 270.957031 233.578125 270.957031 C 234.042969 270.957031 234.472656 270.871094 234.863281 270.699219 C 235.253906 270.527344 235.621094 270.300781 235.964844 270.023438 L 238.070312 272.96875 C 237.414062 273.5625 236.679688 274.015625 235.871094 274.328125 C 235.058594 274.640625 234.167969 274.796875 233.203125 274.796875 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 243.3125 248.769531 L 247.617188 248.769531 L 247.617188 274.46875 L 243.3125 274.46875 Z M 245.464844 244.652344 C 244.558594 244.652344 243.78125 244.355469 243.125 243.761719 C 242.46875 243.167969 242.140625 242.4375 242.140625 241.5625 C 242.140625 240.65625 242.460938 239.910156 243.101562 239.316406 C 243.742188 238.722656 244.53125 238.425781 245.464844 238.425781 C 246.371094 238.425781 247.148438 238.722656 247.804688 239.316406 C 248.460938 239.910156 248.789062 240.65625 248.789062 241.5625 C 248.789062 242.4375 248.460938 243.167969 247.804688 243.761719 C 247.148438 244.355469 246.371094 244.652344 245.464844 244.652344 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 270.742188 252.328125 L 258.335938 270.910156 L 270.882812 270.910156 L 270.882812 274.46875 L 253.375 274.46875 L 253.375 270.910156 L 265.828125 252.328125 L 253.46875 252.328125 L 253.46875 248.769531 L 270.742188 248.769531 Z M 270.742188 252.328125 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 283.894531 261.128906 C 285.140625 261.128906 286.40625 261.058594 287.683594 260.917969 C 288.964844 260.777344 290.148438 260.542969 291.242188 260.214844 C 292.335938 259.886719 293.214844 259.425781 293.886719 258.835938 C 294.558594 258.242188 294.894531 257.507812 294.894531 256.636719 C 294.894531 255.761719 294.621094 254.988281 294.074219 254.316406 C 293.527344 253.644531 292.777344 253.117188 291.828125 252.726562 C 290.875 252.335938 289.808594 252.140625 288.621094 252.140625 C 286.84375 252.140625 285.242188 252.554688 283.824219 253.378906 C 282.402344 254.207031 281.28125 255.292969 280.453125 256.636719 C 279.625 257.976562 279.167969 259.394531 279.074219 260.894531 C 279.632812 260.957031 280.328125 261.011719 281.15625 261.058594 C 281.980469 261.105469 282.894531 261.128906 283.894531 261.128906 M 288.433594 274.796875 C 286.4375 274.796875 284.601562 274.484375 282.933594 273.859375 C 281.265625 273.234375 279.820312 272.355469 278.605469 271.214844 C 277.386719 270.078125 276.449219 268.710938 275.796875 267.121094 C 275.140625 265.527344 274.8125 263.75 274.8125 261.785156 C 274.8125 259.847656 275.179688 258.070312 275.914062 256.445312 C 276.644531 254.824219 277.644531 253.414062 278.910156 252.210938 C 280.171875 251.011719 281.625 250.082031 283.261719 249.425781 C 284.902344 248.769531 286.609375 248.441406 288.386719 248.441406 C 289.980469 248.441406 291.429688 248.652344 292.742188 249.074219 C 294.050781 249.496094 295.183594 250.082031 296.132812 250.832031 C 297.085938 251.578125 297.820312 252.4375 298.335938 253.402344 C 298.851562 254.371094 299.105469 255.433594 299.105469 256.585938 C 299.105469 258.210938 298.652344 259.558594 297.75 260.636719 C 296.84375 261.714844 295.644531 262.554688 294.144531 263.164062 C 292.648438 263.773438 291 264.195312 289.207031 264.429688 C 287.410156 264.660156 285.609375 264.746094 283.800781 264.683594 C 283.300781 264.683594 282.753906 264.671875 282.160156 264.636719 C 281.570312 264.609375 281.023438 264.566406 280.523438 264.519531 C 280.023438 264.472656 279.632812 264.433594 279.351562 264.40625 C 279.539062 265.621094 280.039062 266.746094 280.851562 267.773438 C 281.664062 268.804688 282.722656 269.617188 284.035156 270.210938 C 285.34375 270.800781 286.8125 271.097656 288.433594 271.097656 C 289.683594 271.097656 290.875 270.878906 292.015625 270.441406 C 293.152344 270.003906 294.167969 269.445312 295.058594 268.757812 C 295.949219 268.070312 296.671875 267.371094 297.234375 266.652344 L 300.417969 268.992188 C 299.605469 270.117188 298.589844 271.113281 297.375 271.988281 C 296.15625 272.859375 294.800781 273.546875 293.300781 274.046875 C 291.804688 274.546875 290.179688 274.796875 288.433594 274.796875 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 305.613281 274.46875 L 305.613281 248.769531 L 309.917969 248.769531 L 309.917969 254.246094 C 310.292969 253.1875 310.910156 252.21875 311.765625 251.34375 C 312.625 250.472656 313.648438 249.769531 314.835938 249.238281 C 316.019531 248.707031 317.285156 248.441406 318.625 248.441406 C 320.652344 248.441406 322.417969 248.894531 323.914062 249.800781 C 325.414062 250.707031 326.566406 251.96875 327.378906 253.589844 C 328.1875 255.214844 328.59375 257.132812 328.59375 259.347656 L 328.59375 274.46875 L 324.335938 274.46875 L 324.335938 260.425781 C 324.335938 257.835938 323.679688 255.816406 322.371094 254.363281 C 321.058594 252.914062 319.34375 252.1875 317.222656 252.1875 C 315.847656 252.1875 314.605469 252.570312 313.5 253.335938 C 312.390625 254.097656 311.515625 255.152344 310.878906 256.492188 C 310.238281 257.835938 309.917969 259.378906 309.917969 261.128906 L 309.917969 274.46875 Z M 305.613281 274.46875 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 344.414062 274.796875 C 342.542969 274.796875 340.890625 274.476562 339.453125 273.835938 C 338.019531 273.195312 336.855469 272.335938 335.96875 271.261719 C 335.078125 270.183594 334.476562 268.992188 334.164062 267.679688 L 338.191406 266.792969 C 338.503906 268.070312 339.1875 269.117188 340.25 269.929688 C 341.3125 270.738281 342.667969 271.144531 344.320312 271.144531 C 346.039062 271.144531 347.339844 270.792969 348.230469 270.089844 C 349.121094 269.390625 349.566406 268.507812 349.566406 267.445312 C 349.566406 266.511719 349.195312 265.777344 348.464844 265.246094 C 347.730469 264.71875 346.785156 264.28125 345.632812 263.9375 C 344.476562 263.59375 343.253906 263.25 341.957031 262.90625 C 340.664062 262.5625 339.4375 262.121094 338.285156 261.574219 C 337.128906 261.027344 336.191406 260.285156 335.476562 259.347656 C 334.757812 258.414062 334.398438 257.164062 334.398438 255.605469 C 334.398438 254.261719 334.789062 253.054688 335.570312 251.976562 C 336.347656 250.902344 337.449219 250.042969 338.867188 249.402344 C 340.289062 248.761719 341.949219 248.441406 343.851562 248.441406 C 345.632812 248.441406 347.160156 248.734375 348.441406 249.308594 C 349.71875 249.886719 350.757812 250.675781 351.554688 251.671875 C 352.351562 252.671875 352.886719 253.808594 353.167969 255.089844 L 349.191406 256.167969 C 348.910156 255.011719 348.332031 254.042969 347.457031 253.265625 C 346.585938 252.484375 345.335938 252.09375 343.714844 252.09375 C 342.121094 252.09375 340.898438 252.421875 340.039062 253.078125 C 339.179688 253.734375 338.75 254.558594 338.75 255.558594 C 338.75 256.558594 339.109375 257.335938 338.828125 257.898438 C 340.546875 258.460938 341.472656 258.921875 342.613281 259.277344 C 343.753906 259.636719 344.96875 259.988281 346.265625 260.332031 C 347.558594 260.675781 348.777344 261.105469 349.917969 261.621094 C 351.054688 262.132812 351.984375 262.851562 352.699219 263.773438 C 353.417969 264.695312 353.777344 265.917969 353.777344 267.445312 C 353.777344 268.789062 353.394531 270.023438 352.628906 271.144531 C 351.867188 272.269531 350.78125 273.15625 349.378906 273.8125 C 347.972656 274.46875 346.320312 274.796875 344.414062 274.796875 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 357.613281 251.90625 L 357.613281 249.800781 C 358.957031 249.800781 360.007812 249.542969 360.773438 249.027344 C 361.539062 248.511719 362.015625 247.835938 362.203125 246.992188 C 361.984375 247.179688 361.734375 247.320312 361.453125 247.414062 C 361.171875 247.507812 360.890625 247.554688 360.609375 247.554688 C 359.832031 247.554688 359.152344 247.34375 358.574219 246.921875 C 357.996094 246.5 357.710938 245.808594 357.710938 244.839844 C 357.710938 243.902344 358.027344 243.144531 358.667969 242.570312 C 359.308594 241.992188 360.109375 241.703125 361.078125 241.703125 C 361.796875 241.703125 362.421875 241.90625 362.949219 242.3125 C 363.480469 242.71875 363.902344 243.238281 364.214844 243.878906 C 364.527344 244.519531 364.683594 245.183594 364.683594 245.867188 C 364.683594 247.242188 364.363281 248.378906 363.722656 249.285156 C 363.082031 250.191406 362.234375 250.855469 361.171875 251.273438 C 360.109375 251.695312 358.925781 251.90625 357.613281 251.90625 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 175.160156 288.839844 L 197.253906 288.839844 L 197.253906 292.394531 L 188.359375 292.394531 L 188.359375 321.277344 L 184.054688 321.277344 L 184.054688 292.394531 L 175.160156 292.394531 Z M 175.160156 288.839844 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 203.433594 308.125 L 204.976562 301.289062 C 205.570312 299.386719 206.601562 297.902344 208.066406 296.84375 C 209.535156 295.78125 211.28125 295.25 213.308594 295.25 L 213.308594 299.746094 C 213.058594 299.683594 212.816406 299.644531 212.582031 299.628906 C 212.351562 299.613281 212.121094 299.605469 211.90625 299.605469 C 210.5625 299.605469 209.371094 299.957031 208.324219 300.65625 C 207.277344 301.359375 206.457031 302.34375 205.867188 303.605469 C 205.273438 304.871094 204.976562 306.375 204.976562 308.125 Z M 200.671875 295.578125 L 204.976562 295.578125 L 204.976562 321.277344 L 200.671875 321.277344 Z M 200.671875 295.578125 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 229.363281 317.859375 C 230.925781 317.859375 232.359375 317.484375 233.671875 316.734375 C 234.980469 315.988281 236.035156 314.902344 236.832031 313.480469 C 237.625 312.0625 238.023438 310.371094 238.023438 308.40625 C 238.023438 306.40625 237.625 304.714844 236.832031 303.324219 C 236.035156 301.9375 234.980469 300.867188 233.671875 300.117188 C 232.359375 299.371094 230.925781 298.996094 229.363281 298.996094 C 227.804688 298.996094 226.371094 299.371094 225.058594 300.117188 C 223.746094 300.867188 222.695312 301.9375 221.898438 303.324219 C 221.101562 304.714844 220.707031 306.40625 220.707031 308.40625 C 220.707031 310.371094 221.101562 312.0625 221.898438 313.480469 C 222.695312 314.902344 223.746094 315.988281 225.058594 316.734375 C 226.371094 317.484375 227.804688 317.859375 229.363281 317.859375 M 228.335938 321.605469 C 226.117188 321.605469 224.097656 321.050781 222.273438 319.941406 C 220.449219 318.835938 218.996094 317.289062 217.917969 315.308594 C 216.84375 313.328125 216.304688 311.023438 216.304688 308.40625 C 216.304688 305.78125 216.84375 303.480469 217.917969 301.5 C 218.996094 299.519531 220.449219 297.980469 222.273438 296.890625 C 224.097656 295.796875 226.117188 295.25 228.335938 295.25 C 230.613281 295.25 232.609375 295.789062 234.324219 296.867188 C 236.042969 297.941406 237.273438 299.402344 238.023438 301.242188 L 238.023438 295.578125 L 242.328125 295.578125 L 242.328125 321.277344 L 240.550781 321.277344 C 239.769531 321.277344 239.15625 321.042969 238.703125 320.574219 C 238.25 320.105469 238.023438 319.496094 238.023438 318.75 L 238.023438 315.566406 C 237.242188 317.40625 235.988281 318.875 234.253906 319.964844 C 232.523438 321.058594 230.550781 321.605469 228.335938 321.605469 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 260.492188 321.605469 C 258.058594 321.605469 255.894531 321.066406 254.007812 319.988281 C 252.121094 318.914062 250.644531 317.382812 249.585938 315.402344 C 248.523438 313.421875 247.992188 311.089844 247.992188 308.402344 C 247.992188 305.722656 248.523438 303.394531 249.585938 301.429688 C 250.644531 299.464844 252.121094 297.941406 254.007812 296.867188 C 255.894531 295.789062 258.058594 295.25 260.492188 295.25 C 261.925781 295.25 263.253906 295.40625 264.46875 295.71875 C 265.6875 296.03125 266.777344 296.515625 267.746094 297.167969 C 268.714844 297.824219 269.546875 298.644531 270.25 299.628906 C 270.953125 300.609375 271.523438 301.757812 271.960938 303.066406 L 267.886719 304.378906 C 267.292969 302.601562 266.382812 301.242188 265.148438 300.304688 C 263.914062 299.371094 262.363281 298.902344 260.492188 298.902344 C 258.960938 298.902344 257.582031 299.261719 256.347656 299.976562 C 255.117188 300.699219 254.148438 301.757812 253.445312 303.160156 C 252.746094 304.566406 252.394531 306.316406 252.394531 308.402344 C 252.394531 310.496094 252.746094 312.25 253.445312 313.671875 C 254.148438 315.089844 255.117188 316.160156 256.347656 316.875 C 257.582031 317.59375 258.960938 317.953125 260.492188 317.953125 C 262.644531 317.953125 264.375 317.382812 265.6875 316.246094 C 266.996094 315.105469 267.886719 313.617188 268.355469 311.773438 L 272.332031 312.757812 C 271.894531 314.441406 271.15625 315.957031 270.109375 317.296875 C 269.0625 318.640625 267.746094 319.691406 266.15625 320.457031 C 264.5625 321.222656 262.675781 321.605469 260.492188 321.605469 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 278.042969 321.277344 L 278.042969 286.636719 L 282.351562 286.636719 L 282.351562 306.578125 C 284.253906 306.234375 286.015625 305.582031 287.640625 304.613281 C 289.261719 303.644531 290.640625 302.40625 291.78125 300.890625 C 292.921875 299.378906 293.707031 297.605469 294.144531 295.578125 L 298.777344 295.578125 C 298.3125 297.730469 297.492188 299.667969 296.324219 301.382812 C 295.152344 303.097656 293.808594 304.542969 292.296875 305.710938 C 290.78125 306.882812 289.246094 307.75 287.6875 308.308594 C 288.808594 308.589844 290.003906 309.128906 291.265625 309.925781 C 292.53125 310.722656 293.753906 311.695312 294.941406 312.851562 C 296.125 314.003906 297.140625 315.300781 297.984375 316.734375 C 298.828125 318.171875 299.386719 319.683594 299.667969 321.277344 L 295.035156 321.277344 C 294.722656 319.871094 294.152344 318.546875 293.324219 317.296875 C 292.5 316.050781 291.5 314.925781 290.332031 313.925781 C 289.160156 312.929688 287.886719 312.117188 286.515625 311.492188 C 285.140625 310.867188 283.753906 310.496094 282.351562 310.371094 L 282.351562 321.277344 Z M 278.042969 321.277344 " fill="#FFFFFF" fill-rule="nonzero" />
+    <path d="M 341.257812 310.511719 L 357.917969 310.511719 L 359.089844 314.066406 L 340.132812 314.066406 Z M 352.210938 288.839844 L 363.957031 321.277344 L 359.417969 321.277344 L 348.699219 291.226562 L 350.757812 291.226562 L 339.992188 321.277344 L 335.453125 321.277344 L 347.246094 288.839844 Z M 352.210938 288.839844 " fill="#40A9FF" fill-rule="nonzero" />
+    <path d="M 368.449219 321.277344 L 368.449219 317.71875 L 371.960938 317.71875 L 371.960938 292.394531 L 368.449219 292.394531 L 368.449219 288.839844 L 379.777344 288.839844 L 379.777344 292.394531 L 376.269531 292.394531 L 376.269531 317.71875 L 379.777344 317.71875 L 379.777344 321.277344 Z M 368.449219 321.277344 " fill="#40A9FF" fill-rule="nonzero" />
+    <path d="M 329.824219 288.839844 L 318.027344 321.277344 L 320.367188 321.277344 L 332.164062 288.839844 Z M 329.824219 288.839844 " fill="#8CCBFF" fill-rule="nonzero" />
+    <path d="M 323.183594 288.839844 L 311.386719 321.277344 L 313.726562 321.277344 L 325.527344 288.839844 Z M 323.183594 288.839844 " fill="#8CCBFF" fill-rule="nonzero" />
+  </g>
+</svg>
+      <span class="deck-title-badge">AI in the Picture: Activity Resource</span>
+    </a>
+    <div class="deck-controls-group">
+      <button type="button" class="deck-btn" id="btn-open-jump" title="Type image number (1-25) and hit Enter">
+        🔢 Jump to Image <kbd>1-25</kbd>
+      </button>
+      <a href="#/index" class="deck-btn" title="View Index Grid">
+        ⌂ Index <kbd>0</kbd>
+      </a>
+      <button type="button" class="deck-btn" id="btn-toggle-overview" title="Toggle Slide Overview (Grid)">
+        ▦ Grid <kbd>Esc</kbd>
+      </button>
+    </div>
+  </header>
+
+  <!-- Number Jump Interactive HUD -->
+  <div id="jump-hud">
+    <div class="hud-title">Jump to Image (1–25)</div>
+    <div class="hud-display">
+      <span id="hud-digits"></span><span class="cursor"></span>
+    </div>
+    <div class="hud-hint">
+      Press <span>Enter ↵</span> to jump · <span>Esc</span> to cancel
+    </div>
+  </div>
+
+  <div class="reveal">
+    <div class="slides">
+      <!-- SLIDE 0: INDEX SHEET (JUST IMAGES) -->
+      <section id="index" data-image-num="0">
+        <div class="slide-index-container">
+          <div class="index-hero">
+            <div class="index-hero-text">
+              <h1>AI in the Picture: <span>Activity Resource</span></h1>
+            </div>
+          </div>
+
+          <div class="matrix-grid">
+            <div class="matrix-card-cell" onclick="jumpToImage(1)" title="#01: The AI Race">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#01</span>
+                <img src="https://betterimagesofai.org/ImagesAI/gloria-mendoza_the-ai-race_3000x2000.jpg" alt="#01" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(2)" title="#02: Rare Metals 2">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#02</span>
+                <img src="https://betterimagesofai.org/ImagesAI/rare-metals-2_hanna-barakat-aixdesign_archival-images-of-ai_3328x2312.png" alt="#02" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(3)" title="#03: Frontier Models 1">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#03</span>
+                <img src="https://betterimagesofai.org/ImagesAI/frontier-models-1_hanna-barakat-aixdesign_archival-images-of-ai_3584x2504.png" alt="#03" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(4)" title="#04: Social Media">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#04</span>
+                <img src="https://betterimagesofai.org/ImagesAI/WarburtonSocial_2560x1440.jpg" alt="#04" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(5)" title="#05: AI for Biodiversity">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#05</span>
+                <img src="https://betterimagesofai.org/ImagesAI/nidia-dias_google-deepmind_ai-for-biodiversity_7111x4000.png" alt="#05" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(6)" title="#06: Servers in a Landscape">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#06</span>
+                <img src="https://betterimagesofai.org/ImagesAI/deborah-lupton_severs-in-a-landscape_3005x4250.png" alt="#06" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(7)" title="#07: Data annotators labeling data">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#07</span>
+                <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image1_2362x3543.jpg" alt="#07" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(8)" title="#08: Surveillance View A.">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#08</span>
+                <img src="https://betterimagesofai.org/ImagesAI/comuzi_drones_b_2560x1440.jpg" alt="#08" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(9)" title="#09: Mirror D">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#09</span>
+                <img src="https://betterimagesofai.org/ImagesAI/comuzi_mirror_d_2560x1440.jpg" alt="#09" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(10)" title="#10: Human-AI collaboration">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#10</span>
+                <img src="https://betterimagesofai.org/ImagesAI/anton-grabolle_human-ai-collaboration_2000x2347.png" alt="#10" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(11)" title="#11: A Corner Of The History">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#11</span>
+                <img src="https://betterimagesofai.org/ImagesAI/a-corner-of-the-history_reihaneh-golpayegani_the-bigger-picture_3360x2376.png" alt="#11" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(12)" title="#12: Building Corp">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#12</span>
+                <img src="https://betterimagesofai.org/ImagesAI/building-corp_jamillah-knowles_digit_2560x1440.png" alt="#12" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(13)" title="#13: The intimacy factory 1">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#13</span>
+                <img src="https://betterimagesofai.org/ImagesAI/jenny-kidd_synthetic-pasts_the-intimacy-factory-1_3000x3000.png" alt="#13" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(14)" title="#14: AI City">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#14</span>
+                <img src="https://betterimagesofai.org/ImagesAI/ai-city_2560x1440.png" alt="#14" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(15)" title="#15: Medicine">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#15</span>
+                <img src="https://betterimagesofai.org/ImagesAI/WarburtonMedicine_2560x1440.jpg" alt="#15" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(16)" title="#16: AI Am Over It">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#16</span>
+                <img src="https://betterimagesofai.org/ImagesAI/ai-am-over-it_nadia-piet-aixdesign_archival-images-of-ai_2565x1854.png" alt="#16" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(17)" title="#17: Puppeteering Virtual Reality">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#17</span>
+                <img src="https://betterimagesofai.org/ImagesAI/puppeteering-virtual-reality_hanna-barakat_cambridge-diversity-fund_4591x5888.png" alt="#17" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(18)" title="#18: Colossal Harvest">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#18</span>
+                <img src="https://betterimagesofai.org/ImagesAI/colossal-harvest_hanna-barakat_cambridge-diversity-fund_5085x4884.png" alt="#18" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(19)" title="#19: Ceci n&#x27;est pas une banane">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#19</span>
+                <img src="https://betterimagesofai.org/ImagesAI/Max_Gruber_Ceci_nest_pas_une_banane_4000x2667.jpg" alt="#19" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(20)" title="#20: Who is AI Made Of">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#20</span>
+                <img src="https://betterimagesofai.org/ImagesAI/who-is-ai-made-of_shady-sharify_3815x5120.png" alt="#20" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(21)" title="#21: Glitch Binary Abyss I">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#21</span>
+                <img src="https://betterimagesofai.org/ImagesAI/glitch-binary-abyss-i_elise-racine_the-bigger-picture_4320x5760.jpg" alt="#21" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(22)" title="#22: Data annotators discussing the correct labeling of a dataset">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#22</span>
+                <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image2_3543x2362.jpg" alt="#22" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(23)" title="#23: Quantified Human">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#23</span>
+                <img src="https://betterimagesofai.org/ImagesAI/WarburtonHuman_2560x1440.jpg" alt="#23" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(24)" title="#24: Fish">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#24</span>
+                <img src="https://betterimagesofai.org/ImagesAI/Dimmendaal_fish_3000x1000.jpg" alt="#24" loading="lazy">
+              </div>
+            </div>
+            <div class="matrix-card-cell" onclick="jumpToImage(25)" title="#25: prediction">
+              <div class="cell-thumb-wrap">
+                <span class="cell-num-badge">#25</span>
+                <img src="https://betterimagesofai.org/ImagesAI/prediction_yaning-wu_5250x5250.png" alt="#25" loading="lazy">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #01 FULL VIEW -->
+      <section id="img-01" data-image-num="1">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(1)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/gloria-mendoza_the-ai-race_3000x2000.jpg" alt="#01: The AI Race">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#01</span>
+              <div class="full-meta-titles">
+                <h2>The AI Race</h2>
+                <p>by Gloria Mendoza</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(1)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #01 DETAILS VIEW -->
+      <section id="img-01-details" data-image-num="1">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(1)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/gloria-mendoza_the-ai-race_3000x2000.jpg" alt="#01: The AI Race">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Gloria Mendoza</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(1)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(2)" title="Go to Image #02">Next Image (#02) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#01</span>
+              </div>
+              <h1 class="details-title">The AI Race</h1>
+              <p class="details-artist">by Gloria Mendoza</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">The AI race describes the companies and nations which are racing forward to the newest iteration of &#x27;AI&#x27;, including software, hardware capacity, power, leadership, and influence in the field. It&#x27;s a race that nation leaders and private corporations have signed up for, but workforces, neighbourhoods, communities, and working class people are impacted by the harms caused. I strive to show the implications of technology, in this case, the runner represents the workers running the race for entire nations, and its silhouette contains the materials, hardware, and resources (often hidden) needed to build generative AI technologies. Skylines are representative of cities and progress, but the heavy smoke cruising along the image representing the pollution, e-waste, and debris the race leaves behind. The panels of colour represent the countries typically referred to in the context of the &quot;AI race&quot;: the US and China. But I leave this open to interpretation and did not want the flags and countries to distract from the most important aspect of the illustration: the consequences of the AI race.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Gloria Mendoza / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=GloriaMendoza&amp;title=TheAIRace" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #02 FULL VIEW -->
+      <section id="img-02" data-image-num="2">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(2)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/rare-metals-2_hanna-barakat-aixdesign_archival-images-of-ai_3328x2312.png" alt="#02: Rare Metals 2">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#02</span>
+              <div class="full-meta-titles">
+                <h2>Rare Metals 2</h2>
+                <p>by Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(2)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #02 DETAILS VIEW -->
+      <section id="img-02-details" data-image-num="2">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(2)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/rare-metals-2_hanna-barakat-aixdesign_archival-images-of-ai_3328x2312.png" alt="#02: Rare Metals 2">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(2)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(3)" title="Go to Image #03">Next Image (#03) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#02</span>
+              </div>
+              <h1 class="details-title">Rare Metals 2</h1>
+              <p class="details-artist">by Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">&#x27;Rare Metals&#x27; highlights the human labor that underpins the material realities of modern technology. Archival images of hands — some cast in cement, others hand-drawn — symbolise the toxic burden of data cleaning in China and the immense human cost of mineral extraction in the Congo. Some hands are ghostlike, their translucence reflecting the often-invisible nature of this labor. Others delicately manipulate threads of rare earth metals, essential for manufacturing computer chips. By using hands and strings as visual metaphors, the series seeks to uncover the hidden stories of &quot;anonymous&quot; labor that fuel AI technologies.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Hanna Barakat &amp; Archival Images of AI + AIxDESIGN / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=HannaBarakat&amp;title=RareMetals2" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #03 FULL VIEW -->
+      <section id="img-03" data-image-num="3">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(3)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/frontier-models-1_hanna-barakat-aixdesign_archival-images-of-ai_3584x2504.png" alt="#03: Frontier Models 1">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#03</span>
+              <div class="full-meta-titles">
+                <h2>Frontier Models 1</h2>
+                <p>by Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(3)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #03 DETAILS VIEW -->
+      <section id="img-03-details" data-image-num="3">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(3)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/frontier-models-1_hanna-barakat-aixdesign_archival-images-of-ai_3584x2504.png" alt="#03: Frontier Models 1">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(3)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(4)" title="Go to Image #04">Next Image (#04) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#03</span>
+              </div>
+              <h1 class="details-title">Frontier Models 1</h1>
+              <p class="details-artist">by Hanna Barakat &amp; Archival Images of AI + AIxDESIGN</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image explores the visual culture of generative artificial intelligence landscapes, positioning it as a &quot;new frontier&quot; that echoes the 1850s to 1870s Manifest Destiny paintings (often associated with the Hudson River School). The base image, titled “Across the Continent: Westward the Course of Empire Takes Its Way&quot; by Frances Flora Bond Palmer (1868) is one of many propagandistic artworks that intended to lure settlers westward while “conveniently” concealing the ethnic cleansing of Indigenous populations. Through collage, this image reappropriates the idea of ‘the next frontier’ as AI-frontier models to draw attention to the not-so-new forms of colonisation within the digital realm.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Hanna Barakat &amp; Archival Images of AI + AIxDESIGN / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=HannaBarakat&amp;title=FrontierModels1" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #04 FULL VIEW -->
+      <section id="img-04" data-image-num="4">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(4)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/WarburtonSocial_2560x1440.jpg" alt="#04: Social Media">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#04</span>
+              <div class="full-meta-titles">
+                <h2>Social Media</h2>
+                <p>by Alan Warburton</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(4)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #04 DETAILS VIEW -->
+      <section id="img-04-details" data-image-num="4">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(4)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/WarburtonSocial_2560x1440.jpg" alt="#04: Social Media">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Alan Warburton</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(4)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(5)" title="Go to Image #05">Next Image (#05) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#04</span>
+              </div>
+              <h1 class="details-title">Social Media</h1>
+              <p class="details-artist">by Alan Warburton</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image shows a 3D rendering of a smiling face emoji against a black background. The scene is refracted in different ways by a fragmented glass grid. This grid is a visual metaphor for the way that artificial intelligence (AI) and machine learning technologies can be used to extract and analyse social data in complex ways, and the repetitive and self-similar structure of these systems. A neural network diagram is overlaid, familiarising the viewer with the formal architecture of AI systems.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Alan Warburton / https://betterimagesofai.org / © BBC / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=AlanWarburton&amp;title=SocialMedia" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #05 FULL VIEW -->
+      <section id="img-05" data-image-num="5">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(5)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/nidia-dias_google-deepmind_ai-for-biodiversity_7111x4000.png" alt="#05: AI for Biodiversity">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#05</span>
+              <div class="full-meta-titles">
+                <h2>AI for Biodiversity</h2>
+                <p>by Nidia Dias &amp; Google DeepMind</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(5)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #05 DETAILS VIEW -->
+      <section id="img-05-details" data-image-num="5">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(5)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/nidia-dias_google-deepmind_ai-for-biodiversity_7111x4000.png" alt="#05: AI for Biodiversity">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Nidia Dias &amp; Google DeepMind</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(5)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(6)" title="Go to Image #06">Next Image (#06) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#05</span>
+              </div>
+              <h1 class="details-title">AI for Biodiversity</h1>
+              <p class="details-artist">by Nidia Dias &amp; Google DeepMind</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image depicts how AI could help understand ecosystems and identify species. It was created by Nidia Dias as part of the Visualising AI project launched by Google DeepMind 
+
+“Driven by the current applications of AI in biodiversity, the concept for this piece aims to illustrate the speed and efficiency with which AI can identify species within a specific environment. To depict this, I wanted to design a piece of land that, in an abstract manner, could display ample diversity indicative of various species, thus symbolizing biodiversity. I tried to pair that with a somehow abstract nature, with the aim to maintain simplicity and to ensure its adaptability across different contexts. It&#x27;s truly captivating to consider how AI&#x27;s efficiency in species identification can save scientists valuable time, allowing them to focus more on environmental preservation and the protection of endangered species.”</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Nidia Dias &amp; Google DeepMind / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=NidiaDias&amp;title=AIforBiodiversity" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #06 FULL VIEW -->
+      <section id="img-06" data-image-num="6">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(6)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/deborah-lupton_severs-in-a-landscape_3005x4250.png" alt="#06: Servers in a Landscape">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#06</span>
+              <div class="full-meta-titles">
+                <h2>Servers in a Landscape</h2>
+                <p>by Deborah Lupton</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(6)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #06 DETAILS VIEW -->
+      <section id="img-06-details" data-image-num="6">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(6)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/deborah-lupton_severs-in-a-landscape_3005x4250.png" alt="#06: Servers in a Landscape">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Deborah Lupton</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(6)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(7)" title="Go to Image #07">Next Image (#07) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#06</span>
+              </div>
+              <h1 class="details-title">Servers in a Landscape</h1>
+              <p class="details-artist">by Deborah Lupton</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image shows multiple data servers located in a beautiful landscape but emitting a dark cloud of smoke. It demonstrates the impacts of data centres on the natural world through pollution emitted from the operation of the centres. The image was inspired by my research on the environmental impacts of data centres built around the world to service the expansion of GenAI.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Deborah Lupton / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=DeborahLupton&amp;title=ServersinaLandscape" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #07 FULL VIEW -->
+      <section id="img-07" data-image-num="7">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(7)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image1_2362x3543.jpg" alt="#07: Data annotators labeling data">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#07</span>
+              <div class="full-meta-titles">
+                <h2>Data annotators labeling data</h2>
+                <p>by Nacho Kamenov &amp; Humans in the Loop</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(7)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #07 DETAILS VIEW -->
+      <section id="img-07-details" data-image-num="7">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(7)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image1_2362x3543.jpg" alt="#07: Data annotators labeling data">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Nacho Kamenov &amp; Humans in the Loop</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(7)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(8)" title="Go to Image #08">Next Image (#08) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#07</span>
+              </div>
+              <h1 class="details-title">Data annotators labeling data</h1>
+              <p class="details-artist">by Nacho Kamenov &amp; Humans in the Loop</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Data annotation is a key activity required in order to prepare training data for Artificial Intelligence. Manual data annotation is especially needed when dealing with unstructured data: images, videos, and text. For example, if we want to train an AI model to recognize animals on images, we will need the help of data annotators who would draw bounding boxes or add tags to each image depending on what animal it depicts. Data annotation work is being performed by hundreds of workers around the world who use the job as a means of livelihoods.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Nacho Kamenov &amp; Humans in the Loop / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=NachoKamenov&amp;title=Dataannotatorslabelingdata" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #08 FULL VIEW -->
+      <section id="img-08" data-image-num="8">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(8)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/comuzi_drones_b_2560x1440.jpg" alt="#08: Surveillance View A.">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#08</span>
+              <div class="full-meta-titles">
+                <h2>Surveillance View A.</h2>
+                <p>by Comuzi</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(8)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #08 DETAILS VIEW -->
+      <section id="img-08-details" data-image-num="8">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(8)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/comuzi_drones_b_2560x1440.jpg" alt="#08: Surveillance View A.">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Comuzi</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(8)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(9)" title="Go to Image #09">Next Image (#09) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#08</span>
+              </div>
+              <h1 class="details-title">Surveillance View A.</h1>
+              <p class="details-artist">by Comuzi</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Young adults are walking on a street. Two young women are on the pavement to the left of the image and five young men walk in the road. The road is empty of traffic and the people in the picture are relaxed and appear to be engaged in chatting with each other.
+
+Overlaid on the image are identification boxes. All of the figures have ID boxes around them. The pictures appear to have been taken by a drone.
+
+The image shows how information can be found about people using biometrics based on computer vision technology, and how unaware they might be.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Comuzi / https://betterimagesofai.org / © BBC / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=Comuzi&amp;title=SurveillanceViewA." target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #09 FULL VIEW -->
+      <section id="img-09" data-image-num="9">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(9)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/comuzi_mirror_d_2560x1440.jpg" alt="#09: Mirror D">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#09</span>
+              <div class="full-meta-titles">
+                <h2>Mirror D</h2>
+                <p>by Comuzi</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(9)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #09 DETAILS VIEW -->
+      <section id="img-09-details" data-image-num="9">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(9)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/comuzi_mirror_d_2560x1440.jpg" alt="#09: Mirror D">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Comuzi</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(9)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(10)" title="Go to Image #10">Next Image (#10) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#09</span>
+              </div>
+              <h1 class="details-title">Mirror D</h1>
+              <p class="details-artist">by Comuzi</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">A young black man looks into the camera. He is wearing a dressing gown and has a towel around his neck. He applies a cotton pad to his face and wears a ring on his right hand. A series of dots linked by lines all in white creates a wireframe tracing the features of his face. In the top left corner, a list of words and numbers describes the man’s expression. Happiness 4.185, neutral 0.901, surprise 89.864, sadness 0.01, disgust 0.01, anger 5.021 and fear 0.01. &quot;Emotion recognition&quot; AI is increasingly being used in applications, despite it being built on scientifically dubious (or pseudoscientific) foundations which are criticised for being inconsistent with human rights, biased, inaccurate, and discriminatory.  If you wish to recreate this image in a different language, a blank version is provided at https://betterimagesofai.org/images?artist=Comuzi&amp;title=MirrorB</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Comuzi / https://betterimagesofai.org / © BBC / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=Comuzi&amp;title=MirrorD" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #10 FULL VIEW -->
+      <section id="img-10" data-image-num="10">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(10)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/anton-grabolle_human-ai-collaboration_2000x2347.png" alt="#10: Human-AI collaboration">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#10</span>
+              <div class="full-meta-titles">
+                <h2>Human-AI collaboration</h2>
+                <p>by Anton Grabolle</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(10)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #10 DETAILS VIEW -->
+      <section id="img-10-details" data-image-num="10">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(10)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/anton-grabolle_human-ai-collaboration_2000x2347.png" alt="#10: Human-AI collaboration">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Anton Grabolle</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(10)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(11)" title="Go to Image #11">Next Image (#11) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#10</span>
+              </div>
+              <h1 class="details-title">Human-AI collaboration</h1>
+              <p class="details-artist">by Anton Grabolle</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image highlights AI as an extension of human capabilities. Embedded in a variety of devices it can enrich our lives as a tool or partner that adapts to our needs.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Anton Grabolle / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=AntonGrabolle&amp;title=Human-AIcollaboration" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #11 FULL VIEW -->
+      <section id="img-11" data-image-num="11">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(11)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/a-corner-of-the-history_reihaneh-golpayegani_the-bigger-picture_3360x2376.png" alt="#11: A Corner Of The History">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#11</span>
+              <div class="full-meta-titles">
+                <h2>A Corner Of The History</h2>
+                <p>by Reihaneh Golpayegani &amp; The Bigger Picture</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(11)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #11 DETAILS VIEW -->
+      <section id="img-11-details" data-image-num="11">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(11)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/a-corner-of-the-history_reihaneh-golpayegani_the-bigger-picture_3360x2376.png" alt="#11: A Corner Of The History">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Reihaneh Golpayegani &amp; The Bigger Picture</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(11)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(12)" title="Go to Image #12">Next Image (#12) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#11</span>
+              </div>
+              <h1 class="details-title">A Corner Of The History</h1>
+              <p class="details-artist">by Reihaneh Golpayegani &amp; The Bigger Picture</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This digital painting was created using Procreate. The image shows a glowing wall on the left filled with recognisable app icons like Netflix, Spotify, Alexa, and OpenAI. A trial of footsteps converges towards these icons, symbolising our attention and fascination towards AI. On the opposite side, various physical items, like books, vintage records, a rotary telephone, and paintings, are shrouded in a shadow. Despite this, these objects occupy more space, representing both their substantial historical impact and their persistent relevance in our increasingly digital world. 
+
+The juxtaposition between the shiny icons and these shadowed historical objects invites us to adopt a retrospective and prospective view towards AI, acknowledging AI’s shiny surface and its deeper historical roots. The footsteps that are veering in the opposite direction symbolises the uncertainties and open questions about the future of AI and technology. It suggests that while AI might dominate our focus today, understanding its evolution requires a broader perspective that includes past mediums and future unknowns.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Reihaneh Golpayegani &amp; The Bigger Picture / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=ReihanehGolpayegani&amp;title=ACornerOfTheHistory" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #12 FULL VIEW -->
+      <section id="img-12" data-image-num="12">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(12)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/building-corp_jamillah-knowles_digit_2560x1440.png" alt="#12: Building Corp">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#12</span>
+              <div class="full-meta-titles">
+                <h2>Building Corp</h2>
+                <p>by Jamillah Knowles &amp; Digit</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(12)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #12 DETAILS VIEW -->
+      <section id="img-12-details" data-image-num="12">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(12)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/building-corp_jamillah-knowles_digit_2560x1440.png" alt="#12: Building Corp">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Jamillah Knowles &amp; Digit</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(12)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(13)" title="Go to Image #13">Next Image (#13) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#12</span>
+              </div>
+              <h1 class="details-title">Building Corp</h1>
+              <p class="details-artist">by Jamillah Knowles &amp; Digit</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Building Crop highlights how digital technologies like AI are changing how and where we work. The interconnected network connections show how technologies can bring people together, beyond physical spaces. The image also points to how AI is redefining the architeture of the workplace, blurring the lines between the physical and digital as well as the work and personal. The image was drawn and painted using gauche and pencil. 
+
+This image was submitted as part of the Digital Dialogues Art Competition, which was run in partnership with the ESRC Centre for Digital Futures at Work Research Centre (Digit) and supported by the UKRI ESRC.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Jamillah Knowles &amp; Digit / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=JamillahKnowles&amp;title=BuildingCorp" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #13 FULL VIEW -->
+      <section id="img-13" data-image-num="13">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(13)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/jenny-kidd_synthetic-pasts_the-intimacy-factory-1_3000x3000.png" alt="#13: The intimacy factory 1">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#13</span>
+              <div class="full-meta-titles">
+                <h2>The intimacy factory 1</h2>
+                <p>by Jenny Kidd &amp; Synthetic Pasts</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(13)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #13 DETAILS VIEW -->
+      <section id="img-13-details" data-image-num="13">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(13)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/jenny-kidd_synthetic-pasts_the-intimacy-factory-1_3000x3000.png" alt="#13: The intimacy factory 1">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Jenny Kidd &amp; Synthetic Pasts</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(13)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(14)" title="Go to Image #14">Next Image (#14) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#13</span>
+              </div>
+              <h1 class="details-title">The intimacy factory 1</h1>
+              <p class="details-artist">by Jenny Kidd &amp; Synthetic Pasts</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">‘The intimacy factory 1’ reflects on the increasing use of ‘companion bots&#x27;; conversational bots designed to mimic human-like conversations. It references these systems’ synthetic and mechanical qualities, as well as their very real emotional impacts. These systems manufacture intimacy, creating the illusion of bi-directional attachment and even care.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Jenny Kidd &amp; Synthetic Pasts / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=JennyKidd&amp;title=Theintimacyfactory1" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #14 FULL VIEW -->
+      <section id="img-14" data-image-num="14">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(14)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/ai-city_2560x1440.png" alt="#14: AI City">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#14</span>
+              <div class="full-meta-titles">
+                <h2>AI City</h2>
+                <p>by Emily Rand &amp; LOTI</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(14)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #14 DETAILS VIEW -->
+      <section id="img-14-details" data-image-num="14">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(14)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/ai-city_2560x1440.png" alt="#14: AI City">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Emily Rand &amp; LOTI</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(14)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(15)" title="Go to Image #15">Next Image (#15) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#14</span>
+              </div>
+              <h1 class="details-title">AI City</h1>
+              <p class="details-artist">by Emily Rand &amp; LOTI</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image illustrates the potential for bias in AI, in the setting of smart cities and provision of local services in a city. The image shows a variety of people carrying out their daily activities in a city, while various cursors and boxes show how some might be selected over others, or clustered by the data collected about them. The densely populated city with a mixture of buildings mirrors the design of a GPU. This image was created as the result of a Better Images of AI workshop at Science Gallery London as part of London Data Week 2023, in response to a public conversation with Sam Nutt.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Emily Rand &amp; LOTI / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=EmilyRand&amp;title=AICity" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #15 FULL VIEW -->
+      <section id="img-15" data-image-num="15">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(15)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/WarburtonMedicine_2560x1440.jpg" alt="#15: Medicine">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#15</span>
+              <div class="full-meta-titles">
+                <h2>Medicine</h2>
+                <p>by Alan Warburton</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(15)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #15 DETAILS VIEW -->
+      <section id="img-15-details" data-image-num="15">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(15)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/WarburtonMedicine_2560x1440.jpg" alt="#15: Medicine">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Alan Warburton</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(15)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(16)" title="Go to Image #16">Next Image (#16) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#15</span>
+              </div>
+              <h1 class="details-title">Medicine</h1>
+              <p class="details-artist">by Alan Warburton</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image shows two labelled swab tubes with red caps and a glass jar full of blue and white pills, floating against a grey background and refracted in different ways by a fragmented glass grid. This grid is a visual metaphor for the way that new artificial intelligence (AI) and machine learning technologies can be used to extract and analyse medical data in innovative ways. Some of the grid squares reveal graphical interpretations of the objects that exceed the capabilities of human vision, which indicates how cutting edge technologies offer ways to augment traditional human understandings of complex phenomena. A neural network diagram is overlaid, familiarising the viewer with the formal architecture of AI systems.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Alan Warburton / https://betterimagesofai.org / © BBC / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=AlanWarburton&amp;title=Medicine" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #16 FULL VIEW -->
+      <section id="img-16" data-image-num="16">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(16)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/ai-am-over-it_nadia-piet-aixdesign_archival-images-of-ai_2565x1854.png" alt="#16: AI Am Over It">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#16</span>
+              <div class="full-meta-titles">
+                <h2>AI Am Over It</h2>
+                <p>by Nadia Piet &amp; Archival Images of AI + AIxDESIGN</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(16)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #16 DETAILS VIEW -->
+      <section id="img-16-details" data-image-num="16">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(16)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/ai-am-over-it_nadia-piet-aixdesign_archival-images-of-ai_2565x1854.png" alt="#16: AI Am Over It">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Nadia Piet &amp; Archival Images of AI + AIxDESIGN</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(16)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(17)" title="Go to Image #17">Next Image (#17) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#16</span>
+              </div>
+              <h1 class="details-title">AI Am Over It</h1>
+              <p class="details-artist">by Nadia Piet &amp; Archival Images of AI + AIxDESIGN</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image comments on AI fatigue, illustrating how the overwhelming flood of tools and constant influx of headlines leaves most people feeling dizzy and disoriented. With AI icons swirling around the figure’s head, it captures the mental overload and confusion many feel as they struggle to keep up with rapid developments / the fast-paced AI landscape.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Nadia Piet &amp; Archival Images of AI + AIxDESIGN / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=NadiaPiet&amp;title=AIAmOverIt" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #17 FULL VIEW -->
+      <section id="img-17" data-image-num="17">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(17)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/puppeteering-virtual-reality_hanna-barakat_cambridge-diversity-fund_4591x5888.png" alt="#17: Puppeteering Virtual Reality">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#17</span>
+              <div class="full-meta-titles">
+                <h2>Puppeteering Virtual Reality</h2>
+                <p>by Hanna Barakat &amp; Cambridge Diversity Fund</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(17)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #17 DETAILS VIEW -->
+      <section id="img-17-details" data-image-num="17">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(17)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/puppeteering-virtual-reality_hanna-barakat_cambridge-diversity-fund_4591x5888.png" alt="#17: Puppeteering Virtual Reality">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Hanna Barakat &amp; Cambridge Diversity Fund</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(17)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(18)" title="Go to Image #18">Next Image (#18) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#17</span>
+              </div>
+              <h1 class="details-title">Puppeteering Virtual Reality</h1>
+              <p class="details-artist">by Hanna Barakat &amp; Cambridge Diversity Fund</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This artwork reimagines the use of technology like Augmented Reality and Virtual Reality in education as more than tools for optimization and emphasizes their potential to support creative forms of learning. The anonymous hand studies their handwritten notes vis-a-vis Augmented Reality projections. By highlighting visual references to King’s College Chapel overlaid with diagrams measuring humans, the image envisions image generation expanding beyond efficiency to embrace diverse ways of understanding.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Hanna Barakat &amp; Cambridge Diversity Fund / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=HannaBarakat&amp;title=PuppeteeringVirtualReality" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #18 FULL VIEW -->
+      <section id="img-18" data-image-num="18">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(18)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/colossal-harvest_hanna-barakat_cambridge-diversity-fund_5085x4884.png" alt="#18: Colossal Harvest">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#18</span>
+              <div class="full-meta-titles">
+                <h2>Colossal Harvest</h2>
+                <p>by Hanna Barakat &amp; Cambridge Diversity Fund</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(18)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #18 DETAILS VIEW -->
+      <section id="img-18-details" data-image-num="18">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(18)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/colossal-harvest_hanna-barakat_cambridge-diversity-fund_5085x4884.png" alt="#18: Colossal Harvest">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Hanna Barakat &amp; Cambridge Diversity Fund</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(18)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(19)" title="Go to Image #19">Next Image (#19) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#18</span>
+              </div>
+              <h1 class="details-title">Colossal Harvest</h1>
+              <p class="details-artist">by Hanna Barakat &amp; Cambridge Diversity Fund</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">&#x27;Colossal Harvest&#x27; combines the history of UK computing with a critical reading of diversity in AI development. A young, anonymous, woman is juxtaposed with a digital image of the Colossus machine, an early computer that helped British cryptologists like Alan Turing decipher Germany’s Enigma-encrypted messages during World War II. 
+
+While approximately 7,500 women worked in Bletchley Park to operate the computers used for code-breaking decryption, these women were all white. Through digital collage, this image presents a critique of the continued legacies of computing, highlighting the dependence on data harvested that disproportionally rely upon and systemically discriminate communities of color.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Hanna Barakat &amp; Cambridge Diversity Fund / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=HannaBarakat&amp;title=ColossalHarvest" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #19 FULL VIEW -->
+      <section id="img-19" data-image-num="19">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(19)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/Max_Gruber_Ceci_nest_pas_une_banane_4000x2667.jpg" alt="#19: Ceci n&#x27;est pas une banane">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#19</span>
+              <div class="full-meta-titles">
+                <h2>Ceci n&#x27;est pas une banane</h2>
+                <p>by Max Gruber</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(19)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #19 DETAILS VIEW -->
+      <section id="img-19-details" data-image-num="19">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(19)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/Max_Gruber_Ceci_nest_pas_une_banane_4000x2667.jpg" alt="#19: Ceci n&#x27;est pas une banane">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Max Gruber</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(19)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(20)" title="Go to Image #20">Next Image (#20) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#19</span>
+              </div>
+              <h1 class="details-title">Ceci n&#x27;est pas une banane</h1>
+              <p class="details-artist">by Max Gruber</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Bounding boxes are commonly used in AI research to signify where a computer vision algorithm has detected an object in an image. Here the artist has played with this aesthetic: The bounding boxes are 3D-printed frames positioned in the physical environment around objects. In this case there is a physical banana and a photo of a banana on a screen. The object detection doesn’t make a difference between these two.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Max Gruber / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=MaxGruber&amp;title=Cecin%27estpasunebanane" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #20 FULL VIEW -->
+      <section id="img-20" data-image-num="20">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(20)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/who-is-ai-made-of_shady-sharify_3815x5120.png" alt="#20: Who is AI Made Of">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#20</span>
+              <div class="full-meta-titles">
+                <h2>Who is AI Made Of</h2>
+                <p>by Shady Sharify</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(20)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #20 DETAILS VIEW -->
+      <section id="img-20-details" data-image-num="20">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(20)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/who-is-ai-made-of_shady-sharify_3815x5120.png" alt="#20: Who is AI Made Of">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Shady Sharify</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(20)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(21)" title="Go to Image #21">Next Image (#21) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#20</span>
+              </div>
+              <h1 class="details-title">Who is AI Made Of</h1>
+              <p class="details-artist">by Shady Sharify</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This artwork captures humanity’s collective endeavour in building artificial intelligence, drawing inspiration from Persian Negargari (miniature painting). It emphasises that AI is not the result of sudden breakthroughs but centuries of collaboration among minds, cultures, and technologies.
+
+Inspired by Kamal-ud-Din Behzad’s late 15th-century painting “Construction of the Khawarnaq Palace” (circa 1494 CE), the piece celebrates human creativity and labor in crafting a structure that reaches toward the heavens. By blending traditional Persian Negargari with modern AI symbols—such as circuit boards, cloud storage, and digital glitches—the artwork  underscores that AI is rooted in human effort, shaped over time through the fusion of data, labor, and algorithms, whilst also highlighting the interplay of heritage and technology.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Shady Sharify / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=ShadySharify&amp;title=WhoisAIMadeOf" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #21 FULL VIEW -->
+      <section id="img-21" data-image-num="21">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(21)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/glitch-binary-abyss-i_elise-racine_the-bigger-picture_4320x5760.jpg" alt="#21: Glitch Binary Abyss I">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#21</span>
+              <div class="full-meta-titles">
+                <h2>Glitch Binary Abyss I</h2>
+                <p>by Elise Racine &amp; The Bigger Picture</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(21)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #21 DETAILS VIEW -->
+      <section id="img-21-details" data-image-num="21">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(21)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/glitch-binary-abyss-i_elise-racine_the-bigger-picture_4320x5760.jpg" alt="#21: Glitch Binary Abyss I">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Elise Racine &amp; The Bigger Picture</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(21)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(22)" title="Go to Image #22">Next Image (#22) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#21</span>
+              </div>
+              <h1 class="details-title">Glitch Binary Abyss I</h1>
+              <p class="details-artist">by Elise Racine &amp; The Bigger Picture</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Giant QR code-like patterns dominate the cityscapes, blending seamlessly with the architecture to suggest that algorithmic systems have become intrinsic to the very fabric of urban life. Towering buildings and the street are covered in these black-and-white codes, reflecting how even the most basic aspects of everyday life— where we walk, work, and live — are monitored.
+
+The stark black-and-white aesthetic not only underscores the binary nature of these systems but also hints at what may and may not be encoded and, therefore, lost—such as the nuanced “color” and complexity of our world. Ultimately, the piece invites viewers to consider the pervasive nature of AI-powered surveillance systems, how such technologies have come to define public spaces, and whether there is room for the “human” element.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Elise Racine &amp; The Bigger Picture / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=EliseRacine&amp;title=GlitchBinaryAbyssI" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #22 FULL VIEW -->
+      <section id="img-22" data-image-num="22">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(22)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image2_3543x2362.jpg" alt="#22: Data annotators discussing the correct labeling of a dataset">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#22</span>
+              <div class="full-meta-titles">
+                <h2>Data annotators discussing the correct labeling of a dataset</h2>
+                <p>by Nacho Kamenov &amp; Humans in the Loop</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(22)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #22 DETAILS VIEW -->
+      <section id="img-22-details" data-image-num="22">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(22)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/HumansInTheLoop_Image2_3543x2362.jpg" alt="#22: Data annotators discussing the correct labeling of a dataset">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Nacho Kamenov &amp; Humans in the Loop</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(22)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(23)" title="Go to Image #23">Next Image (#23) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#22</span>
+              </div>
+              <h1 class="details-title">Data annotators discussing the correct labeling of a dataset</h1>
+              <p class="details-artist">by Nacho Kamenov &amp; Humans in the Loop</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">Data annotation for AI is a subjective activity which involves a lot of interpretative work and communication between the annotators and the data scientists. Sometimes, when you are labeling a training dataset for AI, you bump into a lot of edge cases: occluded objects, blurry images, groups of many objects together, etc. How you annotate them can be crucial for ensuring that the resulting AI system is robust in cases of uncertainty. This is what we call the &#x27;long tail&#x27; of AI edge cases and where human involvement is most needed.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Nacho Kamenov &amp; Humans in the Loop / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=NachoKamenov&amp;title=Dataannotatorsdiscussingthecorrectlabelingofadataset" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #23 FULL VIEW -->
+      <section id="img-23" data-image-num="23">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(23)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/WarburtonHuman_2560x1440.jpg" alt="#23: Quantified Human">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#23</span>
+              <div class="full-meta-titles">
+                <h2>Quantified Human</h2>
+                <p>by Alan Warburton</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(23)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #23 DETAILS VIEW -->
+      <section id="img-23-details" data-image-num="23">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(23)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/WarburtonHuman_2560x1440.jpg" alt="#23: Quantified Human">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Alan Warburton</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(23)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(24)" title="Go to Image #24">Next Image (#24) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#23</span>
+              </div>
+              <h1 class="details-title">Quantified Human</h1>
+              <p class="details-artist">by Alan Warburton</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">This image shows a young black man wearing a black coat staring past the camera in front of a blue cloudy sky. The scene is refracted in different ways by a fragmented glass grid. This grid is a visual metaphor for the way that new artificial intelligence (AI) and machine learning technologies can be used to extract and analyse behavioural and demographic data in innovative ways. Some of the grid squares reveal graphical interpretations of the man that exceed the capabilities of human vision, indicating how cutting edge technologies offer ways to augment traditional human understandings of complex phenomena. A neural network diagram is overlaid, familiarising the viewer with the formal architecture of AI systems.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Alan Warburton / https://betterimagesofai.org / © BBC / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=AlanWarburton&amp;title=QuantifiedHuman" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #24 FULL VIEW -->
+      <section id="img-24" data-image-num="24">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(24)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/Dimmendaal_fish_3000x1000.jpg" alt="#24: Fish">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#24</span>
+              <div class="full-meta-titles">
+                <h2>Fish</h2>
+                <p>by Rens Dimmendaal &amp; David Clode</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(24)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #24 DETAILS VIEW -->
+      <section id="img-24-details" data-image-num="24">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(24)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/Dimmendaal_fish_3000x1000.jpg" alt="#24: Fish">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Rens Dimmendaal &amp; David Clode</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(24)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              <button class="deck-btn" onclick="jumpToImage(25)" title="Go to Image #25">Next Image (#25) ➔</button>
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#24</span>
+              </div>
+              <h1 class="details-title">Fish</h1>
+              <p class="details-artist">by Rens Dimmendaal &amp; David Clode</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">The work illustrates a popular type of machine learning model: the decision tree. Decision trees work by splitting the population into ever smaller segments. I try to give people an intuitive understanding of the algorithm. I also want to show that models are simplifications of reality, but can still be useful, or in this case visually pleasing. To create this I trained a model to predict pixel colour values, based on an original photograph.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Rens Dimmendaal &amp; David Clode / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=RensDimmendaal&amp;title=Fish" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #25 FULL VIEW -->
+      <section id="img-25" data-image-num="25">
+        <div class="slide-full-image">
+          <div class="full-image-frame" onclick="jumpToDetails(25)" title="Click to view Artist Statement & Attribution">
+            <img src="https://betterimagesofai.org/ImagesAI/prediction_yaning-wu_5250x5250.png" alt="#25: prediction">
+          </div>
+          <div class="full-image-meta-bar">
+            <div class="full-meta-left">
+              <span class="full-num-pill">#25</span>
+              <div class="full-meta-titles">
+                <h2>prediction</h2>
+                <p>by Yaning Wu</p>
+              </div>
+            </div>
+            <div class="full-meta-right">
+              <button class="deck-btn" onclick="jumpToImage(0)" title="Return to Index">⌂ Index</button>
+              <button class="deck-btn primary" onclick="jumpToDetails(25)" title="View Artist Statement and Attribution">
+                Artist Statement & Info ➔
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+      <!-- IMAGE #25 DETAILS VIEW -->
+      <section id="img-25-details" data-image-num="25">
+        <div class="slide-details-container">
+          <!-- Left Column: Thumbnail & Metadata -->
+          <div class="details-left-col">
+            <div class="details-thumb-card" onclick="jumpToImage(25)" title="Click to expand to full-screen slide">
+              <img src="https://betterimagesofai.org/ImagesAI/prediction_yaning-wu_5250x5250.png" alt="#25: prediction">
+              <div class="overlay-expand">🔍 View Full Screen</div>
+            </div>
+
+            <div class="details-meta-card">
+              <div class="meta-row">
+                <span class="meta-row-label">Artist(s)</span>
+                <span class="meta-row-value">Yaning Wu</span>
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+              <button class="deck-btn primary" onclick="jumpToImage(25)" style="flex: 1;">🔍 Full View</button>
+              <button class="deck-btn" onclick="jumpToImage(0)">⌂ Index</button>
+              
+            </div>
+          </div>
+
+          <!-- Right Column: Statement & Attribution -->
+          <div class="details-right-col">
+            <div class="details-header">
+              <div class="details-header-top">
+                <span class="details-num-pill">#25</span>
+              </div>
+              <h1 class="details-title">prediction</h1>
+              <p class="details-artist">by Yaning Wu</p>
+            </div>
+
+            <!-- Artist Statement Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>🎨</span> Artist's Statement
+              </div>
+              <div class="statement-text">&quot;prediction&quot; provides a hypothetical vignette of AI education. Using simple, icon-based imagery, it depicts a small-group seminar in which an expert (here, a wheelchair user) explains risk prediction algorithms for cardiovascular disease to two students within the health sciences. Disabled people may interact with health systems more frequently than the general public, and this artwork touches on the value this group brings to those systems and their AI-ification.</div>
+            </div>
+
+            <!-- Attribution & Rights Box -->
+            <div class="details-section-box">
+              <div class="section-title">
+                <span>⚖️</span> Attribution Statement &amp; Licensing
+              </div>
+              <div class="attribution-quote">
+                &ldquo;Yaning Wu / https://betterimagesofai.org / Licenced by CC-BY 4.0 (https://creativecommons.org/licenses/by/4.0/)&rdquo;
+              </div>
+              <div>
+                <a href="https://betterimagesofai.org/images?artist=YaningWu&amp;title=prediction" target="_blank" rel="noopener noreferrer" class="deck-btn" style="display: inline-flex;">
+                  Visit Better Images of AI Catalog Page ↗
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <!-- Reveal.js Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  
+  <script>
+    // Initialize Reveal.js
+    const deck = new Reveal({
+      hash: true,
+      history: true,
+      slideNumber: 'c/t',
+      controls: true,
+      controlsTutorial: false,
+      progress: true,
+      center: false,
+      transition: 'fade',
+      transitionSpeed: 'fast',
+      backgroundTransition: 'fade',
+      overview: true,
+      width: 1920,
+      height: 1080,
+      margin: 0.04,
+      minScale: 0.2,
+      maxScale: 2.0
+    });
+    deck.initialize();
+
+    // Map image numbers 1..25 to slide hashes
+    window.jumpToImage = function(n) {
+      if (n === 0) {
+        window.location.hash = '#/index';
+        return;
+      }
+      const numStr = String(n).padStart(2, '0');
+      const targetSlide = document.getElementById('img-' + numStr);
+      if (targetSlide) {
+        window.location.hash = '#/img-' + numStr;
+      }
+    };
+
+    window.jumpToDetails = function(n) {
+      const numStr = String(n).padStart(2, '0');
+      const targetSlide = document.getElementById('img-' + numStr + '-details');
+      if (targetSlide) {
+        window.location.hash = '#/img-' + numStr + '-details';
+      }
+    };
+
+    // Toggle overview button
+    document.getElementById('btn-toggle-overview').addEventListener('click', function() {
+      deck.toggleOverview();
+    });
+
+    // Keyboard Jump Buffer HUD logic
+    let jumpBuffer = '';
+    let jumpTimeout = null;
+    const hud = document.getElementById('jump-hud');
+    const hudDigits = document.getElementById('hud-digits');
+
+    function showHud() {
+      hud.classList.remove('shake');
+      hud.classList.add('active');
+    }
+
+    function hideHud() {
+      hud.classList.remove('active', 'shake');
+      jumpBuffer = '';
+      hudDigits.textContent = '';
+      if (jumpTimeout) clearTimeout(jumpTimeout);
+    }
+
+    function updateHud(str) {
+      hudDigits.textContent = str;
+      showHud();
+      if (jumpTimeout) clearTimeout(jumpTimeout);
+      jumpTimeout = setTimeout(() => {
+        hideHud();
+      }, 5000);
+    }
+
+    function triggerJump() {
+      if (!jumpBuffer) return;
+      const n = parseInt(jumpBuffer, 10);
+      if (n >= 1 && n <= 25) {
+        jumpToImage(n);
+        hideHud();
+      } else if (n === 0) {
+        jumpToImage(0);
+        hideHud();
+      } else {
+        hud.classList.add('shake');
+        hudDigits.textContent = '1-25 only';
+        setTimeout(() => {
+          hideHud();
+        }, 1200);
+      }
+    }
+
+    // Global keyboard listener for typing image numbers and pressing Enter
+    window.addEventListener('keydown', function(e) {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) {
+        return;
+      }
+
+      if (e.key >= '0' && e.key <= '9') {
+        e.preventDefault();
+        if (jumpBuffer.length < 2) {
+          jumpBuffer += e.key;
+          updateHud(jumpBuffer);
+        }
+        return;
+      }
+
+      if (e.key === 'Enter') {
+        if (jumpBuffer.length > 0) {
+          e.preventDefault();
+          triggerJump();
+        }
+        return;
+      }
+
+      if (e.key === 'Backspace') {
+        if (jumpBuffer.length > 0) {
+          e.preventDefault();
+          jumpBuffer = jumpBuffer.slice(0, -1);
+          if (jumpBuffer.length === 0) {
+            hideHud();
+          } else {
+            updateHud(jumpBuffer);
+          }
+        }
+        return;
+      }
+
+      if (e.key === 'Escape') {
+        if (hud.classList.contains('active')) {
+          e.preventDefault();
+          hideHud();
+        }
+      }
+    }, true);
+
+    document.getElementById('btn-open-jump').addEventListener('click', function() {
+      jumpBuffer = '';
+      updateHud('');
+    });
+  </script>
+</body>
+</html>

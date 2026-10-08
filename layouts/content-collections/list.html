@@ -1,0 +1,108 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge">Directory</span>
+  <h1 class="page-title">Content Collections</h1>
+  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+    Browse all thematic content collections and explore their associated interactive elements and facilitator resources.
+  </p>
+</div>
+
+{{ $allCollections := where .Site.RegularPages "Section" "content-collections" }}
+{{ $allItems := where .Site.RegularPages "Section" "content" }}
+
+<div class="collections-stack">
+  {{ range $allCollections }}
+    {{ $collection := . }}
+    {{ $collectionSlug := .File.TranslationBaseName }}
+    
+    {{ $matchedItems := slice }}
+    {{ with .Params.items }}
+      {{ range . }}
+        {{ $targetSlug := . }}
+        {{ range $allItems }}
+          {{ if eq .File.TranslationBaseName $targetSlug }}
+            {{ $matchedItems = $matchedItems | append . }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    {{ range $allItems }}
+      {{ $item := . }}
+      {{ with .Params.collections }}
+        {{ if in . $collectionSlug }}
+          {{ if not (in $matchedItems $item) }}
+            {{ $matchedItems = $matchedItems | append $item }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    <article class="collection-card">
+      <div class="collection-header">
+        <div>
+          <div class="collection-meta-title">
+            <span class="collection-badge">Collection</span>
+            <h2 class="collection-title">
+              <a href="{{ $collection.RelPermalink }}">{{ $collection.Title }}</a>
+            </h2>
+          </div>
+          {{ with $collection.Params.description }}
+            <p class="collection-desc">{{ . }}</p>
+          {{ end }}
+        </div>
+        <span class="collection-items-count">
+          {{ len $matchedItems }} {{ if eq (len $matchedItems) 1 }}Item{{ else }}Items{{ end }}
+        </span>
+      </div>
+
+      <div class="collection-items-wrapper">
+        <div class="collection-items-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line></svg>
+          Attached Content Items
+        </div>
+
+        {{ if gt (len $matchedItems) 0 }}
+          <div class="items-grid">
+            {{ range $matchedItems }}
+              <div class="content-item-card">
+                <div>
+                  <h3 class="item-card-title">
+                    <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                  </h3>
+                  {{ with .Params.facilitator_overview }}
+                    <p class="item-card-overview">{{ . }}</p>
+                  {{ end }}
+                  {{ with .Params.elements }}
+                    <div class="item-card-elements">
+                      {{ range . }}
+                        <span class="element-pill {{ .type }}">
+                          {{ if eq .type "quiz_question" }}Quiz{{ else if eq .type "statistic" }}Statistic{{ else if eq .type "perspective" }}Perspective{{ else if eq .type "information" }}Info{{ else if eq .type "takeaways" }}Takeaways{{ else }}{{ .type }}{{ end }}
+                        </span>
+                      {{ end }}
+                    </div>
+                  {{ end }}
+                </div>
+                <div class="item-card-footer">
+                  <span></span>
+                  <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <a href="{{ .RelPermalink }}#cards" class="view-item-link" title="Open as 2-Sided Cards">🎴 Cards</a>
+                    <a href="{{ .RelPermalink }}#slides" class="view-item-link" title="Open as Slide Deck">📽️ Slides</a>
+                    <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">Page &rarr;</a>
+                  </div>
+                </div>
+              </div>
+            {{ end }}
+          </div>
+        {{ else }}
+          <p style="color: var(--color-muted); font-size: 0.9rem; font-style: italic; margin: 0;">
+            No content items attached to this collection.
+          </p>
+        {{ end }}
+      </div>
+    </article>
+  {{ end }}
+</div>
+
+{{ end }}

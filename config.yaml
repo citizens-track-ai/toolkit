@@ -1,4 +1,32 @@
-baseURL: "http://hugo-quickstart-template.netlify.com"
-languageCode: "en-us"
-title: "Netlify + Hugo Quickstart"
+baseURL: "https://magenta-sable-1da286.netlify.app"
+title: "Citizens Track Toolkit"
 theme: "netlify-basic"
+
+defaultContentLanguage: en
+defaultContentLanguageInSubdir: false
+
+languages:
+  en:
+    locale: en-GB
+    label: English
+    contentDir: content/en
+    weight: 1
+    title: "Citizens Track Toolkit"
+  es:
+    locale: es-ES
+    label: Español
+    contentDir: content/es
+    weight: 2
+    title: "Citizens Track Toolkit (ES)"
+  fr:
+    locale: fr-FR
+    label: Français
+    contentDir: content/fr
+    weight: 3
+    title: "Citizens Track Toolkit (FR)"
+  de:
+    locale: de-DE
+    label: Deutsch
+    contentDir: content/de
+    weight: 4
+    title: "Citizens Track Toolkit (DE)"

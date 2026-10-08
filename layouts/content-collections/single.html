@@ -1,0 +1,120 @@
+{{ define "main" }}
+
+{{ $collectionSlug := .File.TranslationBaseName }}
+{{ $allItems := where .Site.RegularPages "Section" "content" }}
+{{ $matchedItems := slice }}
+
+{{/* 1. Explicitly referenced in collection.Params.items */}}
+{{ with .Params.items }}
+  {{ range . }}
+    {{ $targetSlug := . }}
+    {{ range $allItems }}
+      {{ if eq .File.TranslationBaseName $targetSlug }}
+        {{ $matchedItems = $matchedItems | append . }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{/* 2. Items referencing this collection in item.Params.collections */}}
+{{ range $allItems }}
+  {{ $item := . }}
+  {{ with .Params.collections }}
+    {{ if in . $collectionSlug }}
+      {{ if not (in $matchedItems $item) }}
+        {{ $matchedItems = $matchedItems | append $item }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ "content-collections/" | relLangURL }}">Collections</a>
+  <span>/</span>
+  <strong>{{ .Title }}</strong>
+</nav>
+
+<article class="page-header">
+  <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+    <span class="collection-badge">Collection</span>
+    <span class="collection-items-count">{{ len $matchedItems }} Content {{ if eq (len $matchedItems) 1 }}Item{{ else }}Items{{ end }}</span>
+  </div>
+
+  <h1 class="page-title">{{ .Title }}</h1>
+
+  {{ with .Params.description }}
+    <p style="font-size: 1.15rem; color: var(--color-slate); margin: 0 0 1rem; line-height: 1.6;">
+      {{ . }}
+    </p>
+  {{ end }}
+
+  {{ with .Content }}
+    <div style="margin-top: 1.5rem; font-size: 1rem; color: var(--color-dark); line-height: 1.6;">
+      {{ . }}
+    </div>
+  {{ end }}
+</article>
+
+<section>
+  <div class="section-header">
+    <h2 class="section-title">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary);"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+      Attached Content Items
+    </h2>
+  </div>
+
+  {{ if gt (len $matchedItems) 0 }}
+    <div class="items-grid">
+      {{ range $matchedItems }}
+        <div class="content-item-card">
+          <div>
+            <div class="item-card-header">
+              <h3 class="item-card-title">
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+              </h3>
+            </div>
+
+            {{ with .Params.facilitator_overview }}
+              <p class="item-card-overview">{{ . }}</p>
+            {{ end }}
+
+            {{ with .Params.elements }}
+              <div class="item-card-elements">
+                {{ range . }}
+                  <span class="element-pill {{ .type }}">
+                    {{ if eq .type "quiz_question" }}Quiz{{ else if eq .type "statistic" }}Statistic{{ else if eq .type "perspective" }}Perspective{{ else if eq .type "information" }}Info{{ else if eq .type "takeaways" }}Takeaways{{ else }}{{ .type }}{{ end }}
+                  </span>
+                {{ end }}
+              </div>
+            {{ end }}
+          </div>
+
+          <div class="item-card-footer">
+            {{ if .Params.adaptation_guidance }}
+              <span style="color: #b45309; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                Notes
+              </span>
+            {{ else }}
+              <span></span>
+            {{ end }}
+            <div style="display: flex; gap: 0.5rem; align-items: center;">
+              <a href="{{ .RelPermalink }}#cards" class="view-item-link" title="Open as 2-Sided Cards">🎴 Cards</a>
+              <a href="{{ .RelPermalink }}#slides" class="view-item-link" title="Open as Slide Deck">📽️ Slides</a>
+              <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">Page &rarr;</a>
+            </div>
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  {{ else }}
+    <div style="background: white; border: 1px solid var(--color-border); padding: 2.5rem; text-align: center; border-radius: var(--radius-md);">
+      <p style="color: var(--color-muted); font-size: 0.95rem; margin: 0 0 1rem;">No content items attached to this collection yet.</p>
+      <a href="/admin/" class="nav-cta" target="_blank" rel="noopener">Attach items via CMS Admin</a>
+    </div>
+  {{ end }}
+</section>
+
+{{ end }}

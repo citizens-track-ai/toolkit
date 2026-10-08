@@ -1,0 +1,91 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Index</span>
+  <h1 class="page-title">All Content Items</h1>
+  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+    Standalone and collection-associated learning elements, quizzes, statistics, and community perspectives.
+  </p>
+</div>
+
+{{ $allItems := where .Site.RegularPages "Section" "content" }}
+{{ $allCollections := where .Site.RegularPages "Section" "content-collections" }}
+
+<div class="items-grid">
+  {{ range $allItems }}
+    {{ $itemSlug := .File.TranslationBaseName }}
+    {{ $linkedCollections := slice }}
+    {{ with .Params.collections }}
+      {{ range . }}
+        {{ $targetSlug := . }}
+        {{ range $allCollections }}
+          {{ if eq .File.TranslationBaseName $targetSlug }}
+            {{ $linkedCollections = $linkedCollections | append . }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+    {{ range $allCollections }}
+      {{ $coll := . }}
+      {{ with .Params.items }}
+        {{ if in . $itemSlug }}
+          {{ if not (in $linkedCollections $coll) }}
+            {{ $linkedCollections = $linkedCollections | append $coll }}
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    {{ end }}
+
+    <div class="content-item-card">
+      <div>
+        <div class="item-card-header">
+          <h2 class="item-card-title">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </h2>
+        </div>
+
+        {{ with $linkedCollections }}
+          <div style="margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.25rem;">
+            {{ range . }}
+              <a href="{{ .RelPermalink }}" style="font-size: 0.725rem; font-weight: 600; background: #f1f5f9; color: var(--color-slate); padding: 0.15rem 0.45rem; border-radius: 4px; text-decoration: none;">
+                📁 {{ .Title }}
+              </a>
+            {{ end }}
+          </div>
+        {{ end }}
+
+        {{ with .Params.facilitator_overview }}
+          <p class="item-card-overview">{{ . }}</p>
+        {{ end }}
+
+        {{ with .Params.elements }}
+          <div class="item-card-elements">
+            {{ range . }}
+              <span class="element-pill {{ .type }}">
+                {{ if eq .type "quiz_question" }}Quiz{{ else if eq .type "statistic" }}Statistic{{ else if eq .type "perspective" }}Perspective{{ else if eq .type "information" }}Info{{ else if eq .type "takeaways" }}Takeaways{{ else }}{{ .type }}{{ end }}
+              </span>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+
+      <div class="item-card-footer">
+        {{ if .Params.adaptation_guidance }}
+          <span style="color: #b45309; font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+            Notes
+          </span>
+        {{ else }}
+          <span></span>
+        {{ end }}
+        <div style="display: flex; gap: 0.5rem; align-items: center;">
+          <a href="{{ .RelPermalink }}#cards" class="view-item-link" title="Open as 2-Sided Cards">🎴 Cards</a>
+          <a href="{{ .RelPermalink }}#slides" class="view-item-link" title="Open as Slide Deck">📽️ Slides</a>
+          <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">Page &rarr;</a>
+        </div>
+      </div>
+    </div>
+  {{ end }}
+</div>
+
+{{ end }}

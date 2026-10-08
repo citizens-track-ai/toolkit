@@ -1,0 +1,11 @@
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ if .IsHome }}{{ .Site.Title }}{{ else }}{{ .Title }} | {{ .Site.Title }}{{ end }}</title>
+  {{ with .Params.description }}
+  <meta name="description" content="{{ . }}">
+  {{ else with .Site.Params.description }}
+  <meta name="description" content="{{ . }}">
+  {{ end }}
+  <link rel="stylesheet" href="{{ "css/toolkit.css" | relURL }}">
+</head>

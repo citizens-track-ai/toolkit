@@ -1,0 +1,656 @@
+{{ define "main" }}
+
+{{ $itemSlug := .File.TranslationBaseName }}
+{{ $allCollections := where .Site.RegularPages "Section" "content-collections" }}
+{{ $linkedCollections := slice }}
+
+{{/* Find linked collections (bidirectional) */}}
+{{ with .Params.collections }}
+  {{ range . }}
+    {{ $targetSlug := . }}
+    {{ range $allCollections }}
+      {{ if eq .File.TranslationBaseName $targetSlug }}
+        {{ $linkedCollections = $linkedCollections | append . }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+{{ range $allCollections }}
+  {{ $coll := . }}
+  {{ with .Params.items }}
+    {{ if in . $itemSlug }}
+      {{ if not (in $linkedCollections $coll) }}
+        {{ $linkedCollections = $linkedCollections | append $coll }}
+      {{ end }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ "content/" | relLangURL }}">Content Items</a>
+  <span>/</span>
+  <strong>{{ .Title }}</strong>
+</nav>
+
+<!-- View Switcher Toolbar -->
+<div class="view-switcher-bar">
+  <div class="view-tabs" role="tablist">
+    <button class="view-tab active" data-target="content-view-page" role="tab" id="tab-page" aria-selected="true">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      Page View
+    </button>
+    <button class="view-tab" data-target="content-view-cards" role="tab" id="tab-cards" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+      Two-Sided Cards
+    </button>
+    <button class="view-tab" data-target="content-view-slides" role="tab" id="tab-slides" aria-selected="false">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect><line x1="8" y1="21" x2="16" y2="21"></line><line x1="12" y1="17" x2="12" y2="21"></line></svg>
+      Slide Deck
+    </button>
+  </div>
+
+  <div class="view-actions" id="cards-actions" style="display: none;">
+    <button type="button" class="action-btn" id="btn-flip-all">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+      Flip All Cards
+    </button>
+    <button type="button" class="action-btn primary" id="btn-print-cards">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Print Cards
+    </button>
+  </div>
+
+  <div class="view-actions" id="slides-actions" style="display: none;">
+    <button type="button" class="action-btn primary" id="btn-fullscreen-trigger">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
+      Fullscreen Presentation
+    </button>
+  </div>
+</div>
+
+<!-- =========================================================================
+     VIEW (a): STANDARD PAGE VIEW (Quiz answers collapsed by default)
+     ========================================================================= -->
+<div id="content-view-page" class="view-section active">
+  <article class="page-header">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+      <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Content Item</span>
+      {{ with $linkedCollections }}
+        {{ range . }}
+          <a href="{{ .RelPermalink }}" class="element-pill" style="background: #f1f5f9; color: var(--color-slate); text-decoration: none;">
+            📁 Collection: {{ .Title }}
+          </a>
+        {{ end }}
+      {{ end }}
+    </div>
+
+    <h1 class="page-title">{{ .Title }}</h1>
+
+    {{ with .Params.facilitator_overview }}
+      <div class="facilitator-box">
+        <div class="facilitator-box-label">Facilitator Overview</div>
+        <div class="facilitator-box-text">{{ . | markdownify }}</div>
+      </div>
+    {{ end }}
+  </article>
+
+  {{ with .Params.elements }}
+    <div class="elements-stream">
+      {{ range $idx, $element := . }}
+        <div class="element-block element-{{ $element.type }}">
+          <div class="element-block-header">
+            <span class="element-pill {{ $element.type }}">
+              {{ if eq $element.type "quiz_question" }}Quiz Question
+              {{ else if eq $element.type "statistic" }}Statistic / Key Figure
+              {{ else if eq $element.type "perspective" }}Perspective / Quote
+              {{ else if eq $element.type "information" }}Information
+              {{ else if eq $element.type "takeaways" }}Takeaways
+              {{ else }}{{ $element.type }}{{ end }}
+            </span>
+            <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">Block #{{ add $idx 1 }}</span>
+          </div>
+
+          <div class="element-block-content">
+            {{ if eq $element.type "quiz_question" }}
+              <div class="quiz-question">
+                {{ $element.question | markdownify }}
+              </div>
+
+              <!-- Collapsed by default (no 'open' attribute) per user request -->
+              <details class="quiz-answer-details">
+                <summary>Answer & Explanation</summary>
+                <div class="quiz-answer-body">
+                  {{ $element.answer | markdownify }}
+                  {{ with $element.explanation }}
+                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e9d5ff; font-size: 0.9rem;">
+                      <strong>Explanation:</strong> {{ . | markdownify }}
+                    </div>
+                  {{ end }}
+                </div>
+              </details>
+
+            {{ else if eq $element.type "statistic" }}
+              <div class="stat-element-wrapper">
+                <div class="stat-element-figure">{{ $element.figure }}</div>
+                <div class="stat-element-body">
+                  <div class="stat-element-desc">{{ $element.description }}</div>
+                  {{ with $element.explanation }}
+                    <div class="stat-element-explanation">{{ . | markdownify }}</div>
+                  {{ end }}
+                </div>
+              </div>
+
+            {{ else if eq $element.type "perspective" }}
+              <div class="perspective-quote-box">
+                <blockquote class="perspective-quote-text">
+                  {{ $element.quote | markdownify }}
+                </blockquote>
+                {{ with $element.attribution }}
+                  <div class="perspective-author">— {{ . }}</div>
+                {{ end }}
+              </div>
+
+            {{ else if eq $element.type "information" }}
+              <div style="font-size: 1.05rem; color: var(--color-dark); line-height: 1.6;">
+                {{ $element.text | markdownify }}
+              </div>
+
+            {{ else if eq $element.type "takeaways" }}
+              <div class="takeaways-box">
+                <div style="font-weight: 700; color: #86198f; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">
+                  Key Takeaways
+                </div>
+                <div>{{ $element.text | markdownify }}</div>
+              </div>
+            {{ end }}
+
+            {{ with $element.image }}
+              <div style="margin-top: 1rem;">
+                <img src="{{ . | relURL }}" alt="Content element visual" style="max-width: 100%; border-radius: var(--radius-sm);">
+              </div>
+            {{ end }}
+
+            {{ with $element.citation }}
+              <div class="citation-line">
+                Source / Citation: <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+              </div>
+            {{ end }}
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{ with .Params.adaptation_guidance }}
+    <div class="guidance-box">
+      <div class="guidance-header">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        Adaptation & Localisation Guidance
+      </div>
+      <div class="guidance-content">
+        {{ . | markdownify }}
+      </div>
+    </div>
+  {{ end }}
+</div>
+
+<!-- =========================================================================
+     VIEW (c): TWO-SIDED CARDS (Interactive 3D Flip & Print-Ready)
+     ========================================================================= -->
+<div id="content-view-cards" class="view-section">
+  <div class="cards-intro-bar">
+    <div class="cards-intro-text">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+      <span>Click any card (or press Space/Enter) to flip between <strong>Front (Question/Prompt)</strong> and <strong>Back (Answer/Details)</strong>.</span>
+    </div>
+    <div style="font-size: 0.8rem; color: var(--color-muted); font-style: italic;">
+      Ready for printing onto cardstock for physical workshops.
+    </div>
+  </div>
+
+  {{ with .Params.elements }}
+    <div class="cards-grid">
+      {{ range $idx, $element := . }}
+        <div class="card-3d-wrapper" tabindex="0" role="button" aria-label="Interactive 2-sided card #{{ add $idx 1 }}. Click to flip." data-flipped="false">
+          <div class="card-3d-inner">
+            
+            <!-- CARD FRONT -->
+            <div class="card-face card-face-front">
+              <div class="card-face-header">
+                <span class="element-pill {{ $element.type }}">
+                  {{ if eq $element.type "quiz_question" }}Quiz Question
+                  {{ else if eq $element.type "statistic" }}Statistic / Key Figure
+                  {{ else if eq $element.type "perspective" }}Perspective
+                  {{ else if eq $element.type "information" }}Key Concept
+                  {{ else if eq $element.type "takeaways" }}Takeaways
+                  {{ else }}{{ $element.type }}{{ end }}
+                </span>
+                <span class="card-flip-prompt">Click to flip ↺</span>
+              </div>
+
+              <div class="card-face-body">
+                {{ if eq $element.type "quiz_question" }}
+                  <div class="card-main-title">
+                    {{ $element.question | markdownify }}
+                  </div>
+                {{ else if eq $element.type "statistic" }}
+                  <div class="card-main-stat">{{ $element.figure }}</div>
+                  <div class="card-main-title">{{ $element.description }}</div>
+                {{ else if eq $element.type "perspective" }}
+                  <blockquote class="card-main-quote">
+                    {{ $element.quote | markdownify }}
+                  </blockquote>
+                {{ else if eq $element.type "information" }}
+                  <div class="card-main-title" style="font-size: 1.1rem; line-height: 1.5;">
+                    {{ $element.text | markdownify }}
+                  </div>
+                {{ else if eq $element.type "takeaways" }}
+                  <div class="card-main-title" style="color: #86198f;">
+                    Key Takeaways & Summary
+                  </div>
+                  <div style="font-size: 0.95rem; color: var(--color-slate);">
+                    Flip to reveal key reflection points
+                  </div>
+                {{ end }}
+              </div>
+
+              <div class="card-face-footer">
+                <span class="card-side-tag front">Front Side</span>
+                <button type="button" class="card-flip-btn" tabindex="-1">Flip to Answer &rarr;</button>
+              </div>
+            </div>
+
+            <!-- CARD BACK -->
+            <div class="card-face card-face-back">
+              <div class="card-face-header">
+                <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">
+                  {{ if eq $element.type "quiz_question" }}Answer & Explanation
+                  {{ else if eq $element.type "statistic" }}Context & Insight
+                  {{ else if eq $element.type "perspective" }}Attribution & Context
+                  {{ else if eq $element.type "information" }}Details & Notes
+                  {{ else if eq $element.type "takeaways" }}Key Takeaways
+                  {{ else }}Details{{ end }}
+                </span>
+                <span class="card-flip-prompt">Click to flip ↺</span>
+              </div>
+
+              <div class="card-face-body">
+                {{ if eq $element.type "quiz_question" }}
+                  <div style="font-size: 1.05rem; font-weight: 600; color: #581c87; margin-bottom: 0.5rem;">
+                    {{ $element.answer | markdownify }}
+                  </div>
+                  {{ with $element.explanation }}
+                    <div style="font-size: 0.875rem; color: var(--color-slate); line-height: 1.5; margin-top: 0.5rem;">
+                      {{ . | markdownify }}
+                    </div>
+                  {{ end }}
+                {{ else if eq $element.type "statistic" }}
+                  <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem;">
+                    {{ $element.description }}
+                  </div>
+                  {{ with $element.explanation }}
+                    <div style="font-size: 0.875rem; color: var(--color-slate); line-height: 1.5;">
+                      {{ . | markdownify }}
+                    </div>
+                  {{ end }}
+                {{ else if eq $element.type "perspective" }}
+                  {{ with $element.attribution }}
+                    <div style="font-size: 1.05rem; font-weight: 700; color: #047857; margin-bottom: 0.5rem;">
+                      — {{ . }}
+                    </div>
+                  {{ end }}
+                  <div style="font-size: 0.85rem; color: var(--color-muted); font-style: italic;">
+                    Speaker / Source Perspective
+                  </div>
+                {{ else if eq $element.type "information" }}
+                  <div style="font-size: 0.95rem; line-height: 1.5;">
+                    {{ $element.text | markdownify }}
+                  </div>
+                {{ else if eq $element.type "takeaways" }}
+                  <div style="font-size: 0.9rem; line-height: 1.5;">
+                    {{ $element.text | markdownify }}
+                  </div>
+                {{ end }}
+
+                {{ with $element.citation }}
+                  <div class="citation-line" style="margin-top: 0.5rem; font-size: 0.7rem;">
+                    Source: {{ . }}
+                  </div>
+                {{ end }}
+              </div>
+
+              <div class="card-face-footer">
+                <span class="card-side-tag back">Back Side</span>
+                <button type="button" class="card-flip-btn" tabindex="-1">&larr; Flip to Front</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      {{ end }}
+    </div>
+  {{ end }}
+</div>
+
+<!-- =========================================================================
+     VIEW (b): SLIDE DECK (Fullscreen Presentation Mode)
+     ========================================================================= -->
+<div id="content-view-slides" class="view-section">
+  <div class="slideshow-container" id="slideshow">
+    <div class="slide-progress-bar" id="slide-progress"></div>
+
+    <div class="slides-viewport">
+      <!-- Slide 1: Title Slide (without facilitator overview) -->
+      <div class="slide-item active">
+        <span class="slide-tag">Presentation</span>
+        <h2 class="slide-title" style="font-size: 3rem; margin-bottom: 2rem;">{{ .Title }}</h2>
+        {{ with $linkedCollections }}
+          <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+            {{ range . }}
+              <span class="element-pill" style="background: rgba(255,255,255,0.15); color: #5eead4; font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+                📁 Collection: {{ .Title }}
+              </span>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+
+      <!-- Content Slides -->
+      {{ with .Params.elements }}
+        {{ range $idx, $element := . }}
+          {{ if eq $element.type "quiz_question" }}
+            <!-- Quiz Slide A: Question -->
+            <div class="slide-item">
+              <span class="slide-tag">Quiz Question</span>
+              <div class="slide-title" style="font-size: 2.2rem; line-height: 1.35;">
+                {{ $element.question | markdownify }}
+              </div>
+              {{ with $element.image }}
+                <div style="margin-top: 1.5rem;">
+                  <img src="{{ . | relURL }}" alt="Quiz visual" style="max-height: 300px; border-radius: var(--radius-md);">
+                </div>
+              {{ end }}
+            </div>
+
+            <!-- Quiz Slide B: Answer & Explanation -->
+            <div class="slide-item">
+              <span class="slide-tag" style="background: rgba(20, 184, 166, 0.25); color: #5eead4;">Quiz Answer</span>
+              <div class="slide-title" style="font-size: 2rem; color: #5eead4; line-height: 1.35; margin-bottom: 1.25rem;">
+                {{ $element.answer | markdownify }}
+              </div>
+              {{ with $element.explanation }}
+                <div class="slide-body" style="font-size: 1.25rem; color: #cbd5e1; line-height: 1.5;">
+                  {{ . | markdownify }}
+                </div>
+              {{ end }}
+              {{ with $element.citation }}
+                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                  Source: {{ . }}
+                </div>
+              {{ end }}
+            </div>
+
+          {{ else if eq $element.type "statistic" }}
+            <div class="slide-item">
+              <span class="slide-tag">Key Statistic</span>
+              <div class="slide-stat-figure">{{ $element.figure }}</div>
+              <div class="slide-title" style="font-size: 2rem;">{{ $element.description }}</div>
+              {{ with $element.explanation }}
+                <div class="slide-body">{{ . | markdownify }}</div>
+              {{ end }}
+              {{ with $element.citation }}
+                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                  Source: {{ . }}
+                </div>
+              {{ end }}
+            </div>
+
+          {{ else if eq $element.type "perspective" }}
+            <div class="slide-item">
+              <span class="slide-tag">Perspective</span>
+              <blockquote class="slide-quote">
+                {{ $element.quote | markdownify }}
+              </blockquote>
+              {{ with $element.attribution }}
+                <div class="slide-attribution">— {{ . }}</div>
+              {{ end }}
+              {{ with $element.citation }}
+                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                  Source: {{ . }}
+                </div>
+              {{ end }}
+            </div>
+
+          {{ else if eq $element.type "information" }}
+            <div class="slide-item">
+              <span class="slide-tag">Information</span>
+              <div class="slide-body" style="font-size: 1.6rem; color: white; line-height: 1.6;">
+                {{ $element.text | markdownify }}
+              </div>
+              {{ with $element.citation }}
+                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                  Source: {{ . }}
+                </div>
+              {{ end }}
+            </div>
+
+          {{ else if eq $element.type "takeaways" }}
+            <div class="slide-item">
+              <span class="slide-tag" style="background: rgba(240, 171, 252, 0.2); color: #f0abfc;">Key Takeaways</span>
+              <div class="slide-title" style="font-size: 2rem; color: #f0abfc;">Key Takeaways</div>
+              <div class="slide-body">{{ $element.text | markdownify }}</div>
+            </div>
+          {{ end }}
+        {{ end }}
+      {{ end }}
+    </div>
+
+    <!-- Slide Deck Controls -->
+    <div class="slides-controls">
+      <div class="slides-nav-btns">
+        <button type="button" class="slide-btn" id="btn-prev-slide" aria-label="Previous slide">
+          &larr;
+        </button>
+        <button type="button" class="slide-btn" id="btn-next-slide" aria-label="Next slide">
+          &rarr;
+        </button>
+        <span class="slide-counter" id="slide-counter">Slide 1 / 1</span>
+      </div>
+
+      <div class="slide-helper-keys">
+        <span>Keys:</span>
+        <span class="slide-key-badge">&larr;</span>
+        <span class="slide-key-badge">&rarr;</span>
+        <span class="slide-key-badge">Space</span>
+        <span class="slide-key-badge">F (Fullscreen)</span>
+      </div>
+
+      <button type="button" class="action-btn" id="btn-toggle-fullscreen" style="background: #1e293b; color: white; border-color: #334155;">
+        ⛶ Fullscreen
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // 1. VIEW SWITCHER LOGIC
+  const viewTabs = document.querySelectorAll('.view-tab');
+  const viewSections = document.querySelectorAll('.view-section');
+  const cardsActions = document.getElementById('cards-actions');
+  const slidesActions = document.getElementById('slides-actions');
+
+  function switchView(targetId) {
+    viewTabs.forEach(tab => {
+      const isTarget = tab.dataset.target === targetId;
+      tab.classList.toggle('active', isTarget);
+      tab.setAttribute('aria-selected', isTarget);
+    });
+
+    viewSections.forEach(sec => {
+      sec.classList.toggle('active', sec.id === targetId);
+    });
+
+    if (cardsActions) cardsActions.style.display = targetId === 'content-view-cards' ? 'flex' : 'none';
+    if (slidesActions) slidesActions.style.display = targetId === 'content-view-slides' ? 'flex' : 'none';
+
+    // Update URL hash
+    const viewName = targetId.replace('content-view-', '');
+    if (history.replaceState) {
+      history.replaceState(null, null, '#' + viewName);
+    }
+  }
+
+  viewTabs.forEach(tab => {
+    tab.addEventListener('click', () => switchView(tab.dataset.target));
+  });
+
+  // URL hash routing
+  const initialHash = window.location.hash.toLowerCase();
+  if (initialHash === '#cards') {
+    switchView('content-view-cards');
+  } else if (initialHash === '#slides') {
+    switchView('content-view-slides');
+  }
+
+  // 2. TWO-SIDED CARDS (3D FLIP LOGIC)
+  const cardWrappers = document.querySelectorAll('.card-3d-wrapper');
+  cardWrappers.forEach(card => {
+    function toggleCard() {
+      const isFlipped = card.dataset.flipped === 'true';
+      card.dataset.flipped = (!isFlipped).toString();
+      card.classList.toggle('is-flipped', !isFlipped);
+    }
+
+    card.addEventListener('click', (e) => {
+      // Don't flip if user clicked an external link on card back
+      if (e.target.tagName.toLowerCase() === 'a') return;
+      toggleCard();
+    });
+
+    card.addEventListener('keydown', (e) => {
+      if (e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        toggleCard();
+      }
+    });
+  });
+
+  // Flip All Cards button
+  const btnFlipAll = document.getElementById('btn-flip-all');
+  let allFlipped = false;
+  if (btnFlipAll) {
+    btnFlipAll.addEventListener('click', () => {
+      allFlipped = !allFlipped;
+      cardWrappers.forEach(card => {
+        card.dataset.flipped = allFlipped.toString();
+        card.classList.toggle('is-flipped', allFlipped);
+      });
+      btnFlipAll.textContent = allFlipped ? '↺ Flip All to Front' : '↺ Flip All Cards';
+    });
+  }
+
+  // Print Cards button
+  const btnPrintCards = document.getElementById('btn-print-cards');
+  if (btnPrintCards) {
+    btnPrintCards.addEventListener('click', () => {
+      switchView('content-view-cards');
+      setTimeout(() => window.print(), 100);
+    });
+  }
+
+  // 3. SLIDE DECK LOGIC
+  const slideshow = document.getElementById('slideshow');
+  const slideItems = document.querySelectorAll('.slide-item');
+  const btnPrev = document.getElementById('btn-prev-slide');
+  const btnNext = document.getElementById('btn-next-slide');
+  const counterEl = document.getElementById('slide-counter');
+  const progressEl = document.getElementById('slide-progress');
+  const btnFullscreen = document.getElementById('btn-toggle-fullscreen');
+  const btnFullscreenTrigger = document.getElementById('btn-fullscreen-trigger');
+
+  let currentSlide = 0;
+  const totalSlides = slideItems.length;
+
+  function updateSlides() {
+    slideItems.forEach((slide, idx) => {
+      slide.classList.toggle('active', idx === currentSlide);
+    });
+
+    if (counterEl) {
+      counterEl.textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    if (progressEl) {
+      progressEl.style.width = `${((currentSlide + 1) / totalSlides) * 100}%`;
+    }
+
+    if (btnPrev) btnPrev.disabled = currentSlide === 0;
+    if (btnNext) btnNext.disabled = currentSlide === totalSlides - 1;
+  }
+
+  function nextSlide() {
+    if (currentSlide < totalSlides - 1) {
+      currentSlide++;
+      updateSlides();
+    }
+  }
+
+  function prevSlide() {
+    if (currentSlide > 0) {
+      currentSlide--;
+      updateSlides();
+    }
+  }
+
+  if (btnNext) btnNext.addEventListener('click', nextSlide);
+  if (btnPrev) btnPrev.addEventListener('click', prevSlide);
+
+  // Keyboard navigation when slides view is active
+  window.addEventListener('keydown', (e) => {
+    const slidesSection = document.getElementById('content-view-slides');
+    if (!slidesSection || !slidesSection.classList.contains('active')) return;
+
+    if (e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      nextSlide();
+    } else if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      prevSlide();
+    } else if (e.key === 'f' || e.key === 'F') {
+      toggleFullscreen();
+    }
+  });
+
+  // Fullscreen support
+  function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+      if (slideshow.requestFullscreen) {
+        slideshow.requestFullscreen();
+      } else if (slideshow.webkitRequestFullscreen) {
+        slideshow.webkitRequestFullscreen();
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen();
+      }
+    }
+  }
+
+  if (btnFullscreen) btnFullscreen.addEventListener('click', toggleFullscreen);
+  if (btnFullscreenTrigger) {
+    btnFullscreenTrigger.addEventListener('click', () => {
+      switchView('content-view-slides');
+      toggleFullscreen();
+    });
+  }
+
+  // Initialize slides
+  updateSlides();
+});
+</script>
+
+{{ end }}

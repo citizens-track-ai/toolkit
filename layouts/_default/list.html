@@ -1,0 +1,27 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge">{{ .Section | humanize | title }}</span>
+  <h1 class="page-title">{{ .Title | default (.Section | humanize | title) }}</h1>
+</div>
+
+<div class="items-grid">
+  {{ range .Pages }}
+    <div class="content-item-card">
+      <div>
+        <h2 class="item-card-title">
+          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+        </h2>
+        {{ with .Params.description }}
+          <p class="item-card-overview">{{ . }}</p>
+        {{ end }}
+      </div>
+      <div class="item-card-footer">
+        <span></span>
+        <a href="{{ .RelPermalink }}" class="view-item-link">View details &rarr;</a>
+      </div>
+    </div>
+  {{ end }}
+</div>
+
+{{ end }}

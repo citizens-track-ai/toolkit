@@ -1,0 +1,87 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge" style="background: #e0f2fe; color: #0369a1;">Directory</span>
+  <h1 class="page-title">Activities</h1>
+  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+    Explore interactive workshop exercises, discussions, and educational activities on data, AI, and civic participation.
+  </p>
+</div>
+
+{{ $allActivities := where .Site.RegularPages "Section" "activities" }}
+
+{{ if gt (len $allActivities) 0 }}
+  <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
+    {{ range $allActivities }}
+      <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+            <span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Activity</span>
+            {{ with .Params.duration }}
+              <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+                ⏱️ {{ .min }}-{{ .max }}m
+              </span>
+            {{ end }}
+            {{ with .Params.license }}
+              <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+                ⚖️ {{ .name | default "Open" }}
+              </span>
+            {{ end }}
+          </div>
+
+          <h2 class="item-card-title" style="font-size: 1.25rem;">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </h2>
+
+          {{ with .Params.creators }}
+            <div style="font-size: 0.8rem; color: var(--color-muted); margin: 0.5rem 0 0.85rem; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
+              <span>By</span>
+              {{ if reflect.IsSlice . }}
+                {{ range $i, $c := . }}
+                  {{ if gt $i 0 }}<span>•</span>{{ end }}
+                  {{ if reflect.IsMap $c }}
+                    <strong>{{ index $c "name" }}</strong>
+                  {{ else }}
+                    <strong>{{ $c }}</strong>
+                  {{ end }}
+                {{ end }}
+              {{ else if reflect.IsMap . }}
+                {{ range $name, $url := . }}
+                  <strong>{{ $name }}</strong>
+                {{ end }}
+              {{ else }}
+                <strong>{{ . }}</strong>
+              {{ end }}
+            </div>
+          {{ end }}
+
+          {{ with .Summary }}
+            <p class="item-card-overview" style="font-size: 0.9rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1rem;">
+              {{ . | plainify | truncate 160 }}
+            </p>
+          {{ end }}
+        </div>
+
+        <div class="item-card-footer" style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--color-border-subtle);">
+          {{ with .Params.files }}
+            <span style="font-size: 0.75rem; color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.25rem;">
+              📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
+            </span>
+          {{ else }}
+            <span></span>
+          {{ end }}
+          <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">
+            View Activity &rarr;
+          </a>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+{{ else }}
+  <div style="background: white; border: 1px solid var(--color-border); padding: 3rem; text-align: center; border-radius: var(--radius-lg);">
+    <p style="font-size: 1.1rem; color: var(--color-muted); margin: 0 0 1rem;">No activities published yet.</p>
+    <a href="/admin/" class="nav-cta" target="_blank" rel="noopener">Open CMS Admin to Create Activities</a>
+  </div>
+{{ end }}
+
+{{ end }}

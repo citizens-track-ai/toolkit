@@ -1,0 +1,16 @@
+<footer class="site-footer">
+  <div class="footer-container">
+    <div>
+      <div class="footer-brand">{{ .Site.Title }}</div>
+      <p style="margin: 0.25rem 0 0; font-size: 0.85rem; color: #64748b;">
+        Connected by Data — Empowering communities to shape data and AI systems.
+      </p>
+    </div>
+    <div class="footer-links">
+      <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+      <a href="{{ "content-collections/" | relLangURL }}">Collections</a>
+      <a href="{{ "content/" | relLangURL }}">Content Items</a>
+      <a href="/admin/">CMS Login</a>
+    </div>
+  </div>
+</footer>

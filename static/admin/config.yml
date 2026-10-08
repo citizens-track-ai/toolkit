@@ -1,0 +1,253 @@
+# yaml-language-server: $schema=https://unpkg.com/@sveltia/cms/schema/sveltia-cms.json
+
+backend:
+  name: github
+  repo: timgdavies/toolkit
+  branch: main
+
+media_folder: static/images
+public_folder: /images
+
+i18n:
+  structure: multiple_folders
+  locales:
+    - en
+    - es
+    - fr
+    - de
+  default_locale: en
+  initial_locales: default
+
+collections:
+  - name: modules
+    label: Modules
+    label_singular: Module
+    folder: content/{{locale}}/modules
+    summary: '{{title}} [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+      - { name: description, label: Description, widget: text, required: false, i18n: true }
+      - { name: body, label: Body, widget: richtext, required: false, i18n: true }
+
+  - name: activities
+    label: Activities
+    label_singular: Activity
+    folder: content/{{locale}}/activities
+    summary: '{{title}} ({{duration.min}}-{{duration.max}}m) [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Activity Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+
+      - name: creators
+        label: Creators & Attribution
+        label_singular: Creator
+        widget: list
+        required: false
+        i18n: duplicate
+        summary: '{{name}} ({{role}})'
+        fields:
+          - { name: name, label: Creator Name / Organization, widget: string }
+          - { name: role, label: Role (e.g. author), widget: string, default: "author" }
+          - { name: url, label: URL / Profile Link, widget: string, required: false }
+
+      - name: license
+        label: License
+        widget: object
+        i18n: duplicate
+        types:
+          - name: standard
+            label: Standard Open License
+            fields:
+              - name: name
+                label: License Type
+                widget: select
+                default: "CC BY 4.0"
+                options:
+                  - { label: "Creative Commons Attribution (CC BY 4.0)", value: "CC BY 4.0" }
+                  - { label: "Creative Commons Attribution-ShareAlike (CC BY-SA 4.0)", value: "CC BY-SA 4.0" }
+                  - { label: "Creative Commons Zero (CC0 1.0 Universal)", value: "CC0 1.0" }
+                  - { label: "Open Government Licence (OGL v3.0)", value: "OGL v3.0" }
+          - name: custom
+            label: Custom License / Terms
+            fields:
+              - { name: name, label: Custom License Name, widget: string }
+              - { name: url, label: Custom License URL, widget: string, required: false }
+              - { name: terms, label: Special Terms / Permissions Note, widget: string, required: false }
+
+      - name: duration
+        label: Duration Range (Minutes)
+        widget: object
+        collapsed: false
+        i18n: duplicate
+        fields:
+          - { name: min, label: Minimum Duration (minutes), widget: number, value_type: int, default: 15 }
+          - { name: max, label: Maximum Duration (minutes), widget: number, value_type: int, default: 45 }
+
+      - name: files
+        label: Files & Resources
+        label_singular: File / Resource
+        widget: list
+        required: false
+        i18n: true
+        summary: '{{title}}'
+        fields:
+          - { name: title, label: Resource Title, widget: string, i18n: true }
+          - { name: file, label: Uploaded File (or choose URL), widget: file, required: false, i18n: duplicate }
+          - { name: url, label: External URL (optional direct link), widget: string, required: false, i18n: duplicate }
+          - { name: description, label: Description / Usage Notes, widget: string, required: false, i18n: true }
+
+      - name: body
+        label: Activity Body & Guidance
+        widget: richtext
+        required: false
+        i18n: true
+        default: |
+          ## Purpose
+
+          [Describe the main purpose and learning goals of this activity.]
+
+          ## Prerequisites
+
+          [List any prerequisites, participant requirements, or room setup needed.]
+
+          ## Preparation
+
+          [Steps the facilitator needs to take in advance.]
+
+          ## Process & Steps
+
+          [Step-by-step instructions for running the activity.]
+
+          ## Localisation & Adaptation Notes
+
+          [Guidance on adapting this activity for different audiences, experience levels, or jurisdictions.]
+
+  - name: content_collections
+    label: Content Collections
+    label_singular: Content Collection
+    folder: content/{{locale}}/content-collections
+    summary: '{{title}} [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+      - { name: description, label: Description, widget: text, required: false, i18n: true }
+      - name: items
+        label: Content Items
+        label_singular: Content Item
+        widget: relation
+        collection: content_items
+        multiple: true
+        required: false
+        i18n: duplicate
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        search_fields: ["title", "facilitator_overview"]
+      - { name: body, label: Body, widget: richtext, required: false, i18n: true }
+
+  - name: content_items
+    label: Content
+    label_singular: Content Item
+    folder: content/{{locale}}/content
+    summary: '{{title}} [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+
+      - name: collections
+        label: Collections
+        label_singular: Collection
+        widget: relation
+        collection: content_collections
+        multiple: true
+        required: false
+        i18n: duplicate
+        value_field: "{{slug}}"
+        display_fields: ["title"]
+        search_fields: ["title", "description"]
+
+      - name: facilitator_overview
+        label: Facilitator Overview
+        widget: text
+        i18n: true
+        hint: "Provide a short (1 paragraph max) explanation here, with additional content under sub-headings (also kept to short bullet lists or single paragraphs)"
+
+      - name: elements
+        label: Content Elements (Sequenced Blocks)
+        label_singular: Element
+        widget: list
+        required: false
+        i18n: true
+        types:
+          - name: quiz_question
+            label: Quiz Question
+            summary: "Quiz: {{question}}"
+            fields:
+              - { name: question, label: Question, widget: richtext, i18n: true }
+              - { name: answer, label: Answer, widget: richtext, i18n: true }
+              - { name: explanation, label: Explanation, widget: richtext, required: false, i18n: true }
+              - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+
+          - name: statistic
+            label: Statistic
+            summary: "Statistic: {{figure}} — {{description}}"
+            fields:
+              - { name: figure, label: Figure / Key Data Point, widget: string, i18n: true }
+              - { name: description, label: Description / Label, widget: string, i18n: true }
+              - { name: explanation, label: Explanation / Context, widget: richtext, required: false, i18n: true }
+              - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+
+          - name: information
+            label: Information
+            summary: "Information: {{text}}"
+            fields:
+              - { name: text, label: Information Text, widget: richtext, i18n: true }
+              - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+
+          - name: perspective
+            label: Perspective
+            summary: "Perspective: {{attribution}} — {{quote}}"
+            fields:
+              - { name: quote, label: Quote / Perspective Statement, widget: richtext, i18n: true }
+              - { name: attribution, label: Attribution (Speaker / Role / Community), widget: string, i18n: true }
+              - { name: image, label: Optional Image / Photo, widget: image, required: false, i18n: duplicate }
+              - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+
+          - name: takeaways
+            label: Take-aways
+            summary: "Take-aways: {{text}}"
+            fields:
+              - { name: text, label: Take-away Points, widget: richtext, i18n: true }
+              - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+
+      - name: adaptation_guidance
+        label: Adaptation & Localisation Guidance
+        widget: text
+        required: false
+        i18n: true
+        hint: "Guidance on adapting or localising this content for different audiences, experience levels, or jurisdictions."
+
+  - name: opportunities
+    label: Opportunity
+    label_singular: Opportunity
+    folder: content/{{locale}}/opportunities
+    summary: '{{title}} [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+      - { name: description, label: Description, widget: text, required: false, i18n: true }
+      - { name: body, label: Body, widget: richtext, required: false, i18n: true }

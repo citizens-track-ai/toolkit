@@ -1,0 +1,166 @@
+{{ define "main" }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ "activities/" | relLangURL }}">Activities</a>
+  <span>/</span>
+  <strong>{{ .Title }}</strong>
+</nav>
+
+<article class="page-header">
+  <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+    <span class="collection-badge" style="background: #e0f2fe; color: #0369a1;">Activity</span>
+    {{ with .Params.duration }}
+      <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+        ⏱️ {{ .min }}-{{ .max }} mins
+      </span>
+    {{ end }}
+    {{ with .Params.license }}
+      <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+        ⚖️ {{ .name | default "Open License" }}
+      </span>
+    {{ end }}
+  </div>
+
+  <h1 class="page-title">{{ .Title }}</h1>
+
+  {{ with .Params.creators }}
+    <div style="font-size: 0.9rem; color: var(--color-slate); margin-top: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center;">
+      <strong style="color: var(--color-muted); font-size: 0.85rem;">Attribution:</strong>
+      {{ if reflect.IsMap . }}
+        {{ range $name, $url := . }}
+          <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark); padding: 0.25rem 0.65rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+            {{ if $url }}
+              <a href="{{ $url }}" target="_blank" rel="noopener" style="font-weight: 700; color: var(--color-primary);">{{ $name }}</a>
+            {{ else }}
+              <strong style="color: var(--color-dark);">{{ $name }}</strong>
+            {{ end }}
+          </span>
+        {{ end }}
+      {{ else if reflect.IsSlice . }}
+        {{ range . }}
+          <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark); padding: 0.25rem 0.65rem; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+            {{ if reflect.IsMap . }}
+              {{ $name := index . "name" }}
+              {{ $url := index . "url" }}
+              {{ $role := index . "role" }}
+              {{ if $url }}
+                <a href="{{ $url }}" target="_blank" rel="noopener" style="font-weight: 700; color: var(--color-primary);">{{ $name }}</a>
+              {{ else }}
+                <strong style="color: var(--color-dark);">{{ $name }}</strong>
+              {{ end }}
+              {{ with $role }}
+                <span style="color: var(--color-muted); font-size: 0.75rem;">({{ . }})</span>
+              {{ end }}
+            {{ else }}
+              <strong style="color: var(--color-dark);">{{ . }}</strong>
+            {{ end }}
+          </span>
+        {{ end }}
+      {{ else }}
+        <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark); padding: 0.25rem 0.65rem; font-size: 0.8rem;">
+          <strong style="color: var(--color-dark);">{{ . }}</strong>
+        </span>
+      {{ end }}
+    </div>
+  {{ end }}
+</article>
+
+{{ with .Params.files }}
+  <div class="element-block" style="margin-bottom: 2rem;">
+    <div class="element-block-header">
+      <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">📁 Files & Attached Resources</span>
+    </div>
+    <div class="element-block-content">
+      <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+        {{ range . }}
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
+            <div>
+              <strong style="color: var(--color-dark);">{{ .title }}</strong>
+              {{ with .description }}
+                <div style="font-size: 0.85rem; color: var(--color-muted);">{{ . }}</div>
+              {{ end }}
+            </div>
+            {{ if .file }}
+              <a href="{{ .file | relURL }}" download class="action-btn primary" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Download File</a>
+            {{ else if .url }}
+              <a href="{{ .url }}" target="_blank" rel="noopener" class="action-btn" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Open Link &rarr;</a>
+            {{ end }}
+          </div>
+        {{ end }}
+      </div>
+    </div>
+  </div>
+{{ end }}
+
+{{ with .Content }}
+  <div class="element-block" style="margin-bottom: 2.5rem;">
+    <div class="element-block-content activity-body-container" style="padding: 2.25rem 2.5rem; font-size: 1.05rem; line-height: 1.75;">
+      {{ . }}
+    </div>
+  </div>
+{{ end }}
+
+{{/* Legacy fields fallback if body is empty */}}
+{{ if not .Content }}
+  <div class="elements-stream">
+    {{ with .Params.purpose }}
+      <div class="element-block">
+        <div class="element-block-header">
+          <span class="element-pill" style="background: #dbeafe; color: #1e40af;">🎯 Purpose & Goals</span>
+        </div>
+        <div class="element-block-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{ end }}
+
+    {{ with .Params.prerequisites }}
+      <div class="element-block">
+        <div class="element-block-header">
+          <span class="element-pill" style="background: #fef3c7; color: #92400e;">📋 Pre-requisites & Requirements</span>
+        </div>
+        <div class="element-block-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{ end }}
+
+    {{ with .Params.preparation }}
+      <div class="element-block">
+        <div class="element-block-header">
+          <span class="element-pill" style="background: #f3e8ff; color: #6b21a8;">🛠️ Preparation</span>
+        </div>
+        <div class="element-block-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{ end }}
+
+    {{ with .Params.process }}
+      <div class="element-block">
+        <div class="element-block-header">
+          <span class="element-pill" style="background: #dcfce7; color: #166534;">📝 Process & Steps</span>
+        </div>
+        <div class="element-block-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{ end }}
+
+    {{ with .Params.notes }}
+      <div class="guidance-box">
+        <div class="guidance-header">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Localisation & Adaptation Guidance Notes
+        </div>
+        <div class="guidance-content">
+          {{ . | markdownify }}
+        </div>
+      </div>
+    {{ end }}
+  </div>
+{{ end }}
+
+{{ end }}

@@ -1,0 +1,32 @@
+<header class="site-header">
+  <div class="header-container">
+    <a href="{{ .Site.Home.RelPermalink }}" class="brand-wrapper">
+      <div class="brand-icon">CT</div>
+      <span class="brand-title">{{ .Site.Title }}</span>
+      <span class="brand-badge">Toolkit</span>
+    </a>
+
+    <nav class="site-nav">
+      <a href="{{ "content-collections/" | relLangURL }}" class="nav-link{{ if eq .Section "content-collections" }} active{{ end }}">Collections</a>
+      <a href="{{ "content/" | relLangURL }}" class="nav-link{{ if eq .Section "content" }} active{{ end }}">Content Items</a>
+      <a href="{{ "activities/" | relLangURL }}" class="nav-link{{ if eq .Section "activities" }} active{{ end }}">Activities</a>
+      <a href="{{ "modules/" | relLangURL }}" class="nav-link{{ if eq .Section "modules" }} active{{ end }}">Modules</a>
+
+      {{ if hugo.IsMultilingual }}
+      <div class="lang-switcher">
+        {{ $currentLang := .Language.Lang }}
+        {{ range hugo.Sites }}
+          <a href="{{ if eq .Language.Lang $currentLang }}#{{ else }}{{ .Home.RelPermalink }}{{ end }}" class="lang-btn{{ if eq .Language.Lang $currentLang }} active{{ end }}">
+            {{ .Language.Lang }}
+          </a>
+        {{ end }}
+      </div>
+      {{ end }}
+
+      <a href="/admin/" class="nav-cta" target="_blank" rel="noopener">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+        CMS Admin
+      </a>
+    </nav>
+  </div>
+</header>
