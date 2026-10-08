@@ -5,6 +5,35 @@
     <meta charset="utf-8" />
     <meta name="robots" content="noindex" />
     <title>Sveltia CMS - Citizens Track Toolkit</title>
+    <script>
+        (function () {
+            // 1. Process magic link session token from URL hash or search params
+            const hash = window.location.hash.substring(1);
+            const search = window.location.search.substring(1);
+            const params = new URLSearchParams(hash || search);
+            const token = params.get("token");
+            const email = params.get("email");
+
+            if (token) {
+                const sessionData = {
+                    token: token,
+                    email: email || "",
+                    backendName: "github"
+                };
+                localStorage.setItem("sveltia-cms.user", JSON.stringify(sessionData));
+                // Clean URL hash/params without reloading
+                window.history.replaceState(null, "", window.location.pathname);
+            }
+
+            // 2. If not authenticated and not explicitly in direct PAT mode, redirect to login page
+            const isDirectMode = params.get("direct") === "true";
+            const hasSession = !!localStorage.getItem("sveltia-cms.user");
+
+            if (!hasSession && !isDirectMode) {
+                window.location.replace("/admin/login.html");
+            }
+        })();
+    </script>
 </head>
 
 <body>

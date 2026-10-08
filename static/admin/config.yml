@@ -4,7 +4,9 @@ backend:
   name: github
   repo: citizens-track-ai/toolkit
   branch: staging
-  open_authoring: true
+  api_root: https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev
+  auth_methods: [token]
+  open_authoring: false
   auth_scope: public_repo
 
 media_folder: static/images
