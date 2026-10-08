@@ -2,7 +2,7 @@
 
 backend:
   name: github
-  repo: timgdavies/toolkit
+  repo: citizens-track-ai/toolkit
   branch: main
 
 media_folder: static/images
