@@ -98,7 +98,9 @@
       margin-bottom: 0.5rem;
     }
 
-    input[type="email"] {
+    input[type="email"],
+    input[type="text"],
+    input[type="password"] {
       width: 100%;
       padding: 0.8125rem 1rem;
       font-family: inherit;
@@ -111,7 +113,9 @@
       transition: border-color 0.15s ease, box-shadow 0.15s ease;
     }
 
-    input[type="email"]:focus {
+    input[type="email"]:focus,
+    input[type="text"]:focus,
+    input[type="password"]:focus {
       border-color: var(--color-primary);
       box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
     }
@@ -141,6 +145,37 @@
     button.btn-primary:disabled {
       opacity: 0.65;
       cursor: not-allowed;
+    }
+
+    .auth-tabs {
+      display: flex;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 4px;
+      margin-bottom: 1.5rem;
+      gap: 4px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 0.5rem 0.75rem;
+      border: none;
+      background: transparent;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--color-muted);
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      text-align: center;
+    }
+
+    .auth-tab.active {
+      background: var(--color-bg);
+      color: var(--color-dark);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
     }
 
     .alert {
@@ -233,7 +268,7 @@
   <div class="card">
     <div class="brand">Citizens Track Toolkit</div>
     <h1>Editor Sign-In</h1>
-    <p class="subtitle">Access the Content Management System using your authorized email address.</p>
+    <p class="subtitle" id="form-subtitle">Access the Content Management System using your authorized email address.</p>
 
     <!-- Active session indicator if already logged in -->
     <div id="active-session" class="active-session-box">
@@ -244,11 +279,17 @@
       </div>
     </div>
 
+    <!-- Sign-in Mode Tabs -->
+    <div class="auth-tabs" role="tablist">
+      <button type="button" class="auth-tab active" id="tab-btn-email" role="tab" aria-selected="true">Email (Magic Link)</button>
+      <button type="button" class="auth-tab" id="tab-btn-github" role="tab" aria-selected="false">GitHub Contributor</button>
+    </div>
+
     <!-- Feedback alerts -->
     <div id="alert-error" class="alert alert-error"></div>
     <div id="alert-success" class="alert alert-success"></div>
 
-    <!-- Login form -->
+    <!-- Email Magic Link Form -->
     <form id="login-form">
       <div class="form-group">
         <label for="email">Authorized Email Address</label>
@@ -268,10 +309,34 @@
       </button>
     </form>
 
+    <!-- GitHub Personal Access Token Form -->
+    <form id="github-form" style="display: none;">
+      <div class="form-group">
+        <label for="gh-token">Personal Access Token (PAT)</label>
+        <input 
+          id="gh-token" 
+          name="token" 
+          type="password" 
+          placeholder="ghp_... or github_pat_..." 
+          autocomplete="off" 
+          required 
+        />
+        <p style="font-size: 0.75rem; color: var(--color-muted); margin-top: 0.5rem; line-height: 1.4;">
+          Use a GitHub token with repository permissions. Commits will be authored directly by your GitHub account.
+          <br />
+          <a href="https://github.com/settings/tokens/new?scopes=repo&description=Citizens+Track+CMS" target="_blank" rel="noopener" style="color: var(--color-primary); font-weight: 500;">Generate token on GitHub ↗</a>
+        </p>
+      </div>
+
+      <button id="btn-gh-submit" type="submit" class="btn-primary">
+        <span>Sign In with GitHub</span>
+      </button>
+    </form>
+
     <div class="footer-links">
       <p style="margin-bottom: 0.5rem;">
-        Need to use a Personal Access Token? 
-        <a href="/admin/?direct=true">Developer Sign-In</a>
+        Need raw CMS direct access? 
+        <a href="/admin/?direct=true">Bypass to Sveltia</a>
       </p>
       <p>
         <a href="/">← Return to Citizens Track Toolkit</a>
@@ -284,8 +349,14 @@
       const PROXY_ORIGIN = "https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev";
       const LOGIN_ENDPOINT = PROXY_ORIGIN + "/auth/login";
 
-      const form = document.getElementById("login-form");
+      const tabEmail = document.getElementById("tab-btn-email");
+      const tabGitHub = document.getElementById("tab-btn-github");
+      const emailForm = document.getElementById("login-form");
+      const githubForm = document.getElementById("github-form");
+      const formSubtitle = document.getElementById("form-subtitle");
+
       const emailInput = document.getElementById("email");
+      const ghTokenInput = document.getElementById("gh-token");
       const submitBtn = document.getElementById("btn-submit");
       const submitText = document.getElementById("btn-text");
       const alertError = document.getElementById("alert-error");
@@ -294,6 +365,51 @@
       const sessionEmailEl = document.getElementById("session-email");
       const btnGoCms = document.getElementById("btn-go-cms");
       const btnLogout = document.getElementById("btn-logout");
+
+      // Tab switcher
+      tabEmail.addEventListener("click", function () {
+        tabEmail.classList.add("active");
+        tabEmail.setAttribute("aria-selected", "true");
+        tabGitHub.classList.remove("active");
+        tabGitHub.setAttribute("aria-selected", "false");
+        emailForm.style.display = "block";
+        githubForm.style.display = "none";
+        formSubtitle.textContent = "Access the Content Management System using your authorized email address.";
+        hideAlerts();
+        emailInput.focus();
+      });
+
+      tabGitHub.addEventListener("click", function () {
+        tabGitHub.classList.add("active");
+        tabGitHub.setAttribute("aria-selected", "true");
+        tabEmail.classList.remove("active");
+        tabEmail.setAttribute("aria-selected", "false");
+        githubForm.style.display = "block";
+        emailForm.style.display = "none";
+        formSubtitle.textContent = "Sign in directly using your GitHub credentials to commit with your GitHub identity.";
+        hideAlerts();
+        ghTokenInput.focus();
+      });
+
+      // Handle GitHub PAT submission
+      githubForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        hideAlerts();
+        const token = ghTokenInput.value.trim();
+        if (!token) {
+          alertError.textContent = "Please enter a valid GitHub Personal Access Token.";
+          alertError.style.display = "block";
+          return;
+        }
+
+        localStorage.setItem("sveltia-cms.user", JSON.stringify({
+          token: token,
+          email: "",
+          backendName: "github"
+        }));
+
+        window.location.replace("/admin/");
+      });
 
       // Check if redirected here with token in hash or search
       const hash = window.location.hash.substring(1);
@@ -319,7 +435,10 @@
           try {
             const data = JSON.parse(raw);
             if (data && data.token) {
-              sessionEmailEl.textContent = data.email || "active session";
+              const label = data.email 
+                ? data.email 
+                : (data.token.startsWith("gh") ? "GitHub Contributor (" + data.token.slice(0, 7) + "...)" : "Active Session");
+              sessionEmailEl.textContent = label;
               activeSessionBox.style.display = "block";
               return;
             }
