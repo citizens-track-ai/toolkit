@@ -2,11 +2,11 @@
 title: AI in the Picture (icebreaker)
 draft: false
 creators:
-  - name: Better Images of AI
-    role: creator
+  - name: Better Images of AI Project (various contributors)
+    role: image creators
     url: https://betterimagesofai.org/
   - name: Tim Davies
-    role: author
+    role: activity author
     url: https://connectedbydata.org/people/tim-davies
 license:
   type: standard
