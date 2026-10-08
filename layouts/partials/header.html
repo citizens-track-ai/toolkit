@@ -15,7 +15,7 @@
       {{ if hugo.IsMultilingual }}
       <div class="lang-switcher">
         {{ $currentLang := .Language.Lang }}
-        {{ range hugo.Sites }}
+        {{ range .Site.Sites }}
           <a href="{{ if eq .Language.Lang $currentLang }}#{{ else }}{{ .Home.RelPermalink }}{{ end }}" class="lang-btn{{ if eq .Language.Lang $currentLang }} active{{ end }}">
             {{ .Language.Lang }}
           </a>

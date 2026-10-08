@@ -7,26 +7,26 @@ defaultContentLanguageInSubdir: false
 
 languages:
   en:
-    locale: en-GB
-    label: English
+    languageCode: en-GB
+    languageName: English
     contentDir: content/en
     weight: 1
     title: "Citizens Track Toolkit"
   es:
-    locale: es-ES
-    label: Español
+    languageCode: es-ES
+    languageName: Español
     contentDir: content/es
     weight: 2
     title: "Citizens Track Toolkit (ES)"
   fr:
-    locale: fr-FR
-    label: Français
+    languageCode: fr-FR
+    languageName: Français
     contentDir: content/fr
     weight: 3
     title: "Citizens Track Toolkit (FR)"
   de:
-    locale: de-DE
-    label: Deutsch
+    languageCode: de-DE
+    languageName: Deutsch
     contentDir: content/de
     weight: 4
     title: "Citizens Track Toolkit (DE)"
