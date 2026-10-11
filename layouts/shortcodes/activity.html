@@ -1,0 +1,89 @@
+{{- $slug := .Get 0 | default (.Get "slug") -}}
+{{- $item := .Site.GetPage (printf "activities/%s" $slug) -}}
+{{- $isFallback := false -}}
+
+{{- if not $item -}}
+  {{- range hugo.Sites -}}
+    {{- if and (not $item) (eq .Language.Lang "en") -}}
+      {{- $item = .GetPage (printf "activities/%s" $slug) -}}
+      {{- if $item -}}
+        {{- $isFallback = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $item -}}
+<div class="toolkit-embed-card activity-embed-card{{ if $isFallback }} is-fallback{{ end }}">
+  <div class="embed-card-header">
+    <div class="embed-badges">
+      <span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Activity</span>
+      {{ with $item.Params.duration }}
+        <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+          ⏱️ {{ .min }}-{{ .max }} mins
+        </span>
+      {{ end }}
+      {{ with $item.Params.license }}
+        <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+          ⚖️ {{ .name | default "Open" }}
+        </span>
+      {{ end }}
+      {{ if $isFallback }}
+        <span class="element-pill fallback-pill" style="background: #fef3c7; color: #92400e;" title="This activity is showing the English version as it has not yet been translated into this language.">
+          🌐 English version
+        </span>
+      {{ end }}
+    </div>
+    {{ with $item.Params.files }}
+      {{ if gt (len .) 0 }}
+        <span class="files-count-badge" style="font-size: 0.8rem; color: var(--color-muted); font-weight: 600;">
+          📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
+        </span>
+      {{ end }}
+    {{ end }}
+  </div>
+
+  <h4 class="embed-card-title">
+    <a href="{{ $item.RelPermalink }}">{{ $item.Title }}</a>
+  </h4>
+
+  {{ with $item.Params.creators }}
+    <div class="embed-card-attribution">
+      <span>By </span>
+      {{ if reflect.IsSlice . }}
+        {{ range $i, $c := . }}
+          {{ if gt $i 0 }}<span>•</span>{{ end }}
+          {{ if reflect.IsMap $c }}
+            <strong>{{ index $c "name" }}</strong>
+          {{ else }}
+            <strong>{{ $c }}</strong>
+          {{ end }}
+        {{ end }}
+      {{ else }}
+        <strong>{{ . }}</strong>
+      {{ end }}
+    </div>
+  {{ end }}
+
+  {{ with $item.Summary }}
+    <p class="embed-card-summary">
+      {{ . | plainify | truncate 180 }}
+    </p>
+  {{ end }}
+
+  <div class="embed-card-footer">
+    <a href="{{ $item.RelPermalink }}" class="action-btn-link">
+      Open Activity & Instructions &rarr;
+    </a>
+  </div>
+</div>
+{{- else -}}
+<div class="toolkit-ref-missing">
+  <span class="missing-icon">⚠️</span>
+  <div class="missing-body">
+    <strong>Missing Activity Reference:</strong>
+    <span>Could not find activity with slug <code>{{ $slug }}</code>.</span>
+  </div>
+</div>
+{{- warnf "Module shortcode: activity %q referenced on %s could not be found." $slug .Page.File.Path -}}
+{{- end -}}

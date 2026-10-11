@@ -27,9 +27,27 @@ if (typeof CMS !== 'undefined') {
     return val;
   }
 
+  function processShortcodesForPreview(text) {
+    if (!text) return '';
+    let str = String(text);
+    // Replace {{< activity "slug" >}} or {{< activity slug="slug" >}}
+    str = str.replace(/{{<\s*activity\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/g, (match, slug) => {
+      return `\n\n<div class="toolkit-embed-card activity-embed-card"><div class="embed-card-header"><div class="embed-badges"><span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight:700;">Activity</span><span class="element-pill" style="background:#f1f5f9;">⏱️ 15-45m</span></div></div><h4 class="embed-card-title"><a href="/activities/${slug}">📌 Activity: ${slug}</a></h4><p class="embed-card-summary" style="font-size:0.85rem;color:#64748b;">(Embedded activity reference)</p><div class="embed-card-footer"><span class="action-btn-link">View Activity Instructions &rarr;</span></div></div>\n\n`;
+    });
+    // Replace {{< content-item "slug" >}} or {{< content_item "slug" >}}
+    str = str.replace(/{{<\s*content[-_]item\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/g, (match, slug) => {
+      return `\n\n<div class="toolkit-embed-card content-embed-card"><div class="embed-card-header"><div class="embed-badges"><span class="element-pill" style="background: #ccfbf1; color: #134e4a; font-weight:700;">Content Item</span></div><span style="font-size:0.75rem; color:#64748b; font-weight:600;">📄 Page • 🎴 Cards • 📽️ Slides</span></div><h4 class="embed-card-title"><a href="/content/${slug}">📑 Content Item: ${slug}</a></h4><p class="embed-card-summary" style="font-size:0.85rem;color:#64748b;">(Embedded content item with interactive presentation)</p><div class="embed-card-footer"><span class="action-btn-link primary">Open Presentation &rarr;</span></div></div>\n\n`;
+    });
+    // Replace {{< collection "slug" >}} or {{< content-collection "slug" >}}
+    str = str.replace(/{{<\s*(?:content[-_]collection|collection)\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/g, (match, slug) => {
+      return `\n\n<div class="toolkit-embed-card collection-embed-card"><div class="embed-card-header"><div class="embed-badges"><span class="element-pill" style="background: #fae8ff; color: #a21caf; font-weight:700;">Content Collection</span></div></div><h4 class="embed-card-title"><a href="/content-collections/${slug}">📚 Collection: ${slug}</a></h4><p class="embed-card-summary" style="font-size:0.85rem;color:#64748b;">(Embedded topic collection)</p><div class="embed-card-footer"><span class="action-btn-link" style="color: #a21caf;">Browse Collection &rarr;</span></div></div>\n\n`;
+    });
+    return str;
+  }
+
   function renderMarkdown(md) {
     if (md == null || md === '') return '';
-    const str = String(md);
+    let str = processShortcodesForPreview(String(md));
     try {
       if (typeof marked !== 'undefined') {
         const parsed = typeof marked.parse === 'function'
@@ -579,7 +597,165 @@ if (typeof CMS !== 'undefined') {
     `;
   };
 
+  const ModulePreview = ({ entry }) => {
+    const rawData = entry.get('data');
+    const data = normalize(rawData) || {};
+    const title = data.title || 'Untitled Module';
+    const description = data.description || '';
+    const welcome = data.welcome || '';
+    const learning = data.learning || '';
+    const discussion = data.discussion || '';
+    const action = data.action || '';
+    const body = data.body || '';
+
+    return html`
+      <div class="main-wrapper" style="padding: 1.5rem 1.75rem 3rem;">
+        <nav class="breadcrumbs" style="margin-bottom: 1.5rem;">
+          <span>Home</span>
+          <span>/</span>
+          <span>Modules</span>
+          <span>/</span>
+          <strong>${title}</strong>
+        </nav>
+
+        <article class="page-header" style="margin-bottom: 2rem;">
+          <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+            <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Workshop Module</span>
+            <span class="element-pill" style="background: #f1f5f9; color: var(--color-slate); font-weight: 600;">4 Sections</span>
+          </div>
+          <h1 class="page-title">${title}</h1>
+          ${description && html`<p style="font-size: 1.1rem; color: var(--color-slate); margin: 0; line-height: 1.6;">${description}</p>`}
+        </article>
+
+        <!-- Section Navigation Pills in Preview -->
+        <div class="module-nav-bar" style="margin-bottom: 1.5rem;">
+          <span class="module-nav-label">Module Structure:</span>
+          <div class="module-nav-links">
+            <span class="module-nav-btn"><span class="step-num">1</span> 👋 Welcome</span>
+            <span class="module-nav-btn"><span class="step-num">2</span> 💡 Learning</span>
+            <span class="module-nav-btn"><span class="step-num">3</span> 💬 Discussion</span>
+            <span class="module-nav-btn"><span class="step-num">4</span> ⚡ Action</span>
+          </div>
+        </div>
+
+        <div class="module-sections-stream">
+          <!-- 1. WELCOME -->
+          <section class="module-section-card">
+            <div class="module-section-header">
+              <span class="section-step-pill">Section 1</span>
+              <h2 class="module-section-title">👋 Welcome</h2>
+            </div>
+            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(welcome) || '<p style="color: #94a3b8; font-style: italic;">No welcome notes added yet.</p>' }} />
+          </section>
+
+          <!-- 2. LEARNING -->
+          <section class="module-section-card">
+            <div class="module-section-header">
+              <span class="section-step-pill learning">Section 2</span>
+              <h2 class="module-section-title">💡 Learning</h2>
+            </div>
+            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(learning) || '<p style="color: #94a3b8; font-style: italic;">No learning notes added yet.</p>' }} />
+          </section>
+
+          <!-- 3. DISCUSSION -->
+          <section class="module-section-card">
+            <div class="module-section-header">
+              <span class="section-step-pill discussion">Section 3</span>
+              <h2 class="module-section-title">💬 Discussion</h2>
+            </div>
+            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(discussion) || '<p style="color: #94a3b8; font-style: italic;">No discussion notes added yet.</p>' }} />
+          </section>
+
+          <!-- 4. ACTION -->
+          <section class="module-section-card">
+            <div class="module-section-header">
+              <span class="section-step-pill action">Section 4</span>
+              <h2 class="module-section-title">⚡ Action</h2>
+            </div>
+            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(action) || '<p style="color: #94a3b8; font-style: italic;">No action notes added yet.</p>' }} />
+          </section>
+
+          ${body && html`
+            <section class="module-section-card extra-notes">
+              <div class="module-section-header">
+                <h2 class="module-section-title" style="font-size: 1.25rem;">📝 Additional Facilitator Notes</h2>
+              </div>
+              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(body) }} />
+            </section>
+          `}
+        </div>
+      </div>
+    `;
+  };
+
   CMS.registerPreviewTemplate('content_items', ContentItemPreview);
   CMS.registerPreviewTemplate('activities', ActivityPreview);
+  CMS.registerPreviewTemplate('modules', ModulePreview);
+
+  // Custom Editor Components (Widgets for inserting shortcodes into rich text)
+  if (typeof CMS.registerEditorComponent === 'function') {
+    // 1. Activity shortcode widget
+    CMS.registerEditorComponent({
+      id: 'activity',
+      label: 'Activity Card',
+      fields: [
+        {
+          name: 'slug',
+          label: 'Select Activity',
+          widget: 'relation',
+          collection: 'activities',
+          value_field: '{{slug}}',
+          display_fields: ['title'],
+          search_fields: ['title']
+        }
+      ],
+      pattern: /^{{<\s*activity\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/,
+      fromBlock: (match) => ({ slug: match[1] }),
+      toBlock: (data) => `{{< activity "${data.slug || ''}" >}}`,
+      toPreview: (data) => `<div class="cms-shortcode-preview activity" style="padding: 0.6rem 0.85rem; background: #e0f2fe; border: 1px solid #7dd3fc; border-radius: 6px; font-size: 0.9rem; color: #0369a1; display: inline-flex; align-items: center; gap: 0.4rem;">⏱️ <strong>Activity:</strong> ${data.slug || 'None selected'}</div>`
+    });
+
+    // 2. Content Item shortcode widget
+    CMS.registerEditorComponent({
+      id: 'content_item',
+      label: 'Content Item Card',
+      fields: [
+        {
+          name: 'slug',
+          label: 'Select Content Item',
+          widget: 'relation',
+          collection: 'content_items',
+          value_field: '{{slug}}',
+          display_fields: ['title'],
+          search_fields: ['title']
+        }
+      ],
+      pattern: /^{{<\s*content[-_]item\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/,
+      fromBlock: (match) => ({ slug: match[1] }),
+      toBlock: (data) => `{{< content-item "${data.slug || ''}" >}}`,
+      toPreview: (data) => `<div class="cms-shortcode-preview content-item" style="padding: 0.6rem 0.85rem; background: #ccfbf1; border: 1px solid #5eead4; border-radius: 6px; font-size: 0.9rem; color: #134e4a; display: inline-flex; align-items: center; gap: 0.4rem;">📑 <strong>Content Item:</strong> ${data.slug || 'None selected'}</div>`
+    });
+
+    // 3. Content Collection shortcode widget
+    CMS.registerEditorComponent({
+      id: 'content_collection',
+      label: 'Collection Card',
+      fields: [
+        {
+          name: 'slug',
+          label: 'Select Collection',
+          widget: 'relation',
+          collection: 'content_collections',
+          value_field: '{{slug}}',
+          display_fields: ['title'],
+          search_fields: ['title']
+        }
+      ],
+      pattern: /^{{<\s*(?:content[-_]collection|collection)\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/,
+      fromBlock: (match) => ({ slug: match[1] }),
+      toBlock: (data) => `{{< collection "${data.slug || ''}" >}}`,
+      toPreview: (data) => `<div class="cms-shortcode-preview collection" style="padding: 0.6rem 0.85rem; background: #fae8ff; border: 1px solid #f0abfc; border-radius: 6px; font-size: 0.9rem; color: #a21caf; display: inline-flex; align-items: center; gap: 0.4rem;">📚 <strong>Collection:</strong> ${data.slug || 'None selected'}</div>`
+    });
+  }
 }
 

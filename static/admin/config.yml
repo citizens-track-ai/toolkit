@@ -30,10 +30,39 @@ collections:
     i18n: true
     create: true
     fields:
-      - { name: title, label: Title, widget: string, i18n: true }
+      - { name: title, label: Module Title, widget: string, i18n: true }
       - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
-      - { name: description, label: Description, widget: text, required: false, i18n: true }
-      - { name: body, label: Body, widget: richtext, required: false, i18n: true }
+      - { name: description, label: Module Overview / Target Audience, widget: text, required: false, i18n: true }
+
+      - name: welcome
+        label: "1. Welcome Section"
+        widget: richtext
+        required: false
+        i18n: true
+        hint: "Short description and introductory prose. Use the editor shortcode button to embed Activities, Content Items, or Collections."
+
+      - name: learning
+        label: "2. Learning Section"
+        widget: richtext
+        required: false
+        i18n: true
+        hint: "Short description and learning prose. Embed educational Content Items or Collections."
+
+      - name: discussion
+        label: "3. Discussion Section"
+        widget: richtext
+        required: false
+        i18n: true
+        hint: "Short description and discussion guidance. Embed discussion exercises or Activities."
+
+      - name: action
+        label: "4. Action Section"
+        widget: richtext
+        required: false
+        i18n: true
+        hint: "Short description and participatory action guidance. Embed action/next-step Activities."
+
+      - { name: body, label: "Additional Facilitator Notes (Optional)", widget: richtext, required: false, i18n: true }
 
   - name: activities
     label: Activities

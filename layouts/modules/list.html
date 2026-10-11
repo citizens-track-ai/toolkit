@@ -1,0 +1,57 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Directory</span>
+  <h1 class="page-title">Modules</h1>
+  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+    Curated workshop and discussion modules composed of Welcome, Learning, Discussion, and Action sections.
+  </p>
+</div>
+
+{{ $allModules := where .Site.RegularPages "Section" "modules" }}
+
+{{ if gt (len $allModules) 0 }}
+  <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
+    {{ range $allModules }}
+      <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+            <span class="element-pill" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Module</span>
+            <span class="element-pill" style="background: #f1f5f9; color: var(--color-slate);">
+              4 Sections
+            </span>
+          </div>
+
+          <h2 class="item-card-title" style="font-size: 1.25rem;">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </h2>
+
+          {{ with .Params.description }}
+            <p class="item-card-overview" style="font-size: 0.9rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1.25rem;">
+              {{ . | plainify | truncate 160 }}
+            </p>
+          {{ end }}
+
+          <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem;">
+            <span class="element-pill" style="font-size: 0.75rem; background: #f8fafc; border: 1px solid var(--color-border);">👋 Welcome</span>
+            <span class="element-pill" style="font-size: 0.75rem; background: #f8fafc; border: 1px solid var(--color-border);">💡 Learning</span>
+            <span class="element-pill" style="font-size: 0.75rem; background: #f8fafc; border: 1px solid var(--color-border);">💬 Discussion</span>
+            <span class="element-pill" style="font-size: 0.75rem; background: #f8fafc; border: 1px solid var(--color-border);">⚡ Action</span>
+          </div>
+        </div>
+
+        <div>
+          <a href="{{ .RelPermalink }}" class="action-btn" style="width: 100%; text-align: center; justify-content: center;">
+            Open Module &rarr;
+          </a>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+{{ else }}
+  <div style="text-align: center; padding: 4rem 1rem; color: var(--color-muted);">
+    <p>No modules published yet in this language.</p>
+  </div>
+{{ end }}
+
+{{ end }}
