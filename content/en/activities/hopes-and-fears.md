@@ -1,6 +1,6 @@
 ---
 title: Hopes and Fears
-draft: true
+draft: false
 creators:
   - name: Kavli Centre for Ethics, Science and the Public
     role: Inspiration / Ideas

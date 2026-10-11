@@ -1,0 +1,68 @@
+{{- $slug := .Get 0 | default (.Get "slug") -}}
+{{- $item := .Site.GetPage (printf "content/%s" $slug) -}}
+{{- $isFallback := false -}}
+
+{{- if not $item -}}
+  {{- range hugo.Sites -}}
+    {{- if and (not $item) (eq .Language.Lang "en") -}}
+      {{- $item = .GetPage (printf "content/%s" $slug) -}}
+      {{- if $item -}}
+        {{- $isFallback = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $item -}}
+<div class="toolkit-embed-card content-embed-card{{ if $isFallback }} is-fallback{{ end }}">
+  <div class="embed-card-header">
+    <div class="embed-badges">
+      <span class="element-pill" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Content Item</span>
+      {{ with $item.Params.elements }}
+        <span class="element-pill" style="background: #f1f5f9; color: var(--color-slate);">
+          📑 {{ len . }} {{ if eq (len .) 1 }}Element{{ else }}Elements{{ end }}
+        </span>
+      {{ end }}
+      {{ if $isFallback }}
+        <span class="element-pill fallback-pill" style="background: #fef3c7; color: #92400e;" title="This content item is showing the English version as it has not yet been translated into this language.">
+          🌐 English version
+        </span>
+      {{ end }}
+    </div>
+    <div class="view-modes-indicator" style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">
+      📄 Page • 🎴 Cards • 📽️ Slides
+    </div>
+  </div>
+
+  <h4 class="embed-card-title">
+    <a href="{{ $item.RelPermalink }}">{{ $item.Title }}</a>
+  </h4>
+
+  {{ with $item.Params.facilitator_overview }}
+    <p class="embed-card-summary">
+      {{ . | plainify | truncate 180 }}
+    </p>
+  {{ else }}
+    {{ with $item.Summary }}
+      <p class="embed-card-summary">
+        {{ . | plainify | truncate 180 }}
+      </p>
+    {{ end }}
+  {{ end }}
+
+  <div class="embed-card-footer">
+    <a href="{{ $item.RelPermalink }}" class="action-btn-link primary">
+      Explore Content & Presentation &rarr;
+    </a>
+  </div>
+</div>
+{{- else -}}
+<div class="toolkit-ref-missing">
+  <span class="missing-icon">⚠️</span>
+  <div class="missing-body">
+    <strong>Missing Content Item Reference:</strong>
+    <span>Could not find content item with slug <code>{{ $slug }}</code>.</span>
+  </div>
+</div>
+{{- warnf "Module shortcode: content-item %q referenced on %s could not be found." $slug .Page.File.Path -}}
+{{- end -}}

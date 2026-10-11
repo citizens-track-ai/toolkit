@@ -9,7 +9,7 @@ license:
   type: standard
   name: CC BY 4.0
 duration:
-  min: 15
+  min: 25
   max: 45
 files: []
 ---
@@ -40,16 +40,52 @@ This activity is made up of three optional elements:
 
 ## Preparation
 
-To facilitate discussions based on this activity, consider reading the Wikipedia page on [History of Artificial Intelligence](https://en.wikipedia.org/wiki/History_of_artificial_intelligence) or trialing the hands-on activities yourself to develop a deeper understanding of the history of AI.
+To facilitate discussions based on this activity, consider reading the Wikipedia page on [History of Artificial Intelligence](https://en.wikipedia.org/wiki/History_of_artificial_intelligence) and trialing the hands-on activities yourself to develop a deeper understanding of the history of AI, and to be able to support participants to use the different hands-on learning tools. 
 
 ## Process & Steps
 
-1. **Introduction & Quiz (10-15 mins)**: Use the History of AI quiz or slide deck to test assumptions about when AI technologies emerged.
-2. **Key Concepts & Timelines (10 mins)**: Highlight the Dartmouth 1956 workshop and contrast symbolic AI with modern generative models.
-3. **Hands-on Exploration (15-20 mins)**: Participants test generative tools in small groups and reflect on choices, biases, and data sources.
-4. **Group Discussion (10 mins)**: Connect AI choices back to democratic governance and collective decision making.
+1. **Quiz & introduction (5 mins)**: Use the History of AI quiz to start the session. 
+
+Explain to the group that we will be trying different Generative AI Tools to research the history of artificial intelligence from the 1950s to the present day. 
+
+2. **Hands-on learning (15 - 30 minutes)**: Split into small groups of 2 - 5 people. Each group should have access to a device (phone / computer etc.). 
+
+Assign each group to a different AI tool from the options below (you can also set out different 'stations' around the room, and invite people to select the hands-on activity they want to try), and ask them to prepare a short presentation on the history of Artificial Intelligence from the 1950s to the present day.
+
+Share the suggested prompt: "Explain the phases of AI development from 1950 to the present day."
+
+3. **Group reflection & recap (10 - 20 minutes):** Invite groups to present back (a) which tool they used; (b) key facts about the history of AI they learnt. Briefly present from the 'History of AI' slide deck to recap a common narrative for the whole group. 
+
+If hands-on learning activities are not appropriate for the group you are working with, you can instead perform a set of 'live demos' by (a) prompting an AI model to provide bullet points or a full short script for you to read about the history of AI; (b) demonstrating how a voice-based AI tool can respond to Q&A; (c) using an offline/locally hosted AI tool such as local speech recognition/transcription, or a local LLM. 
+
+### Hands on learning options
+
+Depending on availability of devices, and the set-up you are able to complete, you could ask the group to try researching using the following different tools:
+
+**A. 'Plain old wikipedia':** ask one group to read the Wikipedia [History of Artificial Intelligence](https://en.wikipedia.org/wiki/History_of_artificial_intelligence) page.
+
+_If you have members of your group who have moral or other objections to using AI tools, you can invite them to join this group._ 
+
+**B. A 'commercial' ChatBot** such as ChatGPT, Google Gemini, Anthropic Claude or  Deepseek 
+
+_This group could also experiment with different features, such as enabling or disabling web-search or 'deep research' modes on the ChatBot._
+
+**C. A voice-based AI assistant** accessed from a mobile phone. 
+
+_Encourage the group to have an interactive conversation with the AI tool. Note that free versions may have a limit on how many steps of a conversation they will engage in. The limitations of free versions of these tools is a useful discussion point to raise._ 
+
+**D. A 'Retrieval Augmented Generation' tool such as** Gemini Notebook / Notebook LM. 
+
+_Encourage the group to find a long article (e.g. the Wikipedia page on History of AI) that they want to summarise, and to feed this to Gemini Notebook or another similar tool, and to ask questions or get the tool to generate a summary for them._
+
+**E. An open AI model such as Apertus (**[https://publicai.co/](https://publicai.co/)**) or a research model such as those in the Allen AI playground (**[https://playground.allenai.org/](https://playground.allenai.org/)**)** 
+
+_The Ai2 Playground provides access to 'tune' the way a model is run, and provides a 'trace' feature to look at how the results of a prompt are reflected in training data._ 
+
+**F. A local LLM installed on a computer or mobile phone**
+
+_This allows the group to compare the speed and quality of a locally hosted open source model. If you have participants who are concerned about the environmental impacts of inference, they may wish to join this group._ 
 
 ## Localisation & Adaptation Notes
 
 * Research if there are any national or local milestones in computing/AI history relevant to your participants.
-* If internet access is limited, the session can be run using the printable two-sided cards and offline paper exercises.

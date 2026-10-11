@@ -1,0 +1,93 @@
+{{- $slug := .Get 0 | default (.Get "slug") -}}
+{{- $item := .Site.GetPage (printf "content-collections/%s" $slug) -}}
+{{- $isFallback := false -}}
+
+{{- if not $item -}}
+  {{- range hugo.Sites -}}
+    {{- if and (not $item) (eq .Language.Lang "en") -}}
+      {{- $item = .GetPage (printf "content-collections/%s" $slug) -}}
+      {{- if $item -}}
+        {{- $isFallback = true -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $item -}}
+<div class="toolkit-embed-card collection-embed-card{{ if $isFallback }} is-fallback{{ end }}">
+  <div class="embed-card-header">
+    <div class="embed-badges">
+      <span class="element-pill" style="background: #fae8ff; color: #a21caf; font-weight: 700;">Content Collection</span>
+      {{ with $item.Params.items }}
+        <span class="element-pill" style="background: #f1f5f9; color: var(--color-slate);">
+          📚 {{ len . }} {{ if eq (len .) 1 }}Topic Item{{ else }}Topic Items{{ end }}
+        </span>
+      {{ end }}
+      {{ if $isFallback }}
+        <span class="element-pill fallback-pill" style="background: #fef3c7; color: #92400e;" title="This collection is showing the English version as it has not yet been translated into this language.">
+          🌐 English version
+        </span>
+      {{ end }}
+    </div>
+  </div>
+
+  <h4 class="embed-card-title">
+    <a href="{{ $item.RelPermalink }}">{{ $item.Title }}</a>
+  </h4>
+
+  {{ with $item.Params.description }}
+    <p class="embed-card-summary">
+      {{ . | plainify | truncate 180 }}
+    </p>
+  {{ else }}
+    {{ with $item.Summary }}
+      <p class="embed-card-summary">
+        {{ . | plainify | truncate 180 }}
+      </p>
+    {{ end }}
+  {{ end }}
+
+  {{ with $item.Params.items }}
+    <div class="collection-items-preview">
+      <div style="font-size: 0.78rem; font-weight: 700; color: var(--color-muted); text-transform: uppercase; margin-bottom: 0.35rem;">
+        Included Content Items:
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+        {{ range . }}
+          {{ $childSlug := . }}
+          {{ $child := site.GetPage (printf "content/%s" $childSlug) }}
+          {{ if not $child }}
+            {{ range hugo.Sites }}
+              {{ if and (not $child) (eq .Language.Lang "en") }}
+                {{ $child = .GetPage (printf "content/%s" $childSlug) }}
+              {{ end }}
+            {{ end }}
+          {{ end }}
+          <span class="element-pill" style="background: var(--color-bg); border: 1px solid var(--color-border); font-size: 0.8rem;">
+            {{ if $child }}
+              <a href="{{ $child.RelPermalink }}" style="color: var(--color-dark); text-decoration: none;">📄 {{ $child.Title }}</a>
+            {{ else }}
+              📄 {{ $childSlug }}
+            {{ end }}
+          </span>
+        {{ end }}
+      </div>
+    </div>
+  {{ end }}
+
+  <div class="embed-card-footer" style="margin-top: 1rem;">
+    <a href="{{ $item.RelPermalink }}" class="action-btn-link" style="color: #a21caf;">
+      Browse Collection &rarr;
+    </a>
+  </div>
+</div>
+{{- else -}}
+<div class="toolkit-ref-missing">
+  <span class="missing-icon">⚠️</span>
+  <div class="missing-body">
+    <strong>Missing Collection Reference:</strong>
+    <span>Could not find content collection with slug <code>{{ $slug }}</code>.</span>
+  </div>
+</div>
+{{- warnf "Module shortcode: collection %q referenced on %s could not be found." $slug .Page.File.Path -}}
+{{- end -}}
