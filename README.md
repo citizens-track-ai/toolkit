@@ -1,135 +1,129 @@
-[![hugo](https://user-images.githubusercontent.com/43764894/223559747-e9d7f19d-91bf-46a9-a0cb-8d6a40d3cfa3.png)](https://ntl.fyi/3P9w1mr)
+# Citizens Track Toolkit
 
-# Hugo Quickstart Template   
+An open, participatory toolkit under development as part of the [Citizens Track on AI](https://www.citizens-track.org/)
 
-This is a bare-bones Hugo project that has everything you need to quickly deploy it to [Netlify](https://netlify.com). 
-
-Hate reading, here's a video: https://youtu.be/t-tsRxxYdpk
-
-Love reading, here's blog post: https://www.netlify.com/blog/deploy-your-hugo-app-quick/
-
-## Table of Contents:
-
-- [Quick Setup + Deploy Option](#quick-setup--deploy-option)
-- [Regular Setup](#regular-setup)
-  - [Cloning + Install Packages](#1-cloning--install-packages)
-  - [Deploying](#2-deploying)
-- [Styling](#styling)
-  - [Notes on Styling](#notes-on-styling)
-  - [Remove Styling](#remove-styling)
-- [Hugo + Netlify Resources](#hugo--netlify-resources)
-- [Testing](#testing)
-  - [Included Default Testing](#included-default-testing)
-  - [Removing Renovate](#removing-renovate)
-  - [Removing Cypress](#removing-cypress)
-- [Want to learn more?](#want-to-learn-more)
-
-## Quick Setup + Deploy Option
-
-Click this button and it will help you create a new repo, create a new Netlify project, and deploy!
-
-[![Deploy to Netlify Button](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify-templates/hugo-quickstart)
-
-## Regular Setup
-
- ### 1. Cloning + Running Locally
-
-  - Clone this repo with one of these options:
-
-    - Click the 'Use this template' button at the top of the page
-    - Or via the command line `git clone https://github.com/netlify-templates/hugo-quickstart`
-
- - Start the Hugo sever & check it out:
-
-   - `hugo server -D`
-   - go to [http://localhost:1313/](http://localhost:1313/)
-
-  > Alternatively, you can run this locally with [the Netlify CLI](https://docs.netlify.com/cli/get-started/)'s by running the `netlify dev` command for more options like receiving a live preview to share (`netlify dev --live`) and the ability to test [Netlify Functions](https://www.netlify.com/products/functions) and [redirects](https://docs.netlify.com/routing/redirects/). 
-
-  ### 2. Deploying
-  - Install the Netlify CLI globally `npm install netlify-cli -g`
-    
-  - Run `hugo`
-
-  - Then use the `netlify deploy` for a deploy preview link or `netlify deploy --prod` to deploy to production
-
-  Here are a few other ways you can deploy this template:
-    
-  - Use the Netlify CLI's create from template command `netlify sites:create-template hugo-quickstart` which will create a repo, Netlify project, and deploy it
-    
-  - If you want to utilize continuous deployment through GitHub webhooks, run the Netlify command `netlify init` to create a new project based on your repo or `netlify link` to connect your repo to an existing project
-
-## Styling
-
-We've added some modern styling to this template using Sass within an external stylesheet, this will allow you to easily remove our styling and add in your own. 
-
-If you decide that you want to keep our styling you can review our style notes below. 
-
-### Notes on Styling
-
-The variables below give you the ability to change the gradient colors of the blobs and are interpolated into the URL string of the background-img within the body. 
-
-```css
-// Controls the blob blur gradient colors within the main tag's svg
---top-right-blur-1: #2ebc92;
---top-right-blur-2: #ecbb50;
---bttm-left-blur-1: #ff3e89;
---bttm-left-blur-2: #0095cc;
-```
-
-## Remove Styling
-
-If you decide that our styling is not for you, all you'll need to do is remove the [demo-styling.css](https://github.com/netlify-templates/hugo-quickstart/blob/main/themes/netlify-basic/static/css/demo-styling.css) file. 
-
-## Hugo + Netlify Resources
-
-Here are some resources to help you on your Hugo + Netlify coding fun!
-
-- [Hugo on Netlify Integration Page](https://ntl.fyi/3P9w1mr)
-
-
-Hope this template helps :) Happy coding 👩🏻‍💻!
+The toolkit provides modular, interactive resources designed for community workshops, civic assemblies, and grassroots learning.
 
 ---
 
-## Testing
+## 🌟 Key Features
 
-### Included Default Testing
+- **Multi-Format Content Delivery**: Every content item automatically renders in three interactive formats:
+  - 📄 **Page View**: Accessible, comprehensive document format for direct reading and self-paced study.
+  - 🗂️ **Two-Sided Cards**: Interactive 3D flip cards with a dedicated print layout (`@media print`) that formats cards side-by-side with fold guides for physical workshop materials.
+  - 🖥️ **Slide Deck**: Presentation mode with keyboard controls (`←`/`→`), progress tracking, and full-screen toggle for workshop facilitators.
+- **4-Stage Workshop Modules**: End-to-end participatory learning structures arranged into four guided stages:
+  1. 👋 **Welcome**: Icebreakers and group framing
+  2. 💡 **Learning**: Concepts, stats, and exploration
+  3. 💬 **Discussion**: Deliberation and collective dialogue
+  4. ⚡ **Action**: Community empowerment and next steps
+- **Practical Workshop Activities**: Timed, step-by-step participatory exercises with facilitator notes, creator attributions, license details, and downloadable materials.
+- **Rich Pedagogical Elements**: Modular content items composed of quizzes, data points, perspectives, key takeaways, and adaptation guidance.
+- **Multilingual by Design**: Full internationalization across multiple locales (**English**, **Español**, **Français**, and **Deutsch**) using Hugo's multilingual directory structure (`content/{lang}/`).
+- **Git-Based Sveltia CMS**: Integrated [Sveltia CMS](https://github.com/sveltia/sveltia-cms) at `/admin/` featuring editorial workflow, live side-by-side previews, relation selectors, and visual shortcode insertion tools.
 
-We’ve included some tooling that helps us maintain these templates. This template currently uses:
+---
 
-- [Renovate](https://www.mend.io/free-developer-tools/renovate/) - to regularly update our dependencies
-- [Cypress](https://www.cypress.io/) - to run tests against how the template runs in the browser
-- [Cypress Netlify Build Plugin](https://github.com/cypress-io/netlify-plugin-cypress) - to run our tests during our build process
+## 🏗️ Tech Stack
 
-If your team is not interested in this tooling, you can remove them with ease!
+- **Static Site Generator**: [Hugo](https://gohugo.io/) (v0.167.0+ Extended)
+- **CMS**: [Sveltia CMS](https://github.com/sveltia/sveltia-cms) (Git-backed editorial workflow targeting GitHub)
+- **Styling**: Vanilla CSS design system (`static/css/toolkit.css`) with CSS custom properties, responsive layout, print styles, and micro-animations
+- **Hosting**: [Netlify](https://www.netlify.com/)
 
-### Removing Renovate
+---
 
-In order to keep our project up-to-date with dependencies we use a tool called [Renovate](https://github.com/marketplace/renovate). If you’re not interested in this tooling, delete the `renovate.json` file and commit that onto your main branch.
+## 📁 Repository Structure
 
-### Removing Cypress
-
-For our testing, we use [Cypress](https://www.cypress.io/) for end-to-end testing. This makes sure that we can validate that our templates are rendering and displaying as we’d expect. By default, we have Cypress not generate deploy links if our tests don’t pass. If you’d like to keep Cypress and still generate the deploy links, go into your `netlify.toml` and delete the plugin configuration lines:
-
-```diff
-[[plugins]]
-  package = "netlify-plugin-cypress"
--  [plugins.inputs.postBuild]
--    enable = true
--
--  [plugins.inputs]
--    enable = false 
+```text
+toolkit/
+├── content/                     # Localized Markdown content
+│   ├── en/                      # English content (modules, activities, content, collections)
+│   ├── es/                      # Spanish content
+│   ├── fr/                      # French content
+│   └── de/                      # German content
+├── layouts/                     # Hugo template overrides & layouts
+│   ├── _default/                # Base layouts (baseof.html, list.html, single.html)
+│   ├── activities/              # Activity list & single templates
+│   ├── content/                 # Content item multi-view templates (page/cards/slides)
+│   ├── content-collections/     # Thematic collection layouts
+│   ├── modules/                 # 4-stage workshop module layouts
+│   ├── partials/                # Reusable partials (header.html, footer.html, head.html)
+│   └── shortcodes/              # Shortcodes (activity, content_item, collection)
+├── static/                      # Static assets
+│   ├── admin/                   # Sveltia CMS configuration (config.yml, preview.js, index.html)
+│   ├── css/                     # CSS stylesheets (toolkit.css)
+│   └── images/                  # Media library uploads
+├── config.yaml                  # Hugo configuration & multilingual definitions
+└── netlify.toml                 # Build & deployment pipeline configuration
 ```
 
-If you’d like to remove the `netlify-plugin-cypress` build plugin entirely, you’d need to delete the entire block above instead. And then make sure sure to remove the package from the dependencies using:
+---
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- [Hugo Extended](https://gohugo.io/installation/) (`v0.167.0` or higher)
+- [Git](https://git-scm.com/)
+
+Verify your Hugo installation:
 ```bash
-npm uninstall -D netlify-plugin-cypress
+hugo version
 ```
 
-And lastly if you’d like to remove Cypress entirely, delete the entire `cypress` folder and the `cypress.config.ts` file. Then remove the dependency using:
+### Running Locally
 
-```bash
-npm uninstall cypress
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/citizens-track-ai/toolkit.git
+   cd toolkit
+   ```
+
+2. **Start the local development server**:
+   ```bash
+   hugo server -D
+   ```
+
+3. **Open the site in your browser**:
+   - Toolkit Hub: [http://localhost:1313/](http://localhost:1313/)
+   - Sveltia CMS Admin: [http://localhost:1313/admin/](http://localhost:1313/admin/)
+
+---
+
+## ✍️ Content Authoring with CMS
+
+The toolkit includes an in-browser CMS powered by [Sveltia CMS](https://github.com/sveltia/sveltia-cms).
+
+### Accessing the CMS
+- In production / staging: visit `https://<site-domain>/admin/` and authenticate with GitHub.
+- In local development: visit `http://localhost:1313/admin/`.
+
+### Embedding Shortcodes in Markdown
+Facilitators and authors can embed linked activities, collections, or content items directly into rich text fields using either the CMS editor components or manual Hugo shortcodes:
+
+```markdown
+{{< activity "hands-on-history-exploring-the-evolution-of-ai" >}}
+{{< content_item "history-of-ai-branches-and-timeline" >}}
+{{< collection "history-of-ai" >}}
 ```
+
+All embedded shortcodes gracefully fall back to the default language if a translation is pending, ensuring no broken links during localization.
+
+---
+
+## 🚢 Deployment
+
+The site is continuously built and deployed on Netlify:
+- **Build command**: `hugo`
+- **Publish directory**: `public`
+- **Environment**: Hugo v0.167.0
+
+Pushing changes to the configured branch (`staging` or `main`) triggers an automated build and deploy preview on Netlify.
+
+---
+
+## 📄 License & Attribution
+
+- **Code & Layouts**: Released under the [MIT License](LICENSE).
+- **Educational Materials**: Content developed by multiple parties published under open licenses to support public education and grassroots community participation.
