@@ -568,19 +568,47 @@ if (typeof CMS !== 'undefined') {
             </div>
             <div class="element-block-content">
               <div style="display: flex; flex-direction: column; gap: 0.75rem;">
-                ${files.map((f, idx) => html`
-                  <div key=${idx} style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-                    <div>
-                      <strong style="color: var(--color-dark);">${f.title || 'Untitled file'}</strong>
-                      ${f.description && html`<div style="font-size: 0.85rem; color: var(--color-muted);">${f.description}</div>`}
+                ${files.map((f, idx) => {
+                  const target = f.file || f.url || '';
+                  const cleanPath = target.split('?')[0].split('#')[0];
+                  const ext = cleanPath.includes('.') ? cleanPath.split('.').pop().toLowerCase() : '';
+                  const isPdf = ext === 'pdf';
+                  const isHtml = ext === 'html' || ext === 'htm';
+                  const isImage = ['png', 'jpg', 'jpeg', 'webp', 'svg', 'gif', 'avif'].includes(ext);
+                  const canPreview = isPdf || isHtml || isImage;
+
+                  return html`
+                    <div key=${idx} style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-border); flex-wrap: wrap; gap: 0.75rem;">
+                      <div style="min-width: 200px; flex: 1;">
+                        <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                          <strong style="color: var(--color-dark);">${f.title || 'Untitled file'}</strong>
+                          ${ext ? html`
+                            <span class="element-pill" style="font-size: 0.68rem; padding: 0.15rem 0.4rem; background: #e2e8f0; color: #475569; font-weight: 700; text-transform: uppercase;">
+                              ${ext}
+                            </span>
+                          ` : ''}
+                        </div>
+                        ${f.description && html`<div style="font-size: 0.85rem; color: var(--color-muted); margin-top: 0.2rem;">${f.description}</div>`}
+                      </div>
+                      <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+                        ${canPreview ? html`
+                          <span class="action-btn" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                            Preview Online
+                          </span>
+                        ` : ''}
+                        ${f.file ? html`
+                          <span class="action-btn primary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                            Download
+                          </span>
+                        ` : f.url && !canPreview ? html`
+                          <span class="action-btn" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">Open Link &rarr;</span>
+                        ` : ''}
+                      </div>
                     </div>
-                    ${f.file ? html`
-                      <span class="action-btn primary" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Download File</span>
-                    ` : f.url ? html`
-                      <span class="action-btn" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Open Link &rarr;</span>
-                    ` : ''}
-                  </div>
-                `)}
+                  `;
+                })}
               </div>
             </div>
           </div>

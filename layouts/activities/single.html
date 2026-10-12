@@ -75,18 +75,54 @@
     <div class="element-block-content">
       <div style="display: flex; flex-direction: column; gap: 0.75rem;">
         {{ range . }}
-          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 0.75rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-border);">
-            <div>
-              <strong style="color: var(--color-dark);">{{ .title }}</strong>
+          {{ $target := .file | default .url }}
+          {{ $ext := path.Ext $target | lower }}
+          {{ $cleanExt := strings.TrimPrefix "." $ext }}
+          {{ $isPdf := eq $ext ".pdf" }}
+          {{ $isHtml := or (eq $ext ".html") (eq $ext ".htm") }}
+          {{ $isImage := or (eq $ext ".png") (eq $ext ".jpg") (eq $ext ".jpeg") (eq $ext ".webp") (eq $ext ".svg") (eq $ext ".gif") (eq $ext ".avif") }}
+          {{ $canPreview := or $isPdf $isHtml $isImage }}
+          {{ $fileUrl := "" }}
+          {{ if .file }}
+            {{ $fileUrl = .file | relURL }}
+          {{ else if .url }}
+            {{ $fileUrl = .url }}
+          {{ end }}
+
+          <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 1rem; background: var(--color-bg-alt); border-radius: var(--radius-sm); border: 1px solid var(--color-border); flex-wrap: wrap; gap: 0.75rem;">
+            <div style="min-width: 200px; flex: 1;">
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <strong style="color: var(--color-dark);">{{ .title }}</strong>
+                {{ if $cleanExt }}
+                  <span class="element-pill" style="font-size: 0.68rem; padding: 0.15rem 0.4rem; background: #e2e8f0; color: #475569; font-weight: 700; text-transform: uppercase;">
+                    {{ $cleanExt }}
+                  </span>
+                {{ end }}
+              </div>
               {{ with .description }}
-                <div style="font-size: 0.85rem; color: var(--color-muted);">{{ . }}</div>
+                <div style="font-size: 0.85rem; color: var(--color-muted); margin-top: 0.2rem;">{{ . }}</div>
               {{ end }}
             </div>
-            {{ if .file }}
-              <a href="{{ .file | relURL }}" download class="action-btn primary" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Download File</a>
-            {{ else if .url }}
-              <a href="{{ .url }}" target="_blank" rel="noopener" class="action-btn" style="font-size: 0.75rem; padding: 0.3rem 0.7rem;">Open Link &rarr;</a>
-            {{ end }}
+
+            <div style="display: flex; gap: 0.45rem; align-items: center; flex-wrap: wrap;">
+              {{ if $canPreview }}
+                <a href="{{ $fileUrl }}" target="_blank" rel="noopener" class="action-btn" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Preview online in a new tab">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg>
+                  Preview Online
+                </a>
+              {{ end }}
+
+              {{ if .file }}
+                <a href="{{ $fileUrl }}" download class="action-btn primary" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;" title="Download file to your device">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                  Download
+                </a>
+              {{ else if and .url (not $canPreview) }}
+                <a href="{{ $fileUrl }}" target="_blank" rel="noopener" class="action-btn" style="font-size: 0.78rem; padding: 0.35rem 0.75rem; display: inline-flex; align-items: center; gap: 0.35rem;">
+                  Open Link &rarr;
+                </a>
+              {{ end }}
+            </div>
           </div>
         {{ end }}
       </div>
