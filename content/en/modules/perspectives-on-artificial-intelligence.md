@@ -29,10 +29,22 @@ discussion: |-
   * What benefits or conveniences feel real to you, and what concerns give you pause?
   * Who is currently making the rules for these systems, and who is affected by them?
 action: |-
-  Reconvene the full assembly to harvest key takeaways and discuss what democratic oversight of AI looks like in practice.
+  (Early draft: activities to come)
 
-  ### Closing Steps
-  1. **Harvest Themes:** Ask each table spokesperson to share one surprising consensus and one open question.
-  2. **Question Wall:** Have participants post remaining questions onto the collective question board.
-  3. **Next Steps:** Introduce the upcoming module and signpost participants to the community resource repository.
+  In the last 30 minutes of the session you should work to identify priority **messages** from the group for different audiences.
+
+  * **Hold a brief brainstorm to ask "who can affect AI?"**
+
+  * **Introduce the 'People, Government, Companies' canvas** which has 9 boxes representing different levels at which people, governments, and companies make decisions about AI. 
+
+  * **Either:** 
+      - **Invite individuals to come up with "messages" they want to share about the future of AI**
+  or 
+      - **If you are responding to a particular opportunity for input, summarise the framing question, and invite responses.** 
+
+  * **Map the messages or question responses onto the canvas** **and cluster**
+
+  * **Use dot-voting to identify priorities**
+
+  Write up a prioritised list of messages.
 ---
