@@ -888,16 +888,16 @@ a:hover {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 1.75rem;
   margin-bottom: 3rem;
   perspective: 1200px;
 }
 
 .card-3d-wrapper {
   background-color: transparent;
-  min-height: 440px;
-  height: 440px;
+  min-height: 330px;
+  height: 330px;
   perspective: 1200px;
   cursor: pointer;
   user-select: none;
@@ -936,11 +936,11 @@ a:hover {
   border-radius: var(--radius-lg);
   border: 2px solid var(--color-border);
   background: white;
-  padding: 1.5rem;
+  padding: 1.15rem 1.4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -960,9 +960,15 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.element-pill-spacer {
+  display: inline-block;
+  width: 1px;
+  height: 1px;
 }
 
 .card-flip-prompt {
@@ -977,6 +983,7 @@ a:hover {
   border-radius: 9999px;
   border: 1px solid var(--color-border);
   transition: all 0.15s ease;
+  margin-left: auto;
 }
 
 .card-3d-wrapper:hover .card-flip-prompt {
@@ -990,8 +997,118 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+  padding: 0.25rem 0;
+  min-height: 0;
+}
+
+.card-face-back .card-face-body {
+  justify-content: flex-start;
   overflow-y: auto;
-  padding: 0.5rem 0;
+}
+
+/* Card Front: Information Content (Title & Image) */
+.card-info-front-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  gap: 0.65rem;
+}
+
+.card-front-title {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.card-front-title h1,
+.card-front-title h2,
+.card-front-title h3,
+.card-front-title h4,
+.card-front-title p {
+  margin: 0;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-dark);
+}
+
+.card-info-front-content .card-front-title:only-child h1,
+.card-info-front-content .card-front-title:only-child h2,
+.card-info-front-content .card-front-title:only-child h3,
+.card-info-front-content .card-front-title:only-child h4,
+.card-info-front-content .card-front-title:only-child p {
+  font-size: 1.4rem;
+}
+
+.card-front-image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 155px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.card-front-image {
+  max-height: 155px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card Back: Full Text & Auto-Shrinkable Typography */
+.card-back-text {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--color-dark);
+  transition: font-size 0.08s ease;
+}
+
+.card-back-text h1,
+.card-back-text h2,
+.card-back-text h3,
+.card-back-text h4 {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  color: var(--color-dark);
+}
+
+.card-back-text p {
+  margin: 0 0 0.4rem 0;
+}
+
+.card-back-text p:last-child {
+  margin-bottom: 0;
+}
+
+.card-back-text blockquote {
+  margin: 0.35rem 0;
+  padding: 0.3rem 0.65rem;
+  border-left: 3px solid #93c5fd;
+  background: #f8fafc;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+.card-back-text ul,
+.card-back-text ol {
+  margin: 0.3rem 0;
+  padding-left: 1.25rem;
+}
+
+.card-back-text li {
+  margin-bottom: 0.2rem;
 }
 
 .card-main-title {
@@ -999,11 +1116,11 @@ a:hover {
   font-weight: 700;
   line-height: 1.4;
   color: var(--color-dark);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .card-main-stat {
-  font-size: 3.5rem;
+  font-size: 3.25rem;
   font-weight: 800;
   color: #0284c7;
   line-height: 1;
@@ -1011,9 +1128,9 @@ a:hover {
 }
 
 .card-main-quote {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--color-dark);
   margin: 0;
 }
@@ -1022,7 +1139,7 @@ a:hover {
   padding-top: 0.75rem;
   border-top: 1px solid var(--color-border-subtle);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   font-size: 0.75rem;
   color: var(--color-muted);
@@ -1297,11 +1414,18 @@ a:hover {
    PRINT STYLES FOR TWO-SIDED CARDS (@media print)
    ========================================================================== */
 @media print {
+  @page {
+    size: landscape;
+    margin: 10mm 12mm;
+  }
+
   body {
     background: white !important;
     color: black !important;
     margin: 0 !important;
     padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
   /* Hide non-card elements */
@@ -1325,6 +1449,8 @@ a:hover {
 
   #content-view-cards {
     display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
   .main-wrapper {
@@ -1336,29 +1462,61 @@ a:hover {
   /* Printable Cards: Paired Front & Back side-by-side with central fold line */
   .cards-grid {
     display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
   }
 
+  /* Exactly 2 landscape cards per page */
   .card-3d-wrapper {
     display: block !important;
-    height: auto !important;
-    min-height: auto !important;
+    height: 88mm !important;
+    max-height: 88mm !important;
+    min-height: 88mm !important;
+    margin: 0 0 8mm 0 !important;
+    padding: 0 !important;
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    margin-bottom: 2cm !important;
     perspective: none !important;
     transform: none !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+
+  /* Page break after every 2 cards */
+  .card-3d-wrapper:nth-child(2n) {
+    margin-bottom: 0 !important;
+    page-break-after: always !important;
+    break-after: page !important;
+  }
+
+  .card-3d-wrapper:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  /* Central horizontal cut line between Card 1 and Card 2 on the same page */
+  .card-3d-wrapper:nth-child(2n - 1):not(:last-child)::after {
+    content: '✂ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CUT HERE';
+    display: block;
+    text-align: center;
+    font-size: 6.5pt;
+    color: #94a3b8;
+    margin-top: 3.5mm;
+    letter-spacing: 0.12em;
   }
 
   .card-3d-inner {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
-    border: 2px solid #000000 !important;
-    border-radius: 8px !important;
-    height: auto !important;
-    min-height: 280px !important;
+    border: 1.5px solid #0f172a !important;
+    border-radius: 6px !important;
+    height: 88mm !important;
+    max-height: 88mm !important;
     transform: none !important;
     box-shadow: none !important;
     position: relative !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
   }
 
   /* Central vertical fold line guide */
@@ -1368,13 +1526,15 @@ a:hover {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
-    font-size: 8pt;
-    font-weight: bold;
-    letter-spacing: 0.2em;
-    color: #888888;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #64748b;
     background: white;
-    padding: 2px 6px;
+    padding: 1px 6px;
     z-index: 10;
+    border: 1px solid #cbd5e1;
+    border-radius: 3px;
   }
 
   .card-face {
@@ -1382,19 +1542,24 @@ a:hover {
     top: auto !important;
     left: auto !important;
     width: 100% !important;
-    height: auto !important;
-    min-height: 280px !important;
+    height: 88mm !important;
+    max-height: 88mm !important;
     transform: none !important;
     -webkit-backface-visibility: visible !important;
     backface-visibility: visible !important;
     border: none !important;
     border-radius: 0 !important;
     background: white !important;
-    padding: 1.2cm !important;
+    padding: 4.5mm 6.5mm !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
   }
 
   .card-face-front {
-    border-right: 1.5px dashed #666666 !important;
+    border-right: 1.5px dashed #64748b !important;
   }
 
   .card-face-back {
@@ -1402,19 +1567,129 @@ a:hover {
     border-style: none !important;
   }
 
+  .card-face-header {
+    margin-bottom: 2mm !important;
+    padding-bottom: 1.5mm !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+  }
+
+  .card-face-front.card-front-info .card-face-header {
+    display: none !important;
+  }
+
+  .card-face-footer {
+    display: none !important;
+  }
+
+  .card-flip-prompt,
+  .card-flip-btn {
+    display: none !important;
+  }
+
+  .card-face-body {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  .card-face-back .card-face-body {
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
+
   .card-main-title {
     font-size: 13pt !important;
+    line-height: 1.3 !important;
     color: black !important;
   }
 
+  .card-front-title h1,
+  .card-front-title h2,
+  .card-front-title h3,
+  .card-front-title h4,
+  .card-front-title p {
+    font-size: 14pt !important;
+    line-height: 1.3 !important;
+    color: black !important;
+  }
+
+  .card-info-front-content .card-front-title:only-child h1,
+  .card-info-front-content .card-front-title:only-child h2,
+  .card-info-front-content .card-front-title:only-child h3,
+  .card-info-front-content .card-front-title:only-child h4,
+  .card-info-front-content .card-front-title:only-child p {
+    font-size: 16pt !important;
+  }
+
+  .card-front-image-wrap {
+    max-height: 38mm !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+
+  .card-front-image {
+    max-height: 38mm !important;
+    max-width: 90% !important;
+    object-fit: contain !important;
+  }
+
   .card-main-stat {
-    font-size: 32pt !important;
+    font-size: 26pt !important;
     color: black !important;
   }
 
   .card-main-quote {
-    font-size: 12pt !important;
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
     color: black !important;
+  }
+
+  .card-back-text {
+    font-size: 12pt;
+    line-height: 1.35;
+    color: #0f172a !important;
+  }
+
+  .card-back-text h1,
+  .card-back-text h2,
+  .card-back-text h3,
+  .card-back-text h4 {
+    font-size: 1.2em;
+    margin-bottom: 3pt !important;
+  }
+
+  .card-back-text p {
+    margin: 0 0 3pt 0 !important;
+  }
+
+  .card-back-text blockquote {
+    margin: 2.5pt 0 !important;
+    padding: 2pt 5pt !important;
+    border-left: 2px solid #94a3b8 !important;
+    font-size: 0.95em !important;
+  }
+
+  .card-back-text ul,
+  .card-back-text ol {
+    margin: 1.5pt 0 !important;
+    padding-left: 10pt !important;
+  }
+
+  .card-back-text li {
+    margin-bottom: 1pt !important;
+  }
+
+  .citation-line {
+    margin-top: 1.5pt !important;
+    font-size: 6pt !important;
+    color: #64748b !important;
   }
 }
 

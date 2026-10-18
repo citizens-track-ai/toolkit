@@ -218,16 +218,19 @@
           <div class="card-3d-inner">
             
             <!-- CARD FRONT -->
-            <div class="card-face card-face-front">
+            <div class="card-face card-face-front{{ if eq $element.type "information" }} card-front-info{{ end }}">
               <div class="card-face-header">
-                <span class="element-pill {{ $element.type }}">
-                  {{ if eq $element.type "quiz_question" }}Quiz Question
-                  {{ else if eq $element.type "statistic" }}Statistic / Key Figure
-                  {{ else if eq $element.type "perspective" }}Perspective
-                  {{ else if eq $element.type "information" }}Key Concept
-                  {{ else if eq $element.type "takeaways" }}Takeaways
-                  {{ else }}{{ $element.type }}{{ end }}
-                </span>
+                {{ if ne $element.type "information" }}
+                  <span class="element-pill {{ $element.type }}">
+                    {{ if eq $element.type "quiz_question" }}Quiz Question
+                    {{ else if eq $element.type "statistic" }}Statistic / Key Figure
+                    {{ else if eq $element.type "perspective" }}Perspective
+                    {{ else if eq $element.type "takeaways" }}Takeaways
+                    {{ else }}{{ $element.type }}{{ end }}
+                  </span>
+                {{ else }}
+                  <span class="element-pill-spacer"></span>
+                {{ end }}
                 <span class="card-flip-prompt">Click to flip ↺</span>
               </div>
 
@@ -244,8 +247,24 @@
                     {{ $element.quote | markdownify }}
                   </blockquote>
                 {{ else if eq $element.type "information" }}
-                  <div class="card-main-title" style="font-size: 1.1rem; line-height: 1.5;">
-                    {{ $element.text | markdownify }}
+                  {{- $cleanText := replace $element.text "\r\n" "\n" -}}
+                  {{- $lines := split $cleanText "\n" -}}
+                  {{- $firstLine := "" -}}
+                  {{- range $lines -}}
+                    {{- $trimmed := trim . " \t\r\n" -}}
+                    {{- if and (eq $firstLine "") (ne $trimmed "") -}}
+                      {{- $firstLine = $trimmed -}}
+                    {{- end -}}
+                  {{- end -}}
+                  <div class="card-info-front-content">
+                    <div class="card-front-title">
+                      {{ $firstLine | markdownify }}
+                    </div>
+                    {{ with $element.image }}
+                      <div class="card-front-image-wrap">
+                        <img src="{{ . | relURL }}" alt="Card illustration" class="card-front-image">
+                      </div>
+                    {{ end }}
                   </div>
                 {{ else if eq $element.type "takeaways" }}
                   <div class="card-main-title" style="color: #86198f;">
@@ -258,8 +277,9 @@
               </div>
 
               <div class="card-face-footer">
-                <span class="card-side-tag front">Front Side</span>
-                <button type="button" class="card-flip-btn" tabindex="-1">Flip to Answer &rarr;</button>
+                <button type="button" class="card-flip-btn" tabindex="-1">
+                  {{ if eq $element.type "quiz_question" }}Flip to Answer &rarr;{{ else }}Flip to Details &rarr;{{ end }}
+                </button>
               </div>
             </div>
 
@@ -306,11 +326,11 @@
                     Speaker / Source Perspective
                   </div>
                 {{ else if eq $element.type "information" }}
-                  <div style="font-size: 0.95rem; line-height: 1.5;">
+                  <div class="card-back-text">
                     {{ $element.text | markdownify }}
                   </div>
                 {{ else if eq $element.type "takeaways" }}
-                  <div style="font-size: 0.9rem; line-height: 1.5;">
+                  <div class="card-back-text">
                     {{ $element.text | markdownify }}
                   </div>
                 {{ end }}
@@ -323,7 +343,6 @@
               </div>
 
               <div class="card-face-footer">
-                <span class="card-side-tag back">Back Side</span>
                 <button type="button" class="card-flip-btn" tabindex="-1">&larr; Flip to Front</button>
               </div>
             </div>
@@ -497,6 +516,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (cardsActions) cardsActions.style.display = targetId === 'content-view-cards' ? 'flex' : 'none';
     if (slidesActions) slidesActions.style.display = targetId === 'content-view-slides' ? 'flex' : 'none';
 
+    if (targetId === 'content-view-cards') {
+      requestAnimationFrame(() => {
+        fitCardBacks();
+      });
+    }
+
     // Update URL hash
     const viewName = targetId.replace('content-view-', '');
     if (history.replaceState) {
@@ -508,6 +533,57 @@ document.addEventListener('DOMContentLoaded', () => {
     tab.addEventListener('click', () => switchView(tab.dataset.target));
   });
 
+  // Dynamic font scaling for card backs so all text comfortably fits
+  function fitCardBacks() {
+    const cardsView = document.getElementById('content-view-cards');
+    if (!cardsView) return;
+    const isPrinting = (window.matchMedia && window.matchMedia('print').matches);
+    if (!isPrinting && cardsView.style.display === 'none' && !cardsView.classList.contains('active')) {
+      return;
+    }
+
+    const backBodies = cardsView.querySelectorAll('.card-face-back .card-face-body');
+    backBodies.forEach(body => {
+      const textEl = body.querySelector('.card-back-text');
+      if (!textEl) return;
+
+      // Reset inline styles
+      textEl.style.fontSize = '';
+      textEl.style.lineHeight = '';
+
+      const availableHeight = body.clientHeight;
+      if (availableHeight <= 0) return;
+
+      let currentSize = 16; // 12pt base font size (16px)
+      const computed = window.getComputedStyle(textEl);
+      if (computed && computed.fontSize) {
+        currentSize = parseFloat(computed.fontSize);
+      }
+      const minSize = 10; // legible minimum floor (~7.5pt)
+
+      while (body.scrollHeight > availableHeight + 3 && currentSize > minSize) {
+        currentSize -= 0.5;
+        textEl.style.fontSize = currentSize + 'px';
+      }
+
+      if (body.scrollHeight > availableHeight + 3) {
+        textEl.style.lineHeight = '1.25';
+      }
+    });
+  }
+
+  // Auto-fit on window resize
+  let resizeTimeout;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(fitCardBacks, 150);
+  });
+
+  // Auto-fit before printing
+  window.addEventListener('beforeprint', () => {
+    fitCardBacks();
+  });
+
   // URL hash routing
   const initialHash = window.location.hash.toLowerCase();
   if (initialHash === '#cards') {
@@ -515,6 +591,9 @@ document.addEventListener('DOMContentLoaded', () => {
   } else if (initialHash === '#slides') {
     switchView('content-view-slides');
   }
+
+  // Initial check once rendered
+  setTimeout(fitCardBacks, 200);
 
   // 2. TWO-SIDED CARDS (3D FLIP LOGIC)
   const cardWrappers = document.querySelectorAll('.card-3d-wrapper');
@@ -558,7 +637,8 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnPrintCards) {
     btnPrintCards.addEventListener('click', () => {
       switchView('content-view-cards');
-      setTimeout(() => window.print(), 100);
+      fitCardBacks();
+      setTimeout(() => window.print(), 150);
     });
   }
 
