@@ -38,7 +38,7 @@ action: |-
 
   o bien,
 
-      - **si la sesión responde a una oportunidad concreta para aportar contribuciones, resuman la pregunta central y soliciten respuestas.**
+   * **si la sesión responde a una oportunidad concreta para aportar contribuciones, resuman la pregunta central y soliciten respuestas.**
   * **Ubiquen los mensajes o las respuestas a la pregunta dentro del esquema y agrupen los elementos relacionados.**
   * **Utilicen la votación por puntos («dot-voting») para determinar las prioridades.**
 
