@@ -229,7 +229,10 @@ collections:
               - { name: answer, label: Answer, widget: richtext, i18n: true }
               - { name: explanation, label: Explanation, widget: richtext, required: false, i18n: true }
               - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: image_alt, label: Image Alt Text, widget: string, required: false, i18n: true, hint: "Descriptive alt text for accessibility and screen readers." }
+              - { name: image_attribution, label: Image Attribution, widget: string, required: false, i18n: true, hint: "Artist, creator, or source attribution for the image." }
               - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+              - { name: notes, label: Notes (Speaker & Facilitator Notes), widget: text, required: false, i18n: true, hint: "Optional notes for facilitators on the page view, and speaker notes in slide deck." }
 
           - name: statistic
             label: Statistic
@@ -239,7 +242,10 @@ collections:
               - { name: description, label: Description / Label, widget: string, i18n: true }
               - { name: explanation, label: Explanation / Context, widget: richtext, required: false, i18n: true }
               - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: image_alt, label: Image Alt Text, widget: string, required: false, i18n: true, hint: "Descriptive alt text for accessibility and screen readers." }
+              - { name: image_attribution, label: Image Attribution, widget: string, required: false, i18n: true, hint: "Artist, creator, or source attribution for the image." }
               - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+              - { name: notes, label: Notes (Speaker & Facilitator Notes), widget: text, required: false, i18n: true, hint: "Optional notes for facilitators on the page view, and speaker notes in slide deck." }
 
           - name: information
             label: Information
@@ -247,7 +253,10 @@ collections:
             fields:
               - { name: text, label: Information Text, widget: richtext, i18n: true }
               - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: image_alt, label: Image Alt Text, widget: string, required: false, i18n: true, hint: "Descriptive alt text for accessibility and screen readers." }
+              - { name: image_attribution, label: Image Attribution, widget: string, required: false, i18n: true, hint: "Artist, creator, or source attribution for the image." }
               - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+              - { name: notes, label: Notes (Speaker & Facilitator Notes), widget: text, required: false, i18n: true, hint: "Optional notes for facilitators on the page view, and speaker notes in slide deck." }
 
           - name: perspective
             label: Perspective
@@ -256,7 +265,10 @@ collections:
               - { name: quote, label: Quote / Perspective Statement, widget: richtext, i18n: true }
               - { name: attribution, label: Attribution (Speaker / Role / Community), widget: string, i18n: true }
               - { name: image, label: Optional Image / Photo, widget: image, required: false, i18n: duplicate }
+              - { name: image_alt, label: Image Alt Text, widget: string, required: false, i18n: true, hint: "Descriptive alt text for accessibility and screen readers." }
+              - { name: image_attribution, label: Image Attribution, widget: string, required: false, i18n: true, hint: "Artist, photographer, or source attribution for the image." }
               - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+              - { name: notes, label: Notes (Speaker & Facilitator Notes), widget: text, required: false, i18n: true, hint: "Optional notes for facilitators on the page view, and speaker notes in slide deck." }
 
           - name: takeaways
             label: Take-aways
@@ -264,7 +276,10 @@ collections:
             fields:
               - { name: text, label: Take-away Points, widget: richtext, i18n: true }
               - { name: image, label: Optional Image, widget: image, required: false, i18n: duplicate }
+              - { name: image_alt, label: Image Alt Text, widget: string, required: false, i18n: true, hint: "Descriptive alt text for accessibility and screen readers." }
+              - { name: image_attribution, label: Image Attribution, widget: string, required: false, i18n: true, hint: "Artist, creator, or source attribution for the image." }
               - { name: citation, label: Citation Line, widget: string, required: false, i18n: true }
+              - { name: notes, label: Notes (Speaker & Facilitator Notes), widget: text, required: false, i18n: true, hint: "Optional notes for facilitators on the page view, and speaker notes in slide deck." }
 
       - name: adaptation_guidance
         label: Adaptation & Localisation Guidance

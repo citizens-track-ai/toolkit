@@ -1,11 +1,19 @@
 {{ define "main" }}
 
-<div class="page-header" style="margin-bottom: 2.5rem;">
-  <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Index</span>
-  <h1 class="page-title">All Content Items</h1>
-  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
-    Standalone and collection-associated learning elements, quizzes, statistics, and community perspectives.
-  </p>
+<div class="page-header" style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem;">
+  <div>
+    <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Index</span>
+    <h1 class="page-title">All Content Items</h1>
+    <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+      Standalone and collection-associated learning elements, quizzes, statistics, and community perspectives.
+    </p>
+  </div>
+  <div style="display: flex; gap: 0.5rem; align-items: center; margin-top: 0.5rem;">
+    <a href="{{ "present/" | relLangURL }}" class="action-btn primary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.55rem 1.1rem; font-weight: 700; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);" target="_blank" rel="noopener" title="Open the Reveal.js slide deck combiner">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+      <span>🎛️ Combined Deck Presenter</span>
+    </a>
+  </div>
 </div>
 
 {{ $allItems := where .Site.RegularPages "Section" "content" }}
@@ -38,10 +46,14 @@
 
     <div class="content-item-card">
       <div>
-        <div class="item-card-header">
+        <div class="item-card-header" style="display: flex; justify-content: space-between; align-items: flex-start; gap: 0.5rem;">
           <h2 class="item-card-title">
             <a href="{{ .RelPermalink }}">{{ .Title }}</a>
           </h2>
+          <label style="display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.75rem; color: var(--color-slate); cursor: pointer; background: #f8fafc; border: 1px solid var(--color-border); padding: 0.2rem 0.45rem; border-radius: 4px;" title="Select this deck to combine in Reveal.js presentation">
+            <input type="checkbox" class="list-deck-checkbox" data-slug="{{ $itemSlug }}" style="accent-color: var(--color-primary);">
+            <span>Select</span>
+          </label>
         </div>
 
         {{ with $linkedCollections }}
@@ -57,16 +69,6 @@
         {{ with .Params.facilitator_overview }}
           <p class="item-card-overview">{{ . }}</p>
         {{ end }}
-
-        {{ with .Params.elements }}
-          <div class="item-card-elements">
-            {{ range . }}
-              <span class="element-pill {{ .type }}">
-                {{ if eq .type "quiz_question" }}Quiz{{ else if eq .type "statistic" }}Statistic{{ else if eq .type "perspective" }}Perspective{{ else if eq .type "information" }}Info{{ else if eq .type "takeaways" }}Takeaways{{ else }}{{ .type }}{{ end }}
-              </span>
-            {{ end }}
-          </div>
-        {{ end }}
       </div>
 
       <div class="item-card-footer">
@@ -80,12 +82,62 @@
         {{ end }}
         <div style="display: flex; gap: 0.5rem; align-items: center;">
           <a href="{{ .RelPermalink }}#cards" class="view-item-link" title="Open as 2-Sided Cards">🎴 Cards</a>
-          <a href="{{ .RelPermalink }}#slides" class="view-item-link" title="Open as Slide Deck">📽️ Slides</a>
+          <a href="{{ "present/" | relLangURL }}?decks={{ $itemSlug }}" class="view-item-link" title="Present this deck in Reveal.js" target="_blank" rel="noopener">📽️ Slides</a>
           <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">Page &rarr;</a>
         </div>
       </div>
     </div>
   {{ end }}
 </div>
+
+<!-- Floating Selection Action Bar for Combined Presentations -->
+<div id="deck-combine-floating-bar" style="position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(140px); background: #0f172a; color: white; border: 1px solid rgba(255,255,255,0.2); border-radius: 999px; padding: 0.65rem 1.35rem; display: flex; align-items: center; gap: 1.25rem; box-shadow: 0 20px 40px rgba(0,0,0,0.5); z-index: 1000; transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);">
+  <span style="font-size: 0.9rem; font-weight: 600;"><strong id="selected-decks-counter" style="color: #40A9FF;">0</strong> decks selected</span>
+  <button type="button" id="btn-launch-combined" style="background: #40A9FF; color: #0f172a; border: none; font-weight: 700; padding: 0.45rem 1.15rem; border-radius: 999px; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; gap: 0.35rem; transition: background 0.15s ease;">
+    ▶️ Present Combined in Reveal.js &rarr;
+  </button>
+  <button type="button" id="btn-clear-selection" style="background: none; border: none; color: #94a3b8; font-size: 0.8rem; cursor: pointer; text-decoration: underline;">
+    Clear
+  </button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const checkboxes = document.querySelectorAll('.list-deck-checkbox');
+  const floatingBar = document.getElementById('deck-combine-floating-bar');
+  const counterEl = document.getElementById('selected-decks-counter');
+  const btnLaunch = document.getElementById('btn-launch-combined');
+  const btnClear = document.getElementById('btn-clear-selection');
+  const presentBaseUrl = '{{ "present/" | relLangURL }}';
+
+  function updateFloatingBar() {
+    const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.dataset.slug);
+    counterEl.textContent = selected.length;
+    if (selected.length > 0) {
+      floatingBar.style.transform = 'translateX(-50%) translateY(0)';
+    } else {
+      floatingBar.style.transform = 'translateX(-50%) translateY(140px)';
+    }
+  }
+
+  checkboxes.forEach(cb => cb.addEventListener('change', updateFloatingBar));
+
+  if (btnLaunch) {
+    btnLaunch.addEventListener('click', () => {
+      const selected = Array.from(checkboxes).filter(cb => cb.checked).map(cb => cb.dataset.slug);
+      if (selected.length > 0) {
+        window.open(`${presentBaseUrl}?decks=${selected.join(',')}`, '_blank');
+      }
+    });
+  }
+
+  if (btnClear) {
+    btnClear.addEventListener('click', () => {
+      checkboxes.forEach(cb => cb.checked = false);
+      updateFloatingBar();
+    });
+  }
+});
+</script>
 
 {{ end }}

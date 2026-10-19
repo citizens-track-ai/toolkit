@@ -52,6 +52,21 @@
     </button>
   </div>
 
+  <div class="view-actions" id="page-actions">
+    <button type="button" class="action-btn" id="btn-toggle-notes" aria-pressed="true" title="Toggle facilitator notes on or off">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      <span id="btn-toggle-notes-text">Hide Notes</span>
+    </button>
+    <button type="button" class="action-btn" id="btn-print-worksheet" title="Print as participant worksheet (without facilitator overview and notes)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Print Worksheet
+    </button>
+    <button type="button" class="action-btn primary" id="btn-print-facilitator" title="Print full facilitator view (with overview and notes)">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      Print Facilitator View
+    </button>
+  </div>
+
   <div class="view-actions" id="cards-actions" style="display: none;">
     <button type="button" class="action-btn" id="btn-flip-all">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
@@ -64,12 +79,101 @@
   </div>
 
   <div class="view-actions" id="slides-actions" style="display: none;">
+    <a href="{{ "present/" | relLangURL }}?decks={{ .File.TranslationBaseName }}" class="action-btn" style="background: #0284c7; color: white; border-color: #0369a1; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; font-weight: 600;" target="_blank" rel="noopener" title="Open this deck in full Reveal.js presentation mode with speaker notes, overview grid, and multi-deck combination">
+      <span>📽️ Reveal.js Presenter &rarr;</span>
+    </a>
+    <button type="button" class="action-btn" id="btn-speaker-trigger" title="Open Speaker View with notes and previews (Press S)">
+      🎙️ Speaker View (S)
+    </button>
     <button type="button" class="action-btn primary" id="btn-fullscreen-trigger">
       <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path></svg>
       Fullscreen Presentation
     </button>
   </div>
 </div>
+
+<!-- =========================================================================
+     PRINT CARDS CONFIGURATION MODAL
+     ========================================================================= -->
+<dialog id="print-cards-modal" class="print-modal">
+  <div class="print-modal-inner">
+    <div class="print-modal-header">
+      <div class="print-modal-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        Print Cards Options
+      </div>
+      <button type="button" class="print-modal-close" id="btn-close-print-modal" aria-label="Close dialog">&times;</button>
+    </div>
+
+    <form id="print-cards-form" method="dialog">
+      <div class="print-modal-section">
+        <label class="print-section-label">Printing Style</label>
+        <div class="print-style-cards">
+          <label class="print-style-option">
+            <input type="radio" name="printStyle" value="folding" checked>
+            <div class="print-style-card">
+              <div class="print-style-icon">✂️</div>
+              <div class="print-style-content">
+                <strong>Folding Style (Single-Sided)</strong>
+                <p>Prints Front and Back side-by-side with a central fold line. Fold in half for instant sturdy cards.</p>
+              </div>
+            </div>
+          </label>
+          <label class="print-style-option">
+            <input type="radio" name="printStyle" value="duplex">
+            <div class="print-style-card">
+              <div class="print-style-icon">🔄</div>
+              <div class="print-style-content">
+                <strong>Double-Sided (Duplex)</strong>
+                <p>Alternates a page of Fronts and a page of Backs. Print double-sided (flip on short edge) and cut out.</p>
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="print-modal-section">
+        <label class="print-section-label">Cards Per Sheet</label>
+        <div class="print-radio-tiles">
+          <label class="print-tile-option">
+            <input type="radio" name="perSheet" value="1">
+            <div class="print-tile">
+              <span class="tile-number">1</span>
+              <span class="tile-desc">Large format</span>
+            </div>
+          </label>
+          <label class="print-tile-option">
+            <input type="radio" name="perSheet" value="2" checked>
+            <div class="print-tile">
+              <span class="tile-number">2</span>
+              <span class="tile-desc">Standard (Recommended)</span>
+            </div>
+          </label>
+          <label class="print-tile-option">
+            <input type="radio" name="perSheet" value="4">
+            <div class="print-tile">
+              <span class="tile-number">4</span>
+              <span class="tile-desc">Compact deck</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <div class="print-summary-banner">
+        <span class="summary-icon" id="print-summary-icon">✂️</span>
+        <span class="summary-text" id="print-summary-text">Prints 2 cards per sheet in landscape. Front and back are side-by-side with center fold line and cut guide.</span>
+      </div>
+
+      <div class="print-modal-actions">
+        <button type="button" class="action-btn" id="btn-cancel-print">Cancel</button>
+        <button type="submit" class="action-btn primary" id="btn-confirm-print">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          Open Print Dialog
+        </button>
+      </div>
+    </form>
+  </div>
+</dialog>
 
 <!-- =========================================================================
      VIEW (a): STANDARD PAGE VIEW (Quiz answers collapsed by default)
@@ -98,84 +202,126 @@
   </article>
 
   {{ with .Params.elements }}
+    {{ $groups := slice }}
+    {{ $currentGroup := slice }}
+    {{ $currentType := "" }}
+    {{ range . }}
+      {{ if eq $currentType "" }}
+        {{ $currentType = .type }}
+        {{ $currentGroup = slice . }}
+      {{ else if eq .type $currentType }}
+        {{ $currentGroup = $currentGroup | append . }}
+      {{ else }}
+        {{ $groups = $groups | append (dict "type" $currentType "items" $currentGroup) }}
+        {{ $currentType = .type }}
+        {{ $currentGroup = slice . }}
+      {{ end }}
+    {{ end }}
+    {{ if gt (len $currentGroup) 0 }}
+      {{ $groups = $groups | append (dict "type" $currentType "items" $currentGroup) }}
+    {{ end }}
+
     <div class="elements-stream">
-      {{ range $idx, $element := . }}
-        <div class="element-block element-{{ $element.type }}">
+      {{ range $group := $groups }}
+        <div class="element-block element-{{ $group.type }}">
           <div class="element-block-header">
-            <span class="element-pill {{ $element.type }}">
-              {{ if eq $element.type "quiz_question" }}Quiz Question
-              {{ else if eq $element.type "statistic" }}Statistic / Key Figure
-              {{ else if eq $element.type "perspective" }}Perspective / Quote
-              {{ else if eq $element.type "information" }}Information
-              {{ else if eq $element.type "takeaways" }}Takeaways
-              {{ else }}{{ $element.type }}{{ end }}
+            <span class="element-pill {{ $group.type }}">
+              {{ if eq $group.type "quiz_question" }}Quiz Question{{ if gt (len $group.items) 1 }}s{{ end }}
+              {{ else if eq $group.type "statistic" }}Statistic{{ if gt (len $group.items) 1 }}s{{ end }}
+              {{ else if eq $group.type "perspective" }}Perspective{{ if gt (len $group.items) 1 }}s{{ end }}
+              {{ else if eq $group.type "information" }}Information
+              {{ else if eq $group.type "takeaways" }}Key Takeaways
+              {{ else }}{{ $group.type }}{{ end }}
             </span>
-            <span style="font-size: 0.75rem; color: var(--color-muted); font-weight: 600;">Block #{{ add $idx 1 }}</span>
           </div>
 
-          <div class="element-block-content">
-            {{ if eq $element.type "quiz_question" }}
-              <div class="quiz-question">
-                {{ $element.question | markdownify }}
-              </div>
-
-              <!-- Collapsed by default (no 'open' attribute) per user request -->
-              <details class="quiz-answer-details">
-                <summary>Answer & Explanation</summary>
-                <div class="quiz-answer-body">
-                  {{ $element.answer | markdownify }}
-                  {{ with $element.explanation }}
-                    <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e9d5ff; font-size: 0.9rem;">
-                      <strong>Explanation:</strong> {{ . | markdownify }}
-                    </div>
-                  {{ end }}
-                </div>
-              </details>
-
-            {{ else if eq $element.type "statistic" }}
-              <div class="stat-element-wrapper">
-                <div class="stat-element-figure">{{ $element.figure }}</div>
-                <div class="stat-element-body">
-                  <div class="stat-element-desc">{{ $element.description }}</div>
-                  {{ with $element.explanation }}
-                    <div class="stat-element-explanation">{{ . | markdownify }}</div>
-                  {{ end }}
-                </div>
-              </div>
-
-            {{ else if eq $element.type "perspective" }}
-              <div class="perspective-quote-box">
-                <blockquote class="perspective-quote-text">
-                  {{ $element.quote | markdownify }}
-                </blockquote>
-                {{ with $element.attribution }}
-                  <div class="perspective-author">— {{ . }}</div>
+          <div class="element-block-content{{ if gt (len $group.items) 1 }} element-group-flow{{ end }}">
+            {{ range $itemIdx, $element := $group.items }}
+              <div class="element-item-wrapper{{ if gt $itemIdx 0 }} element-item-separator{{ end }}{{ if $element.image }} has-image{{ end }}">
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution (and (ne $element.type "perspective") $element.attribution) "" }}
+                  <figure class="element-image-figure">
+                    <img src="{{ . | relURL }}" alt="{{ $alt }}" class="element-image">
+                    {{ if or $alt $attribution }}
+                      <figcaption class="element-image-caption">
+                        {{ with $alt }}<span class="image-alt-text">{{ . }}</span>{{ end }}
+                        {{ with $attribution }}<span class="image-attribution-text">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                      </figcaption>
+                    {{ end }}
+                  </figure>
                 {{ end }}
-              </div>
 
-            {{ else if eq $element.type "information" }}
-              <div style="font-size: 1.05rem; color: var(--color-dark); line-height: 1.6;">
-                {{ $element.text | markdownify }}
-              </div>
+                {{ if eq $element.type "quiz_question" }}
+                  <div class="quiz-question">
+                    {{ $element.question | markdownify }}
+                  </div>
 
-            {{ else if eq $element.type "takeaways" }}
-              <div class="takeaways-box">
-                <div style="font-weight: 700; color: #86198f; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">
-                  Key Takeaways
-                </div>
-                <div>{{ $element.text | markdownify }}</div>
-              </div>
-            {{ end }}
+                  <!-- Collapsed by default per user request -->
+                  <details class="quiz-answer-details">
+                    <summary>Answer & Explanation</summary>
+                    <div class="quiz-answer-body">
+                      {{ $element.answer | markdownify }}
+                      {{ with $element.explanation }}
+                        <div style="margin-top: 0.75rem; padding-top: 0.75rem; border-top: 1px solid #e9d5ff; font-size: 0.9rem;">
+                          <strong>Explanation:</strong> {{ . | markdownify }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </details>
 
-            {{ with $element.image }}
-              <div style="margin-top: 1rem;">
-                <img src="{{ . | relURL }}" alt="Content element visual" style="max-width: 100%; border-radius: var(--radius-sm);">
-              </div>
-            {{ end }}
+                {{ else if eq $element.type "statistic" }}
+                  <div class="stat-element-wrapper">
+                    <div class="stat-element-figure">{{ $element.figure }}</div>
+                    <div class="stat-element-body">
+                      <div class="stat-element-desc">{{ $element.description }}</div>
+                      {{ with $element.explanation }}
+                        <div class="stat-element-explanation">{{ . | markdownify }}</div>
+                      {{ end }}
+                    </div>
+                  </div>
 
-            {{ with $element.citation }}
-              <div class="citation-line">
-                Source / Citation: <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                {{ else if eq $element.type "perspective" }}
+                  <div class="perspective-quote-box">
+                    <blockquote class="perspective-quote-text">
+                      {{ $element.quote | markdownify }}
+                    </blockquote>
+                    {{ with $element.attribution }}
+                      <div class="perspective-author">— {{ . }}</div>
+                    {{ end }}
+                  </div>
+
+                {{ else if eq $element.type "information" }}
+                  <div class="information-content-flow" style="font-size: 1.05rem; color: var(--color-dark); line-height: 1.6;">
+                    {{ $element.text | markdownify }}
+                  </div>
+
+                {{ else if eq $element.type "takeaways" }}
+                  <div class="takeaways-box">
+                    <div style="font-weight: 700; color: #86198f; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">
+                      Key Takeaways
+                    </div>
+                    <div>{{ $element.text | markdownify }}</div>
+                  </div>
+                {{ end }}
+
+                {{ with $element.citation }}
+                  <div class="citation-line">
+                    Source / Citation: <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+                  </div>
+                {{ end }}
+
+                {{ with $element.notes }}
+                  <div class="element-notes-box">
+                    <div class="element-notes-label">
+                      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                      Facilitator Note
+                    </div>
+                    <div class="element-notes-content">
+                      {{ . | markdownify }}
+                    </div>
+                  </div>
+                {{ end }}
               </div>
             {{ end }}
           </div>
@@ -239,13 +385,52 @@
                   <div class="card-main-title">
                     {{ $element.question | markdownify }}
                   </div>
+                  {{ with $element.image }}
+                    {{ $alt := or $element.image_alt $element.alt "" }}
+                    {{ $attribution := or $element.image_attribution "" }}
+                    <div class="card-front-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
+                    </div>
+                    {{ if or $alt $attribution }}
+                      <div class="card-image-caption">
+                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
                 {{ else if eq $element.type "statistic" }}
                   <div class="card-main-stat">{{ $element.figure }}</div>
                   <div class="card-main-title">{{ $element.description }}</div>
+                  {{ with $element.image }}
+                    {{ $alt := or $element.image_alt $element.alt "" }}
+                    {{ $attribution := or $element.image_attribution "" }}
+                    <div class="card-front-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
+                    </div>
+                    {{ if or $alt $attribution }}
+                      <div class="card-image-caption">
+                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
                 {{ else if eq $element.type "perspective" }}
                   <blockquote class="card-main-quote">
                     {{ $element.quote | markdownify }}
                   </blockquote>
+                  {{ with $element.image }}
+                    {{ $alt := or $element.image_alt $element.alt "" }}
+                    {{ $attribution := or $element.image_attribution "" }}
+                    <div class="card-front-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
+                    </div>
+                    {{ if or $alt $attribution }}
+                      <div class="card-image-caption">
+                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
                 {{ else if eq $element.type "information" }}
                   {{- $cleanText := replace $element.text "\r\n" "\n" -}}
                   {{- $lines := split $cleanText "\n" -}}
@@ -261,9 +446,17 @@
                       {{ $firstLine | markdownify }}
                     </div>
                     {{ with $element.image }}
+                      {{ $alt := or $element.image_alt $element.alt "" }}
+                      {{ $attribution := or $element.image_attribution "" }}
                       <div class="card-front-image-wrap">
-                        <img src="{{ . | relURL }}" alt="Card illustration" class="card-front-image">
+                        <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
                       </div>
+                      {{ if or $alt $attribution }}
+                        <div class="card-image-caption">
+                          {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
                     {{ end }}
                   </div>
                 {{ else if eq $element.type "takeaways" }}
@@ -273,6 +466,19 @@
                   <div style="font-size: 0.95rem; color: var(--color-slate);">
                     Flip to reveal key reflection points
                   </div>
+                  {{ with $element.image }}
+                    {{ $alt := or $element.image_alt $element.alt "" }}
+                    {{ $attribution := or $element.image_attribution "" }}
+                    <div class="card-front-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
+                    </div>
+                    {{ if or $alt $attribution }}
+                      <div class="card-image-caption">
+                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                      </div>
+                    {{ end }}
+                  {{ end }}
                 {{ end }}
               </div>
 
@@ -375,6 +581,14 @@
             {{ end }}
           </div>
         {{ end }}
+        <div class="slide-speaker-notes-raw" style="display: none;">
+          {{ with .Params.facilitator_overview }}
+            <p><strong>Facilitator Overview:</strong></p>
+            {{ . | markdownify }}
+          {{ else }}
+            <p>Introduce the session topic and goals to participants.</p>
+          {{ end }}
+        </div>
       </div>
 
       <!-- Content Slides -->
@@ -382,16 +596,37 @@
         {{ range $idx, $element := . }}
           {{ if eq $element.type "quiz_question" }}
             <!-- Quiz Slide A: Question -->
-            <div class="slide-item">
-              <span class="slide-tag">Quiz Question</span>
-              <div class="slide-title" style="font-size: 2.2rem; line-height: 1.35;">
-                {{ $element.question | markdownify }}
-              </div>
-              {{ with $element.image }}
-                <div style="margin-top: 1.5rem;">
-                  <img src="{{ . | relURL }}" alt="Quiz visual" style="max-height: 300px; border-radius: var(--radius-md);">
+            <div class="slide-item{{ if $element.image }} slide-has-image{{ end }}">
+              <div class="slide-layout{{ if $element.image }} slide-layout-split{{ end }}">
+                <div class="slide-main-col">
+                  <span class="slide-tag">Quiz Question</span>
+                  <div class="slide-title" style="font-size: 2.2rem; line-height: 1.35;">
+                    {{ $element.question | markdownify }}
+                  </div>
                 </div>
-              {{ end }}
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution "" }}
+                  <div class="slide-side-col">
+                    <div class="slide-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="slide-image">
+                      {{ if or $alt $attribution }}
+                        <div class="slide-image-caption">
+                          {{ with $alt }}<span class="slide-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="slide-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ else }}
+                  <p>Read the question aloud and invite participants to discuss or guess before revealing the answer.</p>
+                {{ end }}
+              </div>
             </div>
 
             <!-- Quiz Slide B: Answer & Explanation -->
@@ -410,61 +645,227 @@
                   Source: {{ . }}
                 </div>
               {{ end }}
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ else }}
+                  {{ with $element.explanation }}
+                    <p><strong>Explanation:</strong></p>
+                    {{ . | markdownify }}
+                  {{ end }}
+                {{ end }}
+              </div>
             </div>
 
           {{ else if eq $element.type "statistic" }}
-            <div class="slide-item">
-              <span class="slide-tag">Key Statistic</span>
-              <div class="slide-stat-figure">{{ $element.figure }}</div>
-              <div class="slide-title" style="font-size: 2rem;">{{ $element.description }}</div>
-              {{ with $element.explanation }}
-                <div class="slide-body">{{ . | markdownify }}</div>
-              {{ end }}
-              {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
-                  Source: {{ . }}
+            <div class="slide-item{{ if $element.image }} slide-has-image{{ end }}">
+              <div class="slide-layout{{ if $element.image }} slide-layout-split{{ end }}">
+                <div class="slide-main-col">
+                  <span class="slide-tag">Key Statistic</span>
+                  <div class="slide-stat-figure">{{ $element.figure }}</div>
+                  <div class="slide-title" style="font-size: 2rem;">{{ $element.description }}</div>
+                  {{ with $element.explanation }}
+                    <div class="slide-body">{{ . | markdownify }}</div>
+                  {{ end }}
+                  {{ with $element.citation }}
+                    <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                      Source: {{ . }}
+                    </div>
+                  {{ end }}
                 </div>
-              {{ end }}
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution "" }}
+                  <div class="slide-side-col">
+                    <div class="slide-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="slide-image">
+                      {{ if or $alt $attribution }}
+                        <div class="slide-image-caption">
+                          {{ with $alt }}<span class="slide-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="slide-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ else }}
+                  {{ with $element.explanation }}
+                    <p><strong>Context / Insight:</strong></p>
+                    {{ . | markdownify }}
+                  {{ end }}
+                {{ end }}
+              </div>
             </div>
 
           {{ else if eq $element.type "perspective" }}
-            <div class="slide-item">
-              <span class="slide-tag">Perspective</span>
-              <blockquote class="slide-quote">
-                {{ $element.quote | markdownify }}
-              </blockquote>
-              {{ with $element.attribution }}
-                <div class="slide-attribution">— {{ . }}</div>
-              {{ end }}
-              {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
-                  Source: {{ . }}
+            <div class="slide-item{{ if $element.image }} slide-has-image{{ end }}">
+              <div class="slide-layout{{ if $element.image }} slide-layout-split{{ end }}">
+                <div class="slide-main-col">
+                  <span class="slide-tag">Perspective</span>
+                  <blockquote class="slide-quote">
+                    {{ $element.quote | markdownify }}
+                  </blockquote>
+                  {{ with $element.attribution }}
+                    <div class="slide-attribution">— {{ . }}</div>
+                  {{ end }}
+                  {{ with $element.citation }}
+                    <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                      Source: {{ . }}
+                    </div>
+                  {{ end }}
                 </div>
-              {{ end }}
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution "" }}
+                  <div class="slide-side-col">
+                    <div class="slide-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="slide-image">
+                      {{ if or $alt $attribution }}
+                        <div class="slide-image-caption">
+                          {{ with $alt }}<span class="slide-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="slide-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ end }}
+              </div>
             </div>
 
           {{ else if eq $element.type "information" }}
-            <div class="slide-item">
-              <span class="slide-tag">Information</span>
-              <div class="slide-body" style="font-size: 1.6rem; color: white; line-height: 1.6;">
-                {{ $element.text | markdownify }}
-              </div>
-              {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
-                  Source: {{ . }}
+            <div class="slide-item{{ if $element.image }} slide-has-image{{ end }}">
+              <div class="slide-layout{{ if $element.image }} slide-layout-split{{ end }}">
+                <div class="slide-main-col">
+                  <span class="slide-tag">Information</span>
+                  <div class="slide-body" style="font-size: 1.6rem; color: white; line-height: 1.6;">
+                    {{ $element.text | markdownify }}
+                  </div>
+                  {{ with $element.citation }}
+                    <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                      Source: {{ . }}
+                    </div>
+                  {{ end }}
                 </div>
-              {{ end }}
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution "" }}
+                  <div class="slide-side-col">
+                    <div class="slide-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="slide-image">
+                      {{ if or $alt $attribution }}
+                        <div class="slide-image-caption">
+                          {{ with $alt }}<span class="slide-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="slide-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ end }}
+              </div>
             </div>
 
           {{ else if eq $element.type "takeaways" }}
-            <div class="slide-item">
-              <span class="slide-tag" style="background: rgba(240, 171, 252, 0.2); color: #f0abfc;">Key Takeaways</span>
-              <div class="slide-title" style="font-size: 2rem; color: #f0abfc;">Key Takeaways</div>
-              <div class="slide-body">{{ $element.text | markdownify }}</div>
+            <div class="slide-item{{ if $element.image }} slide-has-image{{ end }}">
+              <div class="slide-layout{{ if $element.image }} slide-layout-split{{ end }}">
+                <div class="slide-main-col">
+                  <span class="slide-tag" style="background: rgba(240, 171, 252, 0.2); color: #f0abfc;">Key Takeaways</span>
+                  <div class="slide-title" style="font-size: 2rem; color: #f0abfc;">Key Takeaways</div>
+                  <div class="slide-body">{{ $element.text | markdownify }}</div>
+                </div>
+                {{ with $element.image }}
+                  {{ $alt := or $element.image_alt $element.alt "" }}
+                  {{ $attribution := or $element.image_attribution "" }}
+                  <div class="slide-side-col">
+                    <div class="slide-image-wrap">
+                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="slide-image">
+                      {{ if or $alt $attribution }}
+                        <div class="slide-image-caption">
+                          {{ with $alt }}<span class="slide-image-alt">{{ . }}</span>{{ end }}
+                          {{ with $attribution }}<span class="slide-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
+                        </div>
+                      {{ end }}
+                    </div>
+                  </div>
+                {{ end }}
+              </div>
+              <div class="slide-speaker-notes-raw" style="display: none;">
+                {{ with $element.notes }}
+                  {{ . | markdownify }}
+                {{ end }}
+              </div>
             </div>
           {{ end }}
         {{ end }}
       {{ end }}
+    </div>
+
+    <!-- Speaker View Overlay Dashboard -->
+    <div class="slideshow-speaker-view" id="slides-speaker-view" style="display: none;">
+      <div class="speaker-view-topbar">
+        <div class="speaker-top-left">
+          <span class="speaker-badge">🎙️ Speaker View</span>
+          <span class="speaker-counter" id="speaker-counter">Slide 1 / 1</span>
+        </div>
+        <div class="speaker-timer-wrap">
+          <span class="speaker-timer-icon">⏱️</span>
+          <span class="speaker-timer" id="speaker-timer">00:00</span>
+          <button type="button" class="speaker-timer-btn" id="btn-reset-timer" title="Reset presentation timer">Reset</button>
+        </div>
+        <div class="speaker-top-right">
+          <button type="button" class="speaker-close-btn" id="btn-close-speaker-view" title="Exit Speaker View (Esc or S)">&times; Close</button>
+        </div>
+      </div>
+
+      <div class="speaker-view-main">
+        <div class="speaker-column-previews">
+          <div class="speaker-preview-box current-preview-box">
+            <div class="speaker-preview-header">
+              <span>Current Slide (Audience Screen)</span>
+            </div>
+            <div class="speaker-preview-body" id="speaker-current-clone"></div>
+          </div>
+          <div class="speaker-preview-box next-preview-box">
+            <div class="speaker-preview-header">
+              <span>Next Slide Preview</span>
+            </div>
+            <div class="speaker-preview-body" id="speaker-next-clone"></div>
+          </div>
+        </div>
+
+        <div class="speaker-column-notes">
+          <div class="speaker-notes-box">
+            <div class="speaker-notes-header">
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+              <span>Speaker & Facilitator Notes</span>
+            </div>
+            <div class="speaker-notes-body" id="speaker-notes-body">
+              <p class="speaker-notes-empty">No speaker notes for this slide.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="speaker-view-footer">
+        <div class="slides-nav-btns">
+          <button type="button" class="slide-btn" id="btn-speaker-prev" aria-label="Previous slide">&larr;</button>
+          <button type="button" class="slide-btn" id="btn-speaker-next" aria-label="Next slide">&rarr;</button>
+          <span style="font-size: 0.8rem; color: #94a3b8; margin-left: 0.5rem;">Use Space or Arrow keys to navigate</span>
+        </div>
+      </div>
     </div>
 
     <!-- Slide Deck Controls -->
@@ -484,12 +885,18 @@
         <span class="slide-key-badge">&larr;</span>
         <span class="slide-key-badge">&rarr;</span>
         <span class="slide-key-badge">Space</span>
+        <span class="slide-key-badge">S (Speaker View)</span>
         <span class="slide-key-badge">F (Fullscreen)</span>
       </div>
 
-      <button type="button" class="action-btn" id="btn-toggle-fullscreen" style="background: #1e293b; color: white; border-color: #334155;">
-        ⛶ Fullscreen
-      </button>
+      <div style="display: flex; gap: 0.5rem; align-items: center;">
+        <button type="button" class="action-btn" id="btn-toggle-speaker-view" style="background: #1e293b; color: white; border-color: #334155;">
+          🎙️ Speaker View (S)
+        </button>
+        <button type="button" class="action-btn" id="btn-toggle-fullscreen" style="background: #1e293b; color: white; border-color: #334155;">
+          ⛶ Fullscreen
+        </button>
+      </div>
     </div>
   </div>
 </div>
@@ -499,6 +906,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. VIEW SWITCHER LOGIC
   const viewTabs = document.querySelectorAll('.view-tab');
   const viewSections = document.querySelectorAll('.view-section');
+  const pageActions = document.getElementById('page-actions');
   const cardsActions = document.getElementById('cards-actions');
   const slidesActions = document.getElementById('slides-actions');
 
@@ -513,14 +921,9 @@ document.addEventListener('DOMContentLoaded', () => {
       sec.classList.toggle('active', sec.id === targetId);
     });
 
+    if (pageActions) pageActions.style.display = targetId === 'content-view-page' ? 'flex' : 'none';
     if (cardsActions) cardsActions.style.display = targetId === 'content-view-cards' ? 'flex' : 'none';
     if (slidesActions) slidesActions.style.display = targetId === 'content-view-slides' ? 'flex' : 'none';
-
-    if (targetId === 'content-view-cards') {
-      requestAnimationFrame(() => {
-        fitCardBacks();
-      });
-    }
 
     // Update URL hash
     const viewName = targetId.replace('content-view-', '');
@@ -533,57 +936,6 @@ document.addEventListener('DOMContentLoaded', () => {
     tab.addEventListener('click', () => switchView(tab.dataset.target));
   });
 
-  // Dynamic font scaling for card backs so all text comfortably fits
-  function fitCardBacks() {
-    const cardsView = document.getElementById('content-view-cards');
-    if (!cardsView) return;
-    const isPrinting = (window.matchMedia && window.matchMedia('print').matches);
-    if (!isPrinting && cardsView.style.display === 'none' && !cardsView.classList.contains('active')) {
-      return;
-    }
-
-    const backBodies = cardsView.querySelectorAll('.card-face-back .card-face-body');
-    backBodies.forEach(body => {
-      const textEl = body.querySelector('.card-back-text');
-      if (!textEl) return;
-
-      // Reset inline styles
-      textEl.style.fontSize = '';
-      textEl.style.lineHeight = '';
-
-      const availableHeight = body.clientHeight;
-      if (availableHeight <= 0) return;
-
-      let currentSize = 16; // 12pt base font size (16px)
-      const computed = window.getComputedStyle(textEl);
-      if (computed && computed.fontSize) {
-        currentSize = parseFloat(computed.fontSize);
-      }
-      const minSize = 10; // legible minimum floor (~7.5pt)
-
-      while (body.scrollHeight > availableHeight + 3 && currentSize > minSize) {
-        currentSize -= 0.5;
-        textEl.style.fontSize = currentSize + 'px';
-      }
-
-      if (body.scrollHeight > availableHeight + 3) {
-        textEl.style.lineHeight = '1.25';
-      }
-    });
-  }
-
-  // Auto-fit on window resize
-  let resizeTimeout;
-  window.addEventListener('resize', () => {
-    clearTimeout(resizeTimeout);
-    resizeTimeout = setTimeout(fitCardBacks, 150);
-  });
-
-  // Auto-fit before printing
-  window.addEventListener('beforeprint', () => {
-    fitCardBacks();
-  });
-
   // URL hash routing
   const initialHash = window.location.hash.toLowerCase();
   if (initialHash === '#cards') {
@@ -592,11 +944,66 @@ document.addEventListener('DOMContentLoaded', () => {
     switchView('content-view-slides');
   }
 
-  // Initial check once rendered
-  setTimeout(fitCardBacks, 200);
+  // =========================================================================
+  // PAGE VIEW: NOTES TOGGLE & PRINT OPTIONS
+  // =========================================================================
+  const contentViewPage = document.getElementById('content-view-page');
+  const btnToggleNotes = document.getElementById('btn-toggle-notes');
+  const btnToggleNotesText = document.getElementById('btn-toggle-notes-text');
 
-  // 2. TWO-SIDED CARDS (3D FLIP LOGIC)
-  const cardWrappers = document.querySelectorAll('.card-3d-wrapper');
+  let notesVisible = localStorage.getItem('showFacilitatorNotes') !== 'false';
+
+  function applyNotesVisibility() {
+    if (!contentViewPage) return;
+    contentViewPage.classList.toggle('notes-hidden', !notesVisible);
+    if (btnToggleNotes) {
+      btnToggleNotes.setAttribute('aria-pressed', notesVisible.toString());
+      if (btnToggleNotesText) {
+        btnToggleNotesText.textContent = notesVisible ? 'Hide Notes' : 'Show Notes';
+      }
+    }
+  }
+
+  applyNotesVisibility();
+
+  if (btnToggleNotes) {
+    btnToggleNotes.addEventListener('click', () => {
+      notesVisible = !notesVisible;
+      localStorage.setItem('showFacilitatorNotes', notesVisible.toString());
+      applyNotesVisibility();
+    });
+  }
+
+  const btnPrintWorksheet = document.getElementById('btn-print-worksheet');
+  const btnPrintFacilitator = document.getElementById('btn-print-facilitator');
+
+  function triggerPagePrint(mode) {
+    document.body.dataset.pagePrintMode = mode;
+    setTimeout(() => {
+      window.print();
+    }, 100);
+  }
+
+  if (btnPrintWorksheet) {
+    btnPrintWorksheet.addEventListener('click', () => {
+      triggerPagePrint('worksheet');
+    });
+  }
+
+  if (btnPrintFacilitator) {
+    btnPrintFacilitator.addEventListener('click', () => {
+      triggerPagePrint('facilitator');
+    });
+  }
+
+  window.addEventListener('afterprint', () => {
+    delete document.body.dataset.pagePrintMode;
+  });
+
+  // =========================================================================
+  // 2. TWO-SIDED CARDS (3D FLIP LOGIC ON SCREEN)
+  // =========================================================================
+  const cardWrappers = document.querySelectorAll('#content-view-cards .card-3d-wrapper');
   cardWrappers.forEach(card => {
     function toggleCard() {
       const isFlipped = card.dataset.flipped === 'true';
@@ -605,7 +1012,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     card.addEventListener('click', (e) => {
-      // Don't flip if user clicked an external link on card back
       if (e.target.tagName.toLowerCase() === 'a') return;
       toggleCard();
     });
@@ -632,17 +1038,222 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Print Cards button
-  const btnPrintCards = document.getElementById('btn-print-cards');
-  if (btnPrintCards) {
-    btnPrintCards.addEventListener('click', () => {
-      switchView('content-view-cards');
-      fitCardBacks();
-      setTimeout(() => window.print(), 150);
+  // =========================================================================
+  // PRINT CARDS MODAL & ISOLATED PRINT STAGING
+  // Operates completely on a detached clone (#print-cards-stage)
+  // so the live page DOM is never modified or disrupted.
+  // =========================================================================
+  const printModal = document.getElementById('print-cards-modal');
+  const printForm = document.getElementById('print-cards-form');
+  const btnClosePrintModal = document.getElementById('btn-close-print-modal');
+  const btnCancelPrint = document.getElementById('btn-cancel-print');
+  const printSummaryText = document.getElementById('print-summary-text');
+  const printSummaryIcon = document.getElementById('print-summary-icon');
+
+  function updatePrintSummary() {
+    if (!printForm || !printSummaryText) return;
+    const perSheet = printForm.elements['perSheet'].value;
+    const style = printForm.elements['printStyle'].value;
+
+    if (style === 'folding') {
+      if (printSummaryIcon) printSummaryIcon.textContent = '✂️';
+      if (perSheet === '1') {
+        printSummaryText.textContent = 'Prints 1 large card per sheet in landscape. Front and back are side-by-side with a central fold line.';
+      } else if (perSheet === '2') {
+        printSummaryText.textContent = 'Prints 2 cards per sheet in landscape. Front and back are side-by-side with center fold line and cut guide.';
+      } else {
+        printSummaryText.textContent = 'Prints 4 cards per sheet in portrait. Front and back are side-by-side with center fold line and cut guides.';
+      }
+    } else {
+      if (printSummaryIcon) printSummaryIcon.textContent = '📄';
+      if (perSheet === '1') {
+        printSummaryText.textContent = 'Double-sided (duplex): Sheet 1 is Front, Sheet 2 is Back. Set "Print on both sides" in your printer dialog.';
+      } else if (perSheet === '2') {
+        printSummaryText.textContent = 'Double-sided (duplex): Alternates a page of 2 Fronts and a page of 2 Backs. Set "Print on both sides".';
+      } else {
+        printSummaryText.textContent = 'Double-sided (duplex): Alternates a 2x2 grid of 4 Fronts and mirrored 4 Backs for cutting. Set "Print on both sides".';
+      }
+    }
+  }
+
+  if (printForm) {
+    printForm.addEventListener('change', updatePrintSummary);
+  }
+
+  const savedStyle = localStorage.getItem('cardPrintStyle') || 'folding';
+  const savedPerSheet = localStorage.getItem('cardPrintPerSheet') || '2';
+  if (printForm) {
+    if (printForm.elements['printStyle']) printForm.elements['printStyle'].value = savedStyle;
+    if (printForm.elements['perSheet']) printForm.elements['perSheet'].value = savedPerSheet;
+    updatePrintSummary();
+  }
+
+  if (btnClosePrintModal) btnClosePrintModal.addEventListener('click', () => printModal.close());
+  if (btnCancelPrint) btnCancelPrint.addEventListener('click', () => printModal.close());
+
+  function prepareAndPrintCards(style, perSheet) {
+    document.body.dataset.printingCards = 'true';
+
+    const orientation = (style === 'folding' && perSheet === '4') ? 'portrait' : 'landscape';
+    let styleEl = document.getElementById('dynamic-print-page');
+    if (!styleEl) {
+      styleEl = document.createElement('style');
+      styleEl.id = 'dynamic-print-page';
+      document.head.appendChild(styleEl);
+    }
+    styleEl.textContent = `@page { size: ${orientation}; margin: 8mm 10mm; }`;
+
+    let stage = document.getElementById('print-cards-stage');
+    if (!stage) {
+      stage = document.createElement('div');
+      stage.id = 'print-cards-stage';
+      const main = document.querySelector('.main-wrapper') || document.body;
+      main.appendChild(stage);
+    }
+    stage.innerHTML = '';
+    stage.dataset.style = style;
+    stage.dataset.perSheet = perSheet;
+
+    const wrappers = Array.from(document.querySelectorAll('#content-view-cards .card-3d-wrapper'));
+    const count = wrappers.length;
+    const n = parseInt(perSheet, 10);
+
+    if (style === 'folding') {
+      for (let i = 0; i < count; i += n) {
+        const batch = wrappers.slice(i, i + n);
+        const page = document.createElement('div');
+        page.className = `print-folding-page per-sheet-${n}`;
+
+        batch.forEach(card => {
+          const front = card.querySelector('.card-face-front');
+          const back = card.querySelector('.card-face-back');
+          if (front && back) {
+            const item = document.createElement('div');
+            item.className = 'print-folding-item';
+
+            const frontClone = front.cloneNode(true);
+            frontClone.className = 'card-face print-card-face print-card-face-front';
+            if (front.classList.contains('card-front-info')) frontClone.classList.add('card-front-info');
+            frontClone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+
+            const backClone = back.cloneNode(true);
+            backClone.className = 'card-face print-card-face print-card-face-back';
+            backClone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+
+            item.appendChild(frontClone);
+            item.appendChild(backClone);
+            page.appendChild(item);
+          }
+        });
+        stage.appendChild(page);
+      }
+    } else {
+      for (let i = 0; i < count; i += n) {
+        const batch = wrappers.slice(i, i + n);
+
+        const frontsPage = document.createElement('div');
+        frontsPage.className = `print-duplex-page print-page-fronts per-sheet-${n}`;
+        batch.forEach(card => {
+          const front = card.querySelector('.card-face-front');
+          if (front) {
+            const clone = front.cloneNode(true);
+            clone.className = 'card-face print-card-face print-card-face-front';
+            if (front.classList.contains('card-front-info')) clone.classList.add('card-front-info');
+            clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+            frontsPage.appendChild(clone);
+          }
+        });
+        stage.appendChild(frontsPage);
+
+        const backsPage = document.createElement('div');
+        backsPage.className = `print-duplex-page print-page-backs per-sheet-${n}`;
+
+        if (n === 1) {
+          const back = batch[0] && batch[0].querySelector('.card-face-back');
+          if (back) {
+            const clone = back.cloneNode(true);
+            clone.className = 'card-face print-card-face print-card-face-back';
+            clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+            backsPage.appendChild(clone);
+          }
+        } else if (n === 2) {
+          batch.forEach(card => {
+            const back = card.querySelector('.card-face-back');
+            if (back) {
+              const clone = back.cloneNode(true);
+              clone.className = 'card-face print-card-face print-card-face-back';
+              clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+              backsPage.appendChild(clone);
+            }
+          });
+        } else if (n === 4) {
+          const order = [1, 0, 3, 2];
+          order.forEach(idx => {
+            if (idx < batch.length) {
+              const back = batch[idx].querySelector('.card-face-back');
+              if (back) {
+                const clone = back.cloneNode(true);
+                clone.className = 'card-face print-card-face print-card-face-back';
+                clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
+                backsPage.appendChild(clone);
+              }
+            } else {
+              const empty = document.createElement('div');
+              empty.className = 'print-card-face print-card-empty';
+              backsPage.appendChild(empty);
+            }
+          });
+        }
+        stage.appendChild(backsPage);
+      }
+    }
+
+    setTimeout(() => {
+      window.print();
+    }, 120);
+  }
+
+  function cleanupPrintCardsStage() {
+    delete document.body.dataset.printingCards;
+    const styleEl = document.getElementById('dynamic-print-page');
+    if (styleEl) styleEl.remove();
+    const stage = document.getElementById('print-cards-stage');
+    if (stage) stage.innerHTML = '';
+  }
+
+  window.addEventListener('afterprint', cleanupPrintCardsStage);
+
+  if (printForm) {
+    printForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const style = printForm.elements['printStyle'].value;
+      const perSheet = printForm.elements['perSheet'].value;
+
+      localStorage.setItem('cardPrintStyle', style);
+      localStorage.setItem('cardPrintPerSheet', perSheet);
+
+      printModal.close();
+      prepareAndPrintCards(style, perSheet);
     });
   }
 
-  // 3. SLIDE DECK LOGIC
+  const btnPrintCards = document.getElementById('btn-print-cards');
+  if (btnPrintCards) {
+    btnPrintCards.addEventListener('click', () => {
+      if (printModal && typeof printModal.showModal === 'function') {
+        updatePrintSummary();
+        printModal.showModal();
+      } else {
+        const style = localStorage.getItem('cardPrintStyle') || 'folding';
+        const perSheet = localStorage.getItem('cardPrintPerSheet') || '2';
+        prepareAndPrintCards(style, perSheet);
+      }
+    });
+  }
+
+  // =========================================================================
+  // 3. SLIDE DECK & SPEAKER VIEW LOGIC
+  // =========================================================================
   const slideshow = document.getElementById('slideshow');
   const slideItems = document.querySelectorAll('.slide-item');
   const btnPrev = document.getElementById('btn-prev-slide');
@@ -652,8 +1263,103 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnFullscreen = document.getElementById('btn-toggle-fullscreen');
   const btnFullscreenTrigger = document.getElementById('btn-fullscreen-trigger');
 
+  // Speaker View elements
+  const speakerViewEl = document.getElementById('slides-speaker-view');
+  const btnToggleSpeakerView = document.getElementById('btn-toggle-speaker-view');
+  const btnSpeakerTrigger = document.getElementById('btn-speaker-trigger');
+  const btnCloseSpeakerView = document.getElementById('btn-close-speaker-view');
+  const btnSpeakerPrev = document.getElementById('btn-speaker-prev');
+  const btnSpeakerNext = document.getElementById('btn-speaker-next');
+  const speakerCurrentClone = document.getElementById('speaker-current-clone');
+  const speakerNextClone = document.getElementById('speaker-next-clone');
+  const speakerNotesBody = document.getElementById('speaker-notes-body');
+  const speakerCounter = document.getElementById('speaker-counter');
+  const speakerTimer = document.getElementById('speaker-timer');
+  const btnResetTimer = document.getElementById('btn-reset-timer');
+
   let currentSlide = 0;
   const totalSlides = slideItems.length;
+  let isSpeakerView = false;
+  let timerInterval = null;
+  let timerSeconds = 0;
+
+  function formatTimer(sec) {
+    const m = Math.floor(sec / 60);
+    const s = sec % 60;
+    return `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+  }
+
+  function startTimer() {
+    if (!timerInterval) {
+      timerInterval = setInterval(() => {
+        timerSeconds++;
+        if (speakerTimer) speakerTimer.textContent = formatTimer(timerSeconds);
+      }, 1000);
+    }
+  }
+
+  function resetTimer() {
+    timerSeconds = 0;
+    if (speakerTimer) speakerTimer.textContent = '00:00';
+  }
+
+  function updateSpeakerView() {
+    if (!isSpeakerView || !speakerViewEl) return;
+
+    if (speakerCounter) {
+      speakerCounter.textContent = `Slide ${currentSlide + 1} / ${totalSlides}`;
+    }
+
+    // Mirror current slide
+    if (speakerCurrentClone && slideItems[currentSlide]) {
+      const clone = slideItems[currentSlide].cloneNode(true);
+      clone.style.display = 'block';
+      const notesEl = clone.querySelector('.slide-speaker-notes-raw');
+      if (notesEl) notesEl.remove();
+      speakerCurrentClone.innerHTML = '';
+      speakerCurrentClone.appendChild(clone);
+    }
+
+    // Mirror next slide
+    if (speakerNextClone) {
+      if (currentSlide < totalSlides - 1 && slideItems[currentSlide + 1]) {
+        const clone = slideItems[currentSlide + 1].cloneNode(true);
+        clone.style.display = 'block';
+        const notesEl = clone.querySelector('.slide-speaker-notes-raw');
+        if (notesEl) notesEl.remove();
+        speakerNextClone.innerHTML = '';
+        speakerNextClone.appendChild(clone);
+      } else {
+        speakerNextClone.innerHTML = '<div style="color: #64748b; padding: 2rem; text-align: center; font-style: italic;">End of presentation</div>';
+      }
+    }
+
+    // Populate notes
+    if (speakerNotesBody && slideItems[currentSlide]) {
+      const notesRaw = slideItems[currentSlide].querySelector('.slide-speaker-notes-raw');
+      const text = notesRaw ? notesRaw.innerHTML.trim() : '';
+      if (text) {
+        speakerNotesBody.innerHTML = text;
+      } else {
+        speakerNotesBody.innerHTML = '<p class="speaker-notes-empty">No speaker notes for this slide.</p>';
+      }
+    }
+
+    if (btnSpeakerPrev) btnSpeakerPrev.disabled = currentSlide === 0;
+    if (btnSpeakerNext) btnSpeakerNext.disabled = currentSlide === totalSlides - 1;
+  }
+
+  function toggleSpeakerView(force) {
+    isSpeakerView = typeof force === 'boolean' ? force : !isSpeakerView;
+    if (speakerViewEl) {
+      speakerViewEl.style.display = isSpeakerView ? 'flex' : 'none';
+      if (slideshow) slideshow.classList.toggle('speaker-mode-active', isSpeakerView);
+    }
+    if (isSpeakerView) {
+      startTimer();
+      updateSpeakerView();
+    }
+  }
 
   function updateSlides() {
     slideItems.forEach((slide, idx) => {
@@ -670,6 +1376,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (btnPrev) btnPrev.disabled = currentSlide === 0;
     if (btnNext) btnNext.disabled = currentSlide === totalSlides - 1;
+
+    if (isSpeakerView) {
+      updateSpeakerView();
+    }
   }
 
   function nextSlide() {
@@ -689,6 +1399,18 @@ document.addEventListener('DOMContentLoaded', () => {
   if (btnNext) btnNext.addEventListener('click', nextSlide);
   if (btnPrev) btnPrev.addEventListener('click', prevSlide);
 
+  if (btnToggleSpeakerView) btnToggleSpeakerView.addEventListener('click', () => toggleSpeakerView());
+  if (btnSpeakerTrigger) {
+    btnSpeakerTrigger.addEventListener('click', () => {
+      switchView('content-view-slides');
+      toggleSpeakerView(true);
+    });
+  }
+  if (btnCloseSpeakerView) btnCloseSpeakerView.addEventListener('click', () => toggleSpeakerView(false));
+  if (btnResetTimer) btnResetTimer.addEventListener('click', resetTimer);
+  if (btnSpeakerNext) btnSpeakerNext.addEventListener('click', nextSlide);
+  if (btnSpeakerPrev) btnSpeakerPrev.addEventListener('click', prevSlide);
+
   // Keyboard navigation when slides view is active
   window.addEventListener('keydown', (e) => {
     const slidesSection = document.getElementById('content-view-slides');
@@ -700,8 +1422,14 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (e.key === 'ArrowLeft') {
       e.preventDefault();
       prevSlide();
+    } else if (e.key === 's' || e.key === 'S') {
+      e.preventDefault();
+      toggleSpeakerView();
+    } else if (e.key === 'Escape' && isSpeakerView) {
+      e.preventDefault();
+      toggleSpeakerView(false);
     } else if (e.key === 'f' || e.key === 'F') {
-      toggleFullscreen();
+      if (!isSpeakerView) toggleFullscreen();
     }
   });
 

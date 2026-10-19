@@ -1,0 +1,1396 @@
+<!DOCTYPE html>
+<html lang="{{ .Language.Lang | default "en" }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>{{ .Title }} | Reveal.js Presenter | Citizens Track</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  
+  <style>
+    :root {
+      --brand-cerulean: #40A9FF;
+      --brand-fjord: #00447C;
+      --brand-spring-wood: #EFEEE5;
+      --brand-ebony-clay: #242C36;
+      --brand-coral: #FF5F6F;
+      --brand-reef-teal: #00D8B4;
+      --brand-goldenrod: #FFC440;
+      --brand-deep-redwood: #7C0018;
+
+      --bg-canvas: #0f172a;
+      --bg-surface: #1e293b;
+      --bg-surface-elevated: #334155;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --font-family: 'Parkinsans', system-ui, -apple-system, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Fixed Top Navigation Bar */
+    .deck-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 60px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 1.5rem;
+      background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 80%, transparent 100%);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .deck-topbar * { pointer-events: auto; }
+
+    .deck-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .deck-back-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      background: rgba(30, 41, 59, 0.6);
+      border: 1px solid var(--border-subtle);
+      transition: all 0.15s ease;
+    }
+
+    .deck-back-btn:hover {
+      color: #ffffff;
+      background: var(--bg-surface-elevated);
+      border-color: var(--brand-cerulean);
+    }
+
+    .deck-title-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(0, 68, 124, 0.65);
+      border: 1px solid rgba(64, 169, 255, 0.4);
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      color: var(--brand-cerulean);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      max-width: 380px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .deck-controls-group {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .deck-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      background: rgba(30, 41, 59, 0.85);
+      color: var(--text-main);
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 0.35rem 0.75rem;
+      font-family: var(--font-family);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      backdrop-filter: blur(8px);
+    }
+
+    .deck-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+      color: #ffffff;
+    }
+
+    .deck-btn.primary {
+      background: var(--brand-cerulean);
+      color: #0f172a;
+      border-color: var(--brand-cerulean);
+      font-weight: 700;
+    }
+
+    .deck-btn.primary:hover {
+      background: #68bdff;
+      color: #000000;
+    }
+
+    /* Reveal Container Styling */
+    .reveal {
+      font-family: var(--font-family);
+      color: var(--text-main);
+      background-color: var(--bg-canvas);
+    }
+
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal .slides section {
+      padding: 0;
+      height: 100%;
+      top: 0 !important;
+    }
+
+    /* Slide Content Card Layout */
+    .slide-card-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 5rem 6rem;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .slide-badge-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .slide-tag {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(64, 169, 255, 0.2);
+      color: var(--brand-cerulean);
+      border: 1px solid rgba(64, 169, 255, 0.35);
+      display: inline-block;
+    }
+
+    .slide-tag.quiz { background: rgba(255, 196, 64, 0.2); color: var(--brand-goldenrod); border-color: rgba(255, 196, 64, 0.4); }
+    .slide-tag.answer { background: rgba(0, 216, 180, 0.2); color: var(--brand-reef-teal); border-color: rgba(0, 216, 180, 0.4); }
+    .slide-tag.stat { background: rgba(255, 95, 111, 0.2); color: var(--brand-coral); border-color: rgba(255, 95, 111, 0.4); }
+    .slide-tag.perspective { background: rgba(167, 139, 250, 0.2); color: #c4b5fd; border-color: rgba(167, 139, 250, 0.4); }
+    .slide-tag.takeaways { background: rgba(240, 171, 252, 0.2); color: #f0abfc; border-color: rgba(240, 171, 252, 0.4); }
+
+    .slide-deck-breadcrumb {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .slide-main-title {
+      font-size: 3rem;
+      line-height: 1.25;
+      font-weight: 800;
+      margin: 0 0 1.5rem 0;
+      color: #ffffff;
+      letter-spacing: -0.015em;
+    }
+
+    .slide-main-title.small {
+      font-size: 2.2rem;
+    }
+
+    .slide-body-text {
+      font-size: 1.65rem;
+      line-height: 1.55;
+      color: #e2e8f0;
+      margin: 0;
+      max-width: 1400px;
+    }
+
+    .slide-body-text h1, .slide-body-text h2, .slide-body-text h3 {
+      color: #ffffff;
+      font-size: 2.2rem;
+      line-height: 1.3;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .slide-body-text p {
+      margin: 0 0 1rem 0;
+    }
+
+    .slide-body-text ul, .slide-body-text ol {
+      margin: 0 0 1.5rem 2rem;
+      padding: 0;
+    }
+
+    .slide-body-text li {
+      margin-bottom: 0.6rem;
+    }
+
+    .slide-body-text hr {
+      border: 0;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 2rem 0;
+    }
+
+    .slide-body-text a {
+      color: var(--brand-cerulean);
+      text-decoration: underline;
+    }
+
+    /* Split Image Layout */
+    .slide-split-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 3.5rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .slide-media-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-subtle);
+      padding: 0.75rem;
+    }
+
+    .slide-media-img {
+      max-height: 520px;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #000000;
+    }
+
+    .slide-media-caption {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      padding: 0 0.25rem;
+    }
+
+    /* Key Statistic Display */
+    .stat-hero-number {
+      font-size: 5.5rem;
+      font-weight: 800;
+      line-height: 1;
+      color: var(--brand-coral);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* Perspective Quote */
+    .perspective-quote-wrap {
+      border-left: 6px solid var(--brand-reef-teal);
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .perspective-quote-text {
+      font-size: 2.2rem;
+      line-height: 1.4;
+      font-style: italic;
+      color: #f1f5f9;
+      margin: 0 0 1rem 0;
+    }
+
+    .perspective-attribution {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--brand-reef-teal);
+    }
+
+    /* Citation Footer */
+    .slide-citation {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* Chapter Title Slide */
+    .slide-chapter-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 4rem;
+    }
+
+    .slide-chapter-tag {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--brand-cerulean);
+      background: rgba(64, 169, 255, 0.15);
+      border: 1px solid rgba(64, 169, 255, 0.3);
+      padding: 0.4rem 1.25rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .slide-chapter-title {
+      font-size: 4rem;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-chapter-desc {
+      font-size: 1.6rem;
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 900px;
+      margin: 0 0 2rem 0;
+    }
+
+    .slide-chapter-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    /* Modal / Playlist Combiner Drawer */
+    .playlist-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .playlist-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .playlist-modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.97); }
+      to { transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+      border-radius: 4px;
+    }
+
+    .modal-close-btn:hover { color: #ffffff; }
+
+    .modal-body {
+      padding: 1.5rem 1.75rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .deck-selection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .deck-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .deck-item-row:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(64, 169, 255, 0.35);
+    }
+
+    .deck-item-row.selected {
+      border-color: var(--brand-cerulean);
+      background: rgba(0, 68, 124, 0.25);
+    }
+
+    .deck-row-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex: 1;
+    }
+
+    .deck-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand-cerulean);
+      cursor: pointer;
+    }
+
+    .deck-info-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 0.15rem;
+    }
+
+    .deck-info-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .deck-row-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .deck-badge-count {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .order-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .order-mini-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-muted);
+      border-radius: 3px;
+      width: 20px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.65rem;
+    }
+
+    .order-mini-btn:hover {
+      background: var(--brand-cerulean);
+      color: #000;
+    }
+
+    /* Mode Selection Switcher */
+    .mode-select-group {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .mode-select-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 0.65rem;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mode-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .mode-option-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    .mode-option-card.active {
+      border-color: var(--brand-cerulean);
+      background: rgba(0, 68, 124, 0.3);
+    }
+
+    .mode-option-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .mode-option-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.75rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .selection-summary {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .selection-summary strong { color: var(--brand-cerulean); }
+
+    /* Custom Reveal Controls styling */
+    .reveal .controls {
+      bottom: 20px;
+      right: 20px;
+    }
+
+    .reveal .progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .reveal .progress span {
+      background: var(--brand-cerulean);
+    }
+
+    .reveal .slide-number {
+      font-family: var(--font-family);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(15, 23, 42, 0.7);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      right: 80px;
+      bottom: 20px;
+    }
+
+    /* Loading overlay */
+    #deck-loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-canvas);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 150;
+      transition: opacity 0.3s ease;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(64, 169, 255, 0.2);
+      border-top-color: var(--brand-cerulean);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      border: 1px solid var(--brand-cerulean);
+      color: #ffffff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      z-index: 300;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Loading State -->
+  <div id="deck-loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-size: 1.15rem; font-weight: 600; color: #ffffff;">Preparing Reveal.js presentation…</div>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;" id="loading-detail">Loading deck fragments</p>
+  </div>
+
+  <!-- Persistent Top Header HUD -->
+  <header class="deck-topbar" id="deck-topbar">
+    <div class="deck-brand-wrap">
+      <a href="{{ `content/` | relLangURL }}" class="deck-back-btn" title="Back to Content Items">
+        &larr; Toolkit
+      </a>
+      <div class="deck-title-badge" id="hud-deck-title">Presentation</div>
+    </div>
+
+    <div class="deck-controls-group">
+      <button type="button" class="deck-btn" id="btn-open-playlist" title="Choose or combine slide decks (Press P)">
+        📋 Combined Playlist (<span id="hud-deck-count">1</span>)
+      </button>
+      <button type="button" class="deck-btn" id="btn-toggle-speaker" title="Open Speaker View with notes (Press S)">
+        🎙️ Speaker (S)
+      </button>
+      <button type="button" class="deck-btn" id="btn-toggle-overview" title="Slide Overview Grid (Press ESC)">
+        🔲 Overview
+      </button>
+      <button type="button" class="deck-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen (Press F)">
+        ⛶ Fullscreen
+      </button>
+    </div>
+  </header>
+
+  <!-- Reveal Container -->
+  <div class="reveal">
+    <div class="slides" id="reveal-slides-root">
+      <!-- Injected dynamically by presentation engine -->
+    </div>
+  </div>
+
+  <!-- Playlist / Deck Combiner Modal -->
+  <div class="playlist-modal-backdrop" id="playlist-modal-backdrop">
+    <div class="playlist-modal">
+      <div class="modal-header">
+        <div class="modal-title">
+          <span>🎛️ Combine Slide Decks</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-playlist" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.05em;">
+            Select Decks to Include
+          </label>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="deck-btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" id="btn-select-all">Select All</button>
+            <button type="button" class="deck-btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" id="btn-clear-all">Clear</button>
+          </div>
+        </div>
+
+        <div class="deck-selection-list" id="deck-selection-list">
+          <!-- Rendered dynamically from manifest -->
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="mode-select-group">
+          <span class="mode-select-label">Navigation Hierarchy</span>
+          <div class="mode-options-grid">
+            <div class="mode-option-card active" data-mode="2d" id="mode-card-2d">
+              <div class="mode-option-title">
+                <span>🔲 2D Chapter Grid</span>
+              </div>
+              <div class="mode-option-desc">
+                Horizontal arrows switch between decks/topics. Vertical arrows navigate cards within each topic.
+              </div>
+            </div>
+            <div class="mode-option-card" data-mode="linear" id="mode-card-linear">
+              <div class="mode-option-title">
+                <span>➡️ Continuous Linear</span>
+              </div>
+              <div class="mode-option-desc">
+                All cards flow in one continuous 1D sequence from start to finish.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="selection-summary">
+          <span id="modal-selected-summary"><strong>0</strong> decks selected</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="deck-btn" id="btn-copy-link" title="Copy direct link to this combined presentation">
+            🔗 Copy Link
+          </button>
+          <button type="button" class="deck-btn primary" id="btn-launch-presentation">
+            ▶️ Launch Presentation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast message -->
+  <div class="toast-msg" id="toast-msg">Link copied to clipboard!</div>
+
+  <!-- Reveal.js & Notes Plugin -->
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // State
+    let allAvailableDecks = [];
+    let selectedDeckSlugs = [];
+    let presentationMode = '2d'; // '2d' or 'linear'
+    let revealDeck = null;
+
+    const slidesUrl = '{{ "content/slides.json" | relLangURL }}';
+    const slidesRoot = document.getElementById('reveal-slides-root');
+    const loadingOverlay = document.getElementById('deck-loading-overlay');
+    const loadingDetail = document.getElementById('loading-detail');
+    const playlistModal = document.getElementById('playlist-modal-backdrop');
+    const selectionList = document.getElementById('deck-selection-list');
+    const modalSummary = document.getElementById('modal-selected-summary');
+    const hudDeckTitle = document.getElementById('hud-deck-title');
+    const hudDeckCount = document.getElementById('hud-deck-count');
+    const toastEl = document.getElementById('toast-msg');
+
+    function showToast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2500);
+    }
+
+    // Parse URL query params
+    function parseParams() {
+      const url = new URL(window.location.href);
+      const decksParam = url.searchParams.get('decks') || url.searchParams.get('items');
+      const modeParam = url.searchParams.get('mode');
+
+      if (modeParam === 'linear' || modeParam === '2d') {
+        presentationMode = modeParam;
+      }
+
+      if (decksParam) {
+        selectedDeckSlugs = decksParam.split(',').map(s => s.trim()).filter(Boolean);
+      } else {
+        selectedDeckSlugs = [];
+      }
+    }
+
+    // Fetch master slide manifest
+    async function loadDecks() {
+      try {
+        loadingDetail.textContent = 'Fetching deck index…';
+        const res = await fetch(slidesUrl);
+        if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${slidesUrl}`);
+        const data = await res.json();
+        allAvailableDecks = data.items || [];
+
+        parseParams();
+
+        // If no decks specified in query string, default to first deck or open combiner
+        if (selectedDeckSlugs.length === 0) {
+          if (allAvailableDecks.length > 0) {
+            // Default to first deck
+            selectedDeckSlugs = [allAvailableDecks[0].slug];
+            renderPlaylistModal();
+            openPlaylistModal();
+          }
+        }
+
+        renderPlaylistModal();
+        buildAndMountPresentation();
+      } catch (err) {
+        console.error('Failed to load slides:', err);
+        loadingDetail.innerHTML = `<span style="color: #ff5f6f;">Error loading slides: ${err.message}</span>`;
+      }
+    }
+
+    // Render an individual card element into HTML
+    function renderElementSlide(el, deckTitle) {
+      const type = el.type;
+      let badgeClass = 'slide-tag';
+      let tagText = 'Information';
+
+      if (type === 'quiz_question') { badgeClass += ' quiz'; tagText = 'Quiz Question'; }
+      else if (type === 'statistic') { badgeClass += ' stat'; tagText = 'Statistic'; }
+      else if (type === 'perspective') { badgeClass += ' perspective'; tagText = 'Perspective'; }
+      else if (type === 'takeaways') { badgeClass += ' takeaways'; tagText = 'Takeaways'; }
+
+      let speakerNotes = el.notes || '';
+
+      // QUIZ QUESTION: generates 2 slides (Question slide, then Answer slide)
+      if (type === 'quiz_question') {
+        const questionSlide = `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+            </div>
+            ${el.image ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="slide-main-title small">${el.question || ''}</div>
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
+                  ${el.image_alt || el.image_attribution ? `
+                    <div class="slide-media-caption">
+                      ${el.image_alt ? `<span>${el.image_alt}</span>` : ''}
+                      ${el.image_attribution ? `<span> — Credit: ${el.image_attribution}</span>` : ''}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="slide-main-title">${el.question || ''}</div>
+            `}
+            <aside class="notes">
+              <p><strong>Question Slide:</strong></p>
+              ${speakerNotes || '<p>Invite participants to discuss or guess before advancing to reveal the answer.</p>'}
+            </aside>
+          </section>
+        `;
+
+        const answerSlide = `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="slide-tag answer">Quiz Answer</span>
+              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+            </div>
+            <div class="slide-main-title small" style="color: var(--brand-reef-teal);">
+              ${el.answer || ''}
+            </div>
+            ${el.explanation ? `
+              <div class="slide-body-text" style="font-size: 1.45rem; color: #cbd5e1; margin-top: 1rem;">
+                ${el.explanation}
+              </div>
+            ` : ''}
+            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Answer & Explanation:</strong></p>
+              ${speakerNotes || el.explanation || '<p>Debrief and answer questions.</p>'}
+            </aside>
+          </section>
+        `;
+
+        return questionSlide + answerSlide;
+      }
+
+      // STATISTIC
+      if (type === 'statistic') {
+        return `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+            </div>
+            ${el.image ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="stat-hero-number">${el.figure || ''}</div>
+                  <div class="slide-main-title small">${el.description || ''}</div>
+                  ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.35rem; color: #cbd5e1;">${el.explanation}</div>` : ''}
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
+                  ${el.image_attribution ? `<div class="slide-media-caption">Credit: ${el.image_attribution}</div>` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="stat-hero-number">${el.figure || ''}</div>
+              <div class="slide-main-title small">${el.description || ''}</div>
+              ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.4rem; color: #cbd5e1; margin-top: 1rem;">${el.explanation}</div>` : ''}
+            `}
+            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Statistic Insight:</strong></p>
+              ${speakerNotes || el.explanation || '<p>Share background context on this data point.</p>'}
+            </aside>
+          </section>
+        `;
+      }
+
+      // PERSPECTIVE
+      if (type === 'perspective') {
+        return `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+            </div>
+            ${el.image ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="perspective-quote-wrap">
+                    <div class="perspective-quote-text">“${el.quote || ''}”</div>
+                    ${el.attribution ? `<div class="perspective-attribution">— ${el.attribution}</div>` : ''}
+                  </div>
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
+                  ${el.image_attribution ? `<div class="slide-media-caption">Credit: ${el.image_attribution}</div>` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="perspective-quote-wrap">
+                <div class="perspective-quote-text">“${el.quote || ''}”</div>
+                ${el.attribution ? `<div class="perspective-attribution">— ${el.attribution}</div>` : ''}
+              </div>
+            `}
+            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Perspective Discussion:</strong></p>
+              ${speakerNotes || '<p>Ask participants how this perspective resonates with their lived experience.</p>'}
+            </aside>
+          </section>
+        `;
+      }
+
+      // INFORMATION or TAKEAWAYS (Default)
+      return `
+        <section class="slide-card-container">
+          <div class="slide-badge-header">
+            <span class="${badgeClass}">${tagText}</span>
+            <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+          </div>
+          ${el.image ? `
+            <div class="slide-split-grid">
+              <div class="slide-body-text">
+                ${el.text || ''}
+              </div>
+              <div class="slide-media-wrap">
+                <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
+                ${el.image_alt || el.image_attribution ? `
+                  <div class="slide-media-caption">
+                    ${el.image_alt ? `<span>${el.image_alt}</span>` : ''}
+                    ${el.image_attribution ? `<span> — Credit: ${el.image_attribution}</span>` : ''}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : `
+            <div class="slide-body-text">
+              ${el.text || ''}
+            </div>
+          `}
+          ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+          <aside class="notes">
+            <p><strong>Speaker Notes:</strong></p>
+            ${speakerNotes || '<p>Deliver key concept and check for comprehension.</p>'}
+          </aside>
+        </section>
+      `;
+    }
+
+    // Chapter Title Slide for a deck
+    function renderChapterSlide(deck) {
+      return `
+        <section class="slide-card-container">
+          <div class="slide-chapter-card">
+            <span class="slide-chapter-tag">Topic / Module</span>
+            <h1 class="slide-chapter-title">${deck.title}</h1>
+            ${deck.description ? `<p class="slide-chapter-desc">${deck.description}</p>` : ''}
+            <div class="slide-chapter-meta">
+              <span>🃏 ${deck.elements ? deck.elements.length : 0} Cards</span>
+              <span>•</span>
+              <span>Citizens Track Toolkit</span>
+            </div>
+          </div>
+          <aside class="notes">
+            <p><strong>Facilitator Overview (${deck.title}):</strong></p>
+            ${deck.overview || deck.description || '<p>Introduce the session topic and goals.</p>'}
+          </aside>
+        </section>
+      `;
+    }
+
+    // Build the Reveal slide tree and mount
+    function buildAndMountPresentation() {
+      // Find matching deck objects in the selected order
+      const activeDecks = [];
+      selectedDeckSlugs.forEach(slug => {
+        const found = allAvailableDecks.find(d => d.slug === slug);
+        if (found) activeDecks.push(found);
+      });
+
+      if (activeDecks.length === 0 && allAvailableDecks.length > 0) {
+        activeDecks.push(allAvailableDecks[0]);
+      }
+
+      // Update HUD title and badge
+      if (activeDecks.length === 1) {
+        hudDeckTitle.textContent = activeDecks[0].title;
+      } else {
+        hudDeckTitle.textContent = `${activeDecks.length} Combined Decks (${activeDecks.map(d => d.title).join(', ')})`;
+      }
+      hudDeckCount.textContent = activeDecks.length;
+
+      // Construct slide HTML
+      let html = '';
+
+      if (presentationMode === '2d') {
+        // 2D GRID: Each Deck is an outer horizontal <section>; slides within are vertical <section> tags
+        activeDecks.forEach(deck => {
+          let deckSlides = renderChapterSlide(deck);
+          if (deck.elements && deck.elements.length > 0) {
+            deck.elements.forEach(el => {
+              deckSlides += renderElementSlide(el, deck.title);
+            });
+          }
+          html += `<section>${deckSlides}</section>`;
+        });
+      } else {
+        // CONTINUOUS LINEAR: Flat sequence of slides
+        activeDecks.forEach(deck => {
+          html += renderChapterSlide(deck);
+          if (deck.elements && deck.elements.length > 0) {
+            deck.elements.forEach(el => {
+              html += renderElementSlide(el, deck.title);
+            });
+          }
+        });
+      }
+
+      // Teardown previous Reveal instance if already initialized
+      if (revealDeck) {
+        revealDeck.destroy();
+        revealDeck = null;
+      }
+
+      slidesRoot.innerHTML = html;
+
+      // Initialize Reveal.js
+      revealDeck = new Reveal({
+        hash: true,
+        history: true,
+        slideNumber: 'c/t',
+        controls: true,
+        controlsTutorial: true,
+        progress: true,
+        center: false,
+        transition: 'fade',
+        transitionSpeed: 'fast',
+        backgroundTransition: 'fade',
+        overview: true,
+        width: 1920,
+        height: 1080,
+        margin: 0.04,
+        minScale: 0.2,
+        maxScale: 2.0,
+        plugins: [ RevealNotes ]
+      });
+
+      revealDeck.initialize().then(() => {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => { loadingOverlay.style.display = 'none'; }, 300);
+      });
+    }
+
+    // Playlist / Combiner Modal logic
+    function renderPlaylistModal() {
+      selectionList.innerHTML = '';
+
+      // Build ordered array: selected slugs first in order, then remaining
+      const orderedSlugs = [...selectedDeckSlugs];
+      allAvailableDecks.forEach(d => {
+        if (!orderedSlugs.includes(d.slug)) {
+          orderedSlugs.push(d.slug);
+        }
+      });
+
+      orderedSlugs.forEach((slug, idx) => {
+        const deck = allAvailableDecks.find(d => d.slug === slug);
+        if (!deck) return;
+
+        const isChecked = selectedDeckSlugs.includes(slug);
+        const row = document.createElement('div');
+        row.className = `deck-item-row ${isChecked ? 'selected' : ''}`;
+        row.dataset.slug = slug;
+
+        row.innerHTML = `
+          <div class="deck-row-left">
+            <input type="checkbox" class="deck-checkbox" ${isChecked ? 'checked' : ''} data-slug="${slug}">
+            <div>
+              <div class="deck-info-title">${deck.title}</div>
+              <div class="deck-info-desc">${deck.description || (deck.overview ? deck.overview.replace(/<[^>]*>?/gm, '').substring(0, 90) + '…' : '')}</div>
+            </div>
+          </div>
+          <div class="deck-row-right">
+            <span class="deck-badge-count">${deck.element_count || (deck.elements ? deck.elements.length : 0)} cards</span>
+            <div class="order-btn-group">
+              <button type="button" class="order-mini-btn btn-move-up" title="Move Up" ${idx === 0 ? 'disabled style="opacity:0.3"' : ''}>▲</button>
+              <button type="button" class="order-mini-btn btn-move-down" title="Move Down" ${idx === orderedSlugs.length - 1 ? 'disabled style="opacity:0.3"' : ''}>▼</button>
+            </div>
+          </div>
+        `;
+
+        // Checkbox change
+        const checkbox = row.querySelector('.deck-checkbox');
+        checkbox.addEventListener('change', (e) => {
+          e.stopPropagation();
+          toggleDeckSelection(slug, checkbox.checked);
+        });
+
+        // Click row to toggle
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('.order-mini-btn')) return;
+          checkbox.checked = !checkbox.checked;
+          toggleDeckSelection(slug, checkbox.checked);
+        });
+
+        // Up / Down reordering
+        const btnUp = row.querySelector('.btn-move-up');
+        const btnDown = row.querySelector('.btn-move-down');
+        btnUp.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveDeck(slug, -1);
+        });
+        btnDown.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveDeck(slug, 1);
+        });
+
+        selectionList.appendChild(row);
+      });
+
+      updateModalSummary();
+    }
+
+    function toggleDeckSelection(slug, isSelected) {
+      if (isSelected) {
+        if (!selectedDeckSlugs.includes(slug)) selectedDeckSlugs.push(slug);
+      } else {
+        selectedDeckSlugs = selectedDeckSlugs.filter(s => s !== slug);
+      }
+      renderPlaylistModal();
+    }
+
+    function moveDeck(slug, delta) {
+      const idx = selectedDeckSlugs.indexOf(slug);
+      if (idx !== -1) {
+        const targetIdx = idx + delta;
+        if (targetIdx >= 0 && targetIdx < selectedDeckSlugs.length) {
+          const temp = selectedDeckSlugs[idx];
+          selectedDeckSlugs[idx] = selectedDeckSlugs[targetIdx];
+          selectedDeckSlugs[targetIdx] = temp;
+          renderPlaylistModal();
+        }
+      }
+    }
+
+    function updateModalSummary() {
+      modalSummary.innerHTML = `<strong>${selectedDeckSlugs.length}</strong> of ${allAvailableDecks.length} decks selected`;
+    }
+
+    function openPlaylistModal() {
+      renderPlaylistModal();
+      playlistModal.classList.add('open');
+    }
+
+    function closePlaylistModal() {
+      playlistModal.classList.remove('open');
+    }
+
+    // Mode cards toggle
+    const modeCard2D = document.getElementById('mode-card-2d');
+    const modeCardLinear = document.getElementById('mode-card-linear');
+
+    function setPresentationMode(mode) {
+      presentationMode = mode;
+      modeCard2D.classList.toggle('active', mode === '2d');
+      modeCardLinear.classList.toggle('active', mode === 'linear');
+    }
+
+    modeCard2D.addEventListener('click', () => setPresentationMode('2d'));
+    modeCardLinear.addEventListener('click', () => setPresentationMode('linear'));
+
+    // Select All / Clear All
+    document.getElementById('btn-select-all').addEventListener('click', () => {
+      selectedDeckSlugs = allAvailableDecks.map(d => d.slug);
+      renderPlaylistModal();
+    });
+
+    document.getElementById('btn-clear-all').addEventListener('click', () => {
+      selectedDeckSlugs = [];
+      renderPlaylistModal();
+    });
+
+    // Launch presentation from modal
+    document.getElementById('btn-launch-presentation').addEventListener('click', () => {
+      if (selectedDeckSlugs.length === 0 && allAvailableDecks.length > 0) {
+        selectedDeckSlugs = [allAvailableDecks[0].slug];
+      }
+
+      // Update URL query string
+      const url = new URL(window.location.href);
+      url.searchParams.set('decks', selectedDeckSlugs.join(','));
+      url.searchParams.set('mode', presentationMode);
+      window.history.replaceState(null, null, url.toString());
+
+      closePlaylistModal();
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.style.opacity = '1';
+      loadingDetail.textContent = 'Assembling combined presentation…';
+      setTimeout(() => buildAndMountPresentation(), 100);
+    });
+
+    // Copy direct presentation link
+    document.getElementById('btn-copy-link').addEventListener('click', () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('decks', selectedDeckSlugs.join(','));
+      url.searchParams.set('mode', presentationMode);
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        showToast('Presentation link copied to clipboard!');
+      }).catch(() => {
+        showToast('URL: ' + url.toString());
+      });
+    });
+
+    // Topbar buttons
+    document.getElementById('btn-open-playlist').addEventListener('click', openPlaylistModal);
+    document.getElementById('btn-close-playlist').addEventListener('click', closePlaylistModal);
+    playlistModal.addEventListener('click', (e) => {
+      if (e.target === playlistModal) closePlaylistModal();
+    });
+
+    document.getElementById('btn-toggle-speaker').addEventListener('click', () => {
+      if (revealDeck) {
+        const notesPlugin = revealDeck.getPlugin('notes');
+        if (notesPlugin && notesPlugin.open) {
+          notesPlugin.open();
+        } else {
+          // Trigger Reveal keyboard 's' key
+          window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', keyCode: 83 }));
+        }
+      }
+    });
+
+    document.getElementById('btn-toggle-overview').addEventListener('click', () => {
+      if (revealDeck) revealDeck.toggleOverview();
+    });
+
+    document.getElementById('btn-toggle-fullscreen').addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => console.log(err));
+      } else {
+        document.exitFullscreen().catch(err => console.log(err));
+      }
+    });
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'p' || e.key === 'P') {
+        e.preventDefault();
+        if (playlistModal.classList.contains('open')) {
+          closePlaylistModal();
+        } else {
+          openPlaylistModal();
+        }
+      } else if (e.key === 'Escape' && playlistModal.classList.contains('open')) {
+        e.preventDefault();
+        closePlaylistModal();
+      }
+    });
+
+    // Kickoff load
+    loadDecks();
+  })();
+  </script>
+</body>
+</html>
