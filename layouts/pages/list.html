@@ -1,0 +1,59 @@
+{{ define "main" }}
+
+{{ $guidancePages := where (where .Site.RegularPages "Section" "pages") ".Params.group" "guidance" }}
+{{ $sortedChapters := sort $guidancePages "Weight" "asc" }}
+
+<div class="handbook-reader-container">
+  
+  <header class="page-header" style="margin-bottom: 2.5rem;">
+    <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+      <span class="collection-badge">Toolkit Guidance</span>
+      <span style="font-size: 0.85rem; color: var(--color-muted);">{{ len $sortedChapters }} Chapters</span>
+    </div>
+    <h1 class="page-title">Community Assembly Guidance</h1>
+    <p style="font-size: 1.15rem; color: var(--color-slate, #4a5565); margin: 0; line-height: 1.6; max-width: 780px;">
+      A practical, step-by-step handbook covering preparation, facilitation principles, and follow-up mechanisms for community assemblies on artificial intelligence.
+    </p>
+  </header>
+
+  <div class="guidance-chapters-grid" style="display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 3.5rem;">
+    {{ range $idx, $chap := $sortedChapters }}
+      <article class="content-item-card" style="border-inline-start: 5px solid {{ if eq $chap.Params.stage "prepare" }}var(--ct-color-cerulean, #40A9FF){{ else if eq $chap.Params.stage "facilitate" }}var(--ct-color-reef-teal, #00D8B4){{ else if eq $chap.Params.stage "follow-up" }}var(--ct-color-goldenrod, #FFC440){{ else }}var(--ct-color-fjord, #00447C){{ end }}; padding: 1.75rem 2rem;">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap;">
+          <div>
+            <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
+              <span class="stage-number-badge" style="width: 24px; height: 24px; font-size: 0.8rem;">{{ add $idx 1 }}</span>
+              {{ with $chap.Params.stage }}
+                <span class="element-pill" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Stage: {{ . }}</span>
+              {{ else }}
+                <span class="element-pill" style="font-size: 0.78rem; text-transform: uppercase; font-weight: 700; letter-spacing: 0.05em;">Introduction</span>
+              {{ end }}
+            </div>
+            <h2 class="item-card-title" style="font-size: 1.4rem; margin: 0 0 0.5rem;">
+              <a href="{{ $chap.RelPermalink }}">{{ $chap.Title }}</a>
+            </h2>
+            {{ with $chap.Params.description }}
+              <p class="item-card-overview" style="font-size: 1rem; line-height: 1.5; margin: 0; max-width: 740px;">{{ . }}</p>
+            {{ end }}
+          </div>
+          <a href="{{ $chap.RelPermalink }}" class="view-item-link" style="font-weight: 700; align-self: center; white-space: nowrap;">
+            Read Chapter &rarr;
+          </a>
+        </div>
+      </article>
+    {{ end }}
+  </div>
+
+  <div class="handbook-callout teal" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+    <div>
+      <h3 style="margin: 0 0 0.35rem; font-size: 1.15rem; color: #00447C;">Ready to run an assembly in your community?</h3>
+      <p style="margin: 0; font-size: 0.92rem; color: #1e3a5f;">Register your assembly to receive support and connect your outputs with global initiatives.</p>
+    </div>
+    <a href="{{ "pages/register/" | relLangURL }}" class="view-item-link" style="background: var(--ct-color-fjord, #00447C); color: #FFFFFF; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 8px;">
+      Register Your Assembly &rarr;
+    </a>
+  </div>
+
+</div>
+
+{{ end }}

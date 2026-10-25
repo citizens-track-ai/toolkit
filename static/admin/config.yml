@@ -24,6 +24,22 @@ i18n:
   initial_locales: default
 
 collections:
+  - name: pages
+    label: Guidance & Pages
+    label_singular: Page
+    folder: content/{{locale}}/pages
+    summary: '{{title}} (Order: {{weight}}) [{{locales}}]'
+    i18n: true
+    create: true
+    fields:
+      - { name: title, label: Page Title, widget: string, i18n: true }
+      - { name: draft, label: Draft, widget: boolean, default: false, i18n: duplicate }
+      - { name: weight, label: Chapter Order / Weight, widget: number, value_type: int, default: 10, i18n: duplicate, hint: "Order in the handbook reading sequence: 10 (Intro), 20 (Prepare), 30 (Facilitate), 40 (Follow-up), etc." }
+      - { name: group, label: Navigation Group, widget: select, options: [{label: "Guidance", value: "guidance"}, {label: "Register", value: "register"}, {label: "General", value: "general"}], default: "guidance", i18n: duplicate }
+      - { name: stage, label: Stage (for Guidance), widget: select, options: [{label: "None", value: ""}, {label: "1. Prepare", value: "prepare"}, {label: "2. Facilitate", value: "facilitate"}, {label: "3. Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: description, label: Description / Lead Text, widget: text, required: false, i18n: true }
+      - { name: body, label: Page Content, widget: richtext, required: false, i18n: true }
+
   - name: modules
     label: Modules
     label_singular: Module
