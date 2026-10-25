@@ -6,10 +6,10 @@
     </a>
 
     <nav class="site-nav">
-      <a href="{{"content-collections/" | relLangURL }}" class="nav-link{{ if eq .Section "content-collections" }} active{{ end }}">Collections</a>
-      <a href="{{"content/" | relLangURL }}" class="nav-link{{ if eq .Section "content" }} active{{ end }}">Content Items</a>
-      <a href="{{"activities/" | relLangURL }}" class="nav-link{{ if eq .Section "activities" }} active{{ end }}">Activities</a>
-      <a href="{{"modules/" | relLangURL }}" class="nav-link{{ if eq .Section "modules" }} active{{ end }}">Modules</a>
+      <a href="{{ "content-collections/" | relLangURL }}" class="nav-link{{ if eq .Section "content-collections" }} active{{ end }}">Collections</a>
+      <a href="{{ "content/" | relLangURL }}" class="nav-link{{ if eq .Section "content" }} active{{ end }}">Content Items</a>
+      <a href="{{ "activities/" | relLangURL }}" class="nav-link{{ if eq .Section "activities" }} active{{ end }}">Activities</a>
+      <a href="{{ "modules/" | relLangURL }}" class="nav-link{{ if eq .Section "modules" }} active{{ end }}">Modules</a>
 
       {{ if hugo.IsMultilingual }}
       <div class="lang-switcher">

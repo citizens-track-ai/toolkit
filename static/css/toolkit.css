@@ -714,6 +714,118 @@ a:hover {
   padding: 1.5rem;
 }
 
+.element-item-separator {
+  margin-top: 1.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px dashed var(--color-border);
+}
+
+/* Facilitator Notes Box in Page View */
+.element-notes-box {
+  margin-top: 1.25rem;
+  background: #fffbeb;
+  border: 1px solid #fef3c7;
+  border-left: 4px solid #f59e0b;
+  border-radius: var(--radius-md);
+  padding: 0.875rem 1.15rem;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.element-notes-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #b45309;
+  margin-bottom: 0.4rem;
+}
+
+.element-notes-content {
+  font-size: 0.925rem;
+  line-height: 1.55;
+  color: #78350f;
+}
+
+.element-notes-content p {
+  margin: 0 0 0.5rem 0;
+}
+
+.element-notes-content p:last-child {
+  margin-bottom: 0;
+}
+
+.element-notes-content ul,
+.element-notes-content ol {
+  margin: 0.35rem 0;
+  padding-left: 1.25rem;
+}
+
+/* Toggle Hide Notes in Page View */
+#content-view-page.notes-hidden .element-notes-box {
+  display: none !important;
+}
+
+/* Element Image Container & Caption (Page View - Floated Right) */
+.element-image-figure {
+  float: right;
+  margin: 0 0 1.25rem 2rem;
+  max-width: 380px;
+  width: 40%;
+  padding: 0;
+}
+
+.element-image {
+  width: 100%;
+  max-height: 420px;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  display: block;
+}
+
+.element-image-caption {
+  margin-top: 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+  color: var(--color-muted);
+}
+
+.element-image-caption .image-alt-text {
+  font-style: italic;
+  color: var(--color-slate);
+}
+
+.element-image-caption .image-attribution-text {
+  font-weight: 500;
+  color: var(--color-muted);
+}
+
+.element-item-wrapper::after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.element-item-wrapper .citation-line,
+.element-item-wrapper .element-notes-box {
+  clear: both;
+}
+
+@media (max-width: 640px) {
+  .element-image-figure {
+    float: none;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 1.25rem 0;
+  }
+}
+
+
 /* Specific Element Types */
 .element-quiz .quiz-question {
   font-size: 1.15rem;
@@ -988,16 +1100,16 @@ a:hover {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fill, minmax(460px, 1fr));
+  gap: 1.75rem;
   margin-bottom: 3rem;
   perspective: 1200px;
 }
 
 .card-3d-wrapper {
   background-color: transparent;
-  min-height: 440px;
-  height: 440px;
+  min-height: 330px;
+  height: 330px;
   perspective: 1200px;
   cursor: pointer;
   user-select: none;
@@ -1036,11 +1148,11 @@ a:hover {
   border-radius: var(--radius-lg);
   border: 1px solid var(--color-border);
   background: white;
-  padding: 1.5rem;
+  padding: 1.15rem 1.4rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  overflow-y: auto;
+  overflow: hidden;
   box-sizing: border-box;
 }
 
@@ -1060,9 +1172,15 @@ a:hover {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1rem;
-  padding-bottom: 0.75rem;
+  margin-bottom: 0.75rem;
+  padding-bottom: 0.6rem;
   border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.element-pill-spacer {
+  display: inline-block;
+  width: 1px;
+  height: 1px;
 }
 
 .card-flip-prompt {
@@ -1077,6 +1195,7 @@ a:hover {
   border-radius: 9999px;
   border: 1px solid var(--color-border);
   transition: all 0.15s ease;
+  margin-left: auto;
 }
 
 .card-3d-wrapper:hover .card-flip-prompt {
@@ -1090,8 +1209,140 @@ a:hover {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  overflow: hidden;
+  padding: 0.25rem 0;
+  min-height: 0;
+}
+
+.card-face-back .card-face-body {
+  justify-content: flex-start;
   overflow-y: auto;
-  padding: 0.5rem 0;
+}
+
+/* Card Front: Information Content (Title & Image) */
+.card-info-front-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  gap: 0.65rem;
+}
+
+.card-front-title {
+  margin: 0;
+  text-align: center;
+  width: 100%;
+}
+
+.card-front-title h1,
+.card-front-title h2,
+.card-front-title h3,
+.card-front-title h4,
+.card-front-title p {
+  margin: 0;
+  padding: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--color-dark);
+}
+
+.card-info-front-content .card-front-title:only-child h1,
+.card-info-front-content .card-front-title:only-child h2,
+.card-info-front-content .card-front-title:only-child h3,
+.card-info-front-content .card-front-title:only-child h4,
+.card-info-front-content .card-front-title:only-child p {
+  font-size: 1.4rem;
+}
+
+.card-front-image-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 155px;
+  width: 100%;
+  overflow: hidden;
+  border-radius: var(--radius-md);
+}
+
+.card-front-image {
+  max-height: 155px;
+  max-width: 100%;
+  object-fit: contain;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+/* Card Front Image Caption */
+.card-image-caption {
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--color-muted);
+  text-align: center;
+  margin-top: 0.35rem;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.card-image-caption .card-image-alt {
+  font-style: italic;
+}
+
+.card-image-caption .card-image-attribution {
+  font-weight: 500;
+}
+
+
+/* Card Back: Full Text & Auto-Shrinkable Typography */
+.card-back-text {
+  font-size: 0.95rem;
+  line-height: 1.45;
+  color: var(--color-dark);
+  transition: font-size 0.08s ease;
+}
+
+.card-back-text h1,
+.card-back-text h2,
+.card-back-text h3,
+.card-back-text h4 {
+  font-size: 1.15em;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0.35rem;
+  color: var(--color-dark);
+}
+
+.card-back-text p {
+  margin: 0 0 0.4rem 0;
+}
+
+.card-back-text p:last-child {
+  margin-bottom: 0;
+}
+
+.card-back-text blockquote {
+  margin: 0.35rem 0;
+  padding: 0.3rem 0.65rem;
+  border-left: 3px solid #93c5fd;
+  background: #f8fafc;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  font-style: italic;
+  font-size: 0.95em;
+}
+
+.card-back-text ul,
+.card-back-text ol {
+  margin: 0.3rem 0;
+  padding-left: 1.25rem;
+}
+
+.card-back-text li {
+  margin-bottom: 0.2rem;
 }
 
 .card-main-title {
@@ -1099,11 +1350,11 @@ a:hover {
   font-weight: 700;
   line-height: 1.4;
   color: var(--color-dark);
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
 }
 
 .card-main-stat {
-  font-size: 3.5rem;
+  font-size: 3.25rem;
   font-weight: 800;
   color: var(--ct-color-cerulean);
   line-height: 1;
@@ -1111,9 +1362,9 @@ a:hover {
 }
 
 .card-main-quote {
-  font-size: 1.15rem;
+  font-size: 1.1rem;
   font-style: italic;
-  line-height: 1.5;
+  line-height: 1.45;
   color: var(--color-dark);
   margin: 0;
 }
@@ -1122,7 +1373,7 @@ a:hover {
   padding-top: 0.75rem;
   border-top: 1px solid var(--color-border-subtle);
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   font-size: 0.75rem;
   color: var(--color-muted);
@@ -1423,6 +1674,77 @@ a:hover {
   margin: 0 0 1.5rem;
 }
 
+/* Slide Deck Image & Split Layout (Image on Right-Hand Side) */
+.slide-item.slide-has-image {
+  max-width: 1040px;
+}
+
+.slide-layout-split {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3rem;
+  align-items: center;
+  width: 100%;
+}
+
+.slide-main-col {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.slide-side-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+}
+
+.slide-image-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.slide-image {
+  max-height: 380px;
+  max-width: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.45), 0 8px 10px -6px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.slide-image-caption {
+  margin-top: 0.75rem;
+  font-size: 0.85rem;
+  color: #94a3b8;
+  text-align: center;
+  max-width: 90%;
+}
+
+.slide-image-caption .slide-image-alt {
+  font-style: italic;
+  color: #cbd5e1;
+}
+
+.slide-image-caption .slide-image-attribution {
+  font-weight: 500;
+  color: #5eead4;
+}
+
+@media (max-width: 768px) {
+  .slide-layout-split {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+}
+
+
 .slide-attribution {
   font-size: 1.25rem;
   font-weight: 700;
@@ -1589,37 +1911,515 @@ a:hover {
 }
 
 /* ==========================================================================
-   PRINT STYLES FOR TWO-SIDED CARDS (@media print)
+   SLIDE DECK SPEAKER VIEW DASHBOARD
+   ========================================================================== */
+.slideshow-speaker-view {
+  position: absolute;
+  inset: 0;
+  background: #090e1a;
+  color: #f8fafc;
+  z-index: 50;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: slideFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.speaker-view-topbar {
+  background: #0f172a;
+  border-bottom: 1px solid #1e293b;
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-shrink: 0;
+}
+
+.speaker-top-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.speaker-badge {
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+  border: 1px solid rgba(56, 189, 248, 0.25);
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+}
+
+.speaker-counter {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+}
+
+.speaker-timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #1e293b;
+  padding: 0.3rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 1px solid #334155;
+}
+
+.speaker-timer {
+  font-family: var(--font-mono, monospace);
+  font-size: 1rem;
+  font-weight: 700;
+  color: #5eead4;
+}
+
+.speaker-timer-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  font-size: 0.75rem;
+  cursor: pointer;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  transition: all 0.15s ease;
+}
+
+.speaker-timer-btn:hover {
+  color: white;
+  background: #334155;
+}
+
+.speaker-close-btn {
+  background: #1e293b;
+  border: 1px solid #334155;
+  color: #cbd5e1;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.speaker-close-btn:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  color: white;
+}
+
+.speaker-view-main {
+  flex: 1;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 1.25rem;
+  padding: 1.25rem 1.5rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.speaker-column-previews {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.speaker-preview-box {
+  background: #0f172a;
+  border: 1px solid #1e293b;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+.speaker-preview-box.current-preview-box {
+  border-color: #0284c7;
+  flex: 1.35;
+}
+
+.speaker-preview-box.next-preview-box {
+  border-color: #334155;
+  flex: 1;
+  opacity: 0.9;
+}
+
+.speaker-preview-header {
+  background: #1e293b;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  border-bottom: 1px solid #334155;
+  flex-shrink: 0;
+}
+
+.current-preview-box .speaker-preview-header {
+  color: #38bdf8;
+}
+
+.speaker-preview-body {
+  padding: 1rem 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+/* Scaled down preview representations */
+.speaker-preview-body .slide-item {
+  display: block !important;
+  animation: none !important;
+}
+
+.speaker-preview-body .slide-title {
+  font-size: 1.35rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.speaker-preview-body .slide-body {
+  font-size: 0.95rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.speaker-preview-body .slide-stat-figure {
+  font-size: 2.75rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.speaker-preview-body .slide-quote {
+  font-size: 1.15rem !important;
+  margin-bottom: 0.75rem !important;
+}
+
+.speaker-preview-body .slide-layout-split {
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 0.75rem;
+}
+
+.speaker-preview-body .slide-side-col .slide-image {
+  max-height: 95px !important;
+}
+
+.speaker-preview-body .slide-side-col .slide-image-caption {
+  font-size: 0.65rem !important;
+  margin-top: 0.25rem !important;
+}
+
+
+.speaker-column-notes {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.speaker-notes-box {
+  background: #0f172a;
+  border: 1px solid #334155;
+  border-radius: var(--radius-md);
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  min-height: 0;
+}
+
+.speaker-notes-header {
+  background: #1e293b;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f59e0b;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border-bottom: 1px solid #334155;
+  flex-shrink: 0;
+}
+
+.speaker-notes-body {
+  padding: 1.25rem;
+  overflow-y: auto;
+  flex: 1;
+  font-size: 1.15rem;
+  line-height: 1.65;
+  color: #f1f5f9;
+}
+
+.speaker-notes-body p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.speaker-notes-body p:last-child {
+  margin-bottom: 0;
+}
+
+.speaker-notes-body ul,
+.speaker-notes-body ol {
+  padding-left: 1.4rem;
+  margin-bottom: 1rem;
+}
+
+.speaker-notes-empty {
+  color: #64748b;
+  font-style: italic;
+}
+
+.speaker-view-footer {
+  background: #090e1a;
+  border-top: 1px solid #1e293b;
+  padding: 0.6rem 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+
+/* ==========================================================================
+   PRINT CARDS MODAL DIALOG
+   ========================================================================== */
+.print-modal {
+  border: none;
+  border-radius: var(--radius-lg, 12px);
+  padding: 0;
+  max-width: 540px;
+  width: 92vw;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25), 0 8px 10px -6px rgba(0, 0, 0, 0.2);
+  background: white;
+  color: var(--color-dark, #0f172a);
+}
+
+.print-modal::backdrop {
+  background: rgba(15, 23, 42, 0.55);
+  backdrop-filter: blur(4px);
+}
+
+.print-modal-inner {
+  padding: 1.5rem;
+}
+
+.print-modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid var(--color-border, #e2e8f0);
+}
+
+.print-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--color-dark, #0f172a);
+}
+
+.print-modal-close {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--color-muted, #64748b);
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+}
+
+.print-modal-close:hover {
+  background: #f1f5f9;
+  color: #0f172a;
+}
+
+.print-modal-section {
+  margin-bottom: 1.25rem;
+}
+
+.print-section-label {
+  display: block;
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-muted, #64748b);
+  margin-bottom: 0.5rem;
+}
+
+.print-style-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.print-style-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.print-style-card {
+  border: 2px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: 0.875rem;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  transition: all 0.15s ease;
+  background: #fff;
+  box-sizing: border-box;
+}
+
+.print-style-option input[type="radio"]:checked + .print-style-card {
+  border-color: var(--color-primary, #0284c7);
+  background: #f0f9ff;
+  box-shadow: 0 0 0 1px var(--color-primary, #0284c7);
+}
+
+.print-style-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.print-style-content strong {
+  display: block;
+  font-size: 0.92rem;
+  color: var(--color-dark, #0f172a);
+  margin-bottom: 0.25rem;
+}
+
+.print-style-content p {
+  font-size: 0.78rem;
+  color: var(--color-muted, #64748b);
+  margin: 0;
+  line-height: 1.35;
+}
+
+.print-radio-tiles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+}
+
+.print-tile-option input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.print-tile {
+  border: 2px solid var(--color-border, #e2e8f0);
+  border-radius: var(--radius-md, 8px);
+  padding: 0.75rem 0.5rem;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  box-sizing: border-box;
+}
+
+.print-tile-option input[type="radio"]:checked + .print-tile {
+  border-color: var(--color-primary, #0284c7);
+  background: #f0f9ff;
+  box-shadow: 0 0 0 1px var(--color-primary, #0284c7);
+}
+
+.tile-number {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--color-dark, #0f172a);
+  line-height: 1;
+}
+
+.tile-desc {
+  font-size: 0.72rem;
+  color: var(--color-muted, #64748b);
+  line-height: 1.2;
+}
+
+.print-summary-banner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: var(--radius-md, 8px);
+  padding: 0.75rem 1rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  margin-bottom: 1.25rem;
+  font-size: 0.82rem;
+  color: #334155;
+  line-height: 1.4;
+}
+
+.print-summary-banner .summary-icon {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.print-modal-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border, #e2e8f0);
+}
+
+/* Print Staging Container (Always hidden on screen, populated only during card printing) */
+#print-cards-stage {
+  display: none !important;
+}
+
+/* ==========================================================================
+   PRINT STYLES (@media print)
    ========================================================================== */
 @media print {
+  /* Default document print layout (for Page View and standard site pages) */
+  @page {
+    size: portrait;
+    margin: 12mm 15mm;
+  }
+
   body {
     background: white !important;
     color: black !important;
     margin: 0 !important;
     padding: 0 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
   }
 
-  /* Hide non-card elements */
+  /* Always hide non-printable UI chrome across all print views */
   .site-header,
   .site-footer,
   .view-switcher-bar,
   .breadcrumbs,
-  .hero,
-  .page-header,
-  .guidance-box,
-  .elements-stream,
+  .nav-cta,
+  .view-actions,
   .slideshow-container,
   .cards-intro-bar,
   .card-flip-prompt,
   .card-flip-btn,
-  .nav-cta,
-  #content-view-page,
-  #content-view-slides {
+  .print-modal,
+  dialog {
     display: none !important;
-  }
-
-  #content-view-cards {
-    display: block !important;
   }
 
   .main-wrapper {
@@ -1628,88 +2428,439 @@ a:hover {
     margin: 0 !important;
   }
 
-  /* Printable Cards: Paired Front & Back side-by-side with central fold line */
-  .cards-grid {
+  /* --------------------------------------------------------------------------
+     MODE 1: DEFAULT PAGE PRINT (When NOT printing cards)
+     Prints the standard page view as a readable document without any disruption.
+     -------------------------------------------------------------------------- */
+  body:not([data-printing-cards="true"]) #print-cards-stage,
+  body:not([data-printing-cards="true"]) #content-view-cards,
+  body:not([data-printing-cards="true"]) #content-view-slides {
+    display: none !important;
+  }
+
+  body:not([data-printing-cards="true"]) #content-view-page {
     display: block !important;
   }
 
-  .card-3d-wrapper {
+  body:not([data-printing-cards="true"]) .page-header,
+  body:not([data-printing-cards="true"]) .elements-stream {
     display: block !important;
-    height: auto !important;
-    min-height: auto !important;
+  }
+
+  body:not([data-printing-cards="true"]) .element-block {
     page-break-inside: avoid !important;
     break-inside: avoid !important;
-    margin-bottom: 2cm !important;
-    perspective: none !important;
-    transform: none !important;
+    margin-bottom: 1.5rem !important;
   }
 
-  .card-3d-inner {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    border: 2px solid #000000 !important;
-    border-radius: 8px !important;
-    height: auto !important;
-    min-height: 280px !important;
-    transform: none !important;
-    box-shadow: none !important;
+  /* Reveal quiz answers in print */
+  body:not([data-printing-cards="true"]) details.quiz-answer-details {
+    display: block !important;
+    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+  }
+  body:not([data-printing-cards="true"]) details.quiz-answer-details .quiz-answer-body {
+    display: block !important;
+  }
+
+  /* Worksheet Print Mode: Hide facilitator overview and notes */
+  body[data-page-print-mode="worksheet"] .facilitator-box,
+  body[data-page-print-mode="worksheet"] .guidance-box,
+  body[data-page-print-mode="worksheet"] .element-notes-box {
+    display: none !important;
+  }
+
+  /* Facilitator View Print Mode: Explicitly format overview and notes */
+  body[data-page-print-mode="facilitator"] .facilitator-box,
+  body[data-page-print-mode="facilitator"] .guidance-box,
+  body[data-page-print-mode="facilitator"] .element-notes-box {
+    display: block !important;
+  }
+
+  body[data-page-print-mode="facilitator"] .element-notes-box {
+    border: 1px solid #cbd5e1 !important;
+    background: #f8fafc !important;
+    border-left: 4px solid #f59e0b !important;
+    color: #0f172a !important;
+    page-break-inside: avoid !important;
+  }
+
+  body[data-page-print-mode="facilitator"] .element-notes-label {
+    color: #b45309 !important;
+  }
+
+  body[data-page-print-mode="facilitator"] .element-notes-content {
+    color: #0f172a !important;
+  }
+
+
+  /* --------------------------------------------------------------------------
+     MODE 2: ISOLATED CARDS PRINT (Active ONLY when user triggers card print)
+     Prints only the staging copy in #print-cards-stage.
+     -------------------------------------------------------------------------- */
+  body[data-printing-cards="true"] .main-wrapper > *:not(#print-cards-stage),
+  body[data-printing-cards="true"] #content-view-page,
+  body[data-printing-cards="true"] #content-view-cards,
+  body[data-printing-cards="true"] #content-view-slides,
+  body[data-printing-cards="true"] .hero,
+  body[data-printing-cards="true"] .page-header,
+  body[data-printing-cards="true"] .guidance-box,
+  body[data-printing-cards="true"] .elements-stream {
+    display: none !important;
+  }
+
+  body[data-printing-cards="true"] #print-cards-stage {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  /* Base Staging Page & Cards */
+  .print-folding-page,
+  .print-duplex-page {
+    box-sizing: border-box !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+    page-break-after: always !important;
+    break-after: page !important;
     position: relative !important;
   }
 
+  .print-folding-page:last-child,
+  .print-duplex-page:last-child {
+    page-break-after: auto !important;
+    break-after: auto !important;
+  }
+
+  .print-card-face {
+    box-sizing: border-box !important;
+    background: white !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  .print-card-empty {
+    border: none !important;
+    visibility: hidden !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     A. FOLDING STYLE (Front and Back side-by-side with fold line)
+     -------------------------------------------------------------------------- */
+  .print-folding-item {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    border: 1.5px solid #0f172a !important;
+    border-radius: 6px !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+    page-break-inside: avoid !important;
+    break-inside: avoid !important;
+  }
+
   /* Central vertical fold line guide */
-  .card-3d-inner::before {
+  .print-folding-item::before {
     content: 'FOLD HERE ✂';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) rotate(90deg);
-    font-size: 8pt;
-    font-weight: bold;
-    letter-spacing: 0.2em;
-    color: #888888;
+    font-size: 7pt;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: #64748b;
     background: white;
-    padding: 2px 6px;
+    padding: 1px 6px;
     z-index: 10;
+    border: 1px solid #cbd5e1;
+    border-radius: 3px;
   }
 
-  .card-face {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
+  .print-folding-item .print-card-face-front {
+    border-right: 1.5px dashed #64748b !important;
+  }
+
+  /* (1) Folding: 1 Per Sheet (Landscape, full page) */
+  .print-folding-page.per-sheet-1 .print-folding-item {
+    height: 184mm !important;
+    max-height: 184mm !important;
+  }
+  .print-folding-page.per-sheet-1 .print-card-face {
+    height: 184mm !important;
+    max-height: 184mm !important;
+    padding: 8mm 10mm !important;
+  }
+  .print-folding-page.per-sheet-1 .card-front-image-wrap {
+    max-height: 65mm !important;
+  }
+  .print-folding-page.per-sheet-1 .card-front-image {
+    max-height: 65mm !important;
+  }
+
+  /* (2) Folding: 2 Per Sheet (Landscape, 2 cards stacked vertically) */
+  .print-folding-page.per-sheet-2 .print-folding-item {
+    height: 88mm !important;
+    max-height: 88mm !important;
+    margin: 0 0 8mm 0 !important;
+  }
+  .print-folding-page.per-sheet-2 .print-folding-item:last-child {
+    margin-bottom: 0 !important;
+  }
+  .print-folding-page.per-sheet-2 .print-folding-item:first-child:not(:last-child)::after {
+    content: '✂ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CUT HERE';
+    position: absolute;
+    bottom: -6mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 6.5pt;
+    color: #94a3b8;
+    letter-spacing: 0.12em;
+  }
+  .print-folding-page.per-sheet-2 .print-card-face {
+    height: 88mm !important;
+    max-height: 88mm !important;
+    padding: 4.5mm 6.5mm !important;
+  }
+
+  /* (3) Folding: 4 Per Sheet (Portrait page, 4 cards stacked vertically) */
+  .print-folding-page.per-sheet-4 .print-folding-item {
+    height: 64mm !important;
+    max-height: 64mm !important;
+    margin: 0 0 4mm 0 !important;
+  }
+  .print-folding-page.per-sheet-4 .print-folding-item:last-child {
+    margin-bottom: 0 !important;
+  }
+  .print-folding-page.per-sheet-4 .print-folding-item:not(:last-child)::after {
+    content: '✂ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CUT HERE';
+    position: absolute;
+    bottom: -3mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 6pt;
+    color: #94a3b8;
+    letter-spacing: 0.1em;
+  }
+  .print-folding-page.per-sheet-4 .print-card-face {
+    height: 64mm !important;
+    max-height: 64mm !important;
+    padding: 3mm 5mm !important;
+  }
+  .print-folding-page.per-sheet-4 .card-front-image-wrap {
+    max-height: 24mm !important;
+  }
+  .print-folding-page.per-sheet-4 .card-front-image {
+    max-height: 24mm !important;
+  }
+
+  /* --------------------------------------------------------------------------
+     B. DOUBLE-SIDED (DUPLEX) STYLE (Alternating Fronts page & Backs page)
+     -------------------------------------------------------------------------- */
+  .print-duplex-page .print-card-face {
+    border: 1.5px solid #0f172a !important;
+    border-radius: 6px !important;
+  }
+
+  /* (1) Duplex: 1 Per Sheet */
+  .print-duplex-page.per-sheet-1 {
+    height: 184mm !important;
+    max-height: 184mm !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+  .print-duplex-page.per-sheet-1 .print-card-face {
+    width: 240mm !important;
+    height: 160mm !important;
+    padding: 8mm 12mm !important;
+  }
+  .print-duplex-page.per-sheet-1 .card-front-image-wrap {
+    max-height: 60mm !important;
+  }
+  .print-duplex-page.per-sheet-1 .card-front-image {
+    max-height: 60mm !important;
+  }
+
+  /* (2) Duplex: 2 Per Sheet */
+  .print-duplex-page.per-sheet-2 {
+    height: 184mm !important;
+    max-height: 184mm !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+  .print-duplex-page.per-sheet-2 .print-card-face {
     width: 100% !important;
-    height: auto !important;
-    min-height: 280px !important;
-    transform: none !important;
-    -webkit-backface-visibility: visible !important;
-    backface-visibility: visible !important;
-    border: none !important;
-    border-radius: 0 !important;
-    background: white !important;
-    padding: 1.2cm !important;
+    height: 88mm !important;
+    max-height: 88mm !important;
+    padding: 4.5mm 6.5mm !important;
+    position: relative !important;
+  }
+  .print-duplex-page.per-sheet-2 .print-card-face:first-child:not(:only-child)::after {
+    content: '✂ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - CUT HERE';
+    position: absolute;
+    bottom: -6mm;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 6.5pt;
+    color: #94a3b8;
+    letter-spacing: 0.12em;
   }
 
-  .card-face-front {
-    border-right: 1.5px dashed #666666 !important;
+  /* (3) Duplex: 4 Per Sheet (2x2 grid in Landscape) */
+  .print-duplex-page.per-sheet-4 {
+    height: 184mm !important;
+    max-height: 184mm !important;
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    grid-template-rows: 88mm 88mm !important;
+    gap: 8mm 10mm !important;
+  }
+  .print-duplex-page.per-sheet-4 .print-card-face {
+    width: 100% !important;
+    height: 88mm !important;
+    max-height: 88mm !important;
+    padding: 4.5mm 6.5mm !important;
   }
 
-  .card-face-back {
-    transform: none !important;
-    border-style: none !important;
+  /* --------------------------------------------------------------------------
+     CARD FACE INTERNAL FORMATTING (Inside #print-cards-stage)
+     -------------------------------------------------------------------------- */
+  #print-cards-stage .card-face-header {
+    margin-bottom: 2mm !important;
+    padding-bottom: 1.5mm !important;
+    border-bottom: 1px solid #e2e8f0 !important;
   }
 
-  .card-main-title {
+  #print-cards-stage .card-face-front.card-front-info .card-face-header {
+    display: none !important;
+  }
+
+  #print-cards-stage .card-face-footer,
+  #print-cards-stage .card-flip-prompt,
+  #print-cards-stage .card-flip-btn {
+    display: none !important;
+  }
+
+  #print-cards-stage .card-face-body {
+    flex: 1 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
+    overflow: hidden !important;
+    padding: 0 !important;
+    min-height: 0 !important;
+  }
+
+  #print-cards-stage .card-face-back .card-face-body {
+    justify-content: flex-start !important;
+    overflow: hidden !important;
+  }
+
+  #print-cards-stage .card-main-title {
     font-size: 13pt !important;
+    line-height: 1.3 !important;
     color: black !important;
   }
 
-  .card-main-stat {
-    font-size: 32pt !important;
+  #print-cards-stage .card-front-title h1,
+  #print-cards-stage .card-front-title h2,
+  #print-cards-stage .card-front-title h3,
+  #print-cards-stage .card-front-title h4,
+  #print-cards-stage .card-front-title p {
+    font-size: 14pt !important;
+    line-height: 1.3 !important;
     color: black !important;
   }
 
-  .card-main-quote {
-    font-size: 12pt !important;
+  #print-cards-stage .card-info-front-content .card-front-title:only-child h1,
+  #print-cards-stage .card-info-front-content .card-front-title:only-child h2,
+  #print-cards-stage .card-info-front-content .card-front-title:only-child h3,
+  #print-cards-stage .card-info-front-content .card-front-title:only-child h4,
+  #print-cards-stage .card-info-front-content .card-front-title:only-child p {
+    font-size: 16pt !important;
+  }
+
+  #print-cards-stage .card-front-image-wrap {
+    max-height: 38mm !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    overflow: hidden !important;
+  }
+
+  #print-cards-stage .card-front-image {
+    max-height: 38mm !important;
+    max-width: 90% !important;
+    object-fit: contain !important;
+  }
+
+  #print-cards-stage .card-image-caption {
+    font-size: 6.5pt !important;
+    color: #64748b !important;
+    margin-top: 1mm !important;
+    line-height: 1.2 !important;
+  }
+
+
+  #print-cards-stage .card-main-stat {
+    font-size: 26pt !important;
     color: black !important;
+  }
+
+  #print-cards-stage .card-main-quote {
+    font-size: 10pt !important;
+    line-height: 1.35 !important;
+    color: black !important;
+  }
+
+  #print-cards-stage .card-back-text {
+    font-size: 12pt;
+    line-height: 1.35;
+    color: #0f172a !important;
+  }
+
+  #print-cards-stage .card-back-text h1,
+  #print-cards-stage .card-back-text h2,
+  #print-cards-stage .card-back-text h3,
+  #print-cards-stage .card-back-text h4 {
+    font-size: 1.2em;
+    margin-bottom: 3pt !important;
+  }
+
+  #print-cards-stage .card-back-text p {
+    margin: 0 0 3pt 0 !important;
+  }
+
+  #print-cards-stage .card-back-text blockquote {
+    margin: 2.5pt 0 !important;
+    padding: 2pt 5pt !important;
+    border-left: 2px solid #94a3b8 !important;
+    font-size: 0.95em !important;
+  }
+
+  #print-cards-stage .card-back-text ul,
+  #print-cards-stage .card-back-text ol {
+    margin: 1.5pt 0 !important;
+    padding-left: 10pt !important;
+  }
+
+  #print-cards-stage .card-back-text li {
+    margin-bottom: 1pt !important;
+  }
+
+  #print-cards-stage .citation-line {
+    margin-top: 1.5pt !important;
+    font-size: 6pt !important;
+    color: #64748b !important;
   }
 }
 

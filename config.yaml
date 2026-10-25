@@ -4,6 +4,20 @@ title: "Citizens' Track on AI Toolkit"
 defaultContentLanguage: en
 defaultContentLanguageInSubdir: false
 
+outputFormats:
+  SlideJSON:
+    mediaType: "application/json"
+    baseName: "slides"
+    isPlainText: true
+
+outputs:
+  page:
+    - HTML
+    - SlideJSON
+  section:
+    - HTML
+    - SlideJSON
+
 languages:
   en:
     locale: en-GB

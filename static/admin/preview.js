@@ -305,14 +305,15 @@ if (typeof CMS !== 'undefined') {
                   >
                     <div class="card-3d-inner">
                       <!-- FRONT -->
-                      <div class="card-face card-face-front">
+                      <div class="card-face card-face-front ${el.type === 'information' ? 'card-front-info' : ''}">
                         <div class="card-face-header">
-                          <span class="element-pill ${el.type}">
-                            ${el.type === 'quiz_question' ? 'Quiz Question' :
-                              el.type === 'statistic' ? 'Statistic' :
-                              el.type === 'perspective' ? 'Perspective' :
-                              el.type === 'information' ? 'Concept' : 'Takeaways'}
-                          </span>
+                          ${el.type !== 'information' ? html`
+                            <span class="element-pill ${el.type}">
+                              ${el.type === 'quiz_question' ? 'Quiz Question' :
+                                el.type === 'statistic' ? 'Statistic' :
+                                el.type === 'perspective' ? 'Perspective' : 'Takeaways'}
+                            </span>
+                          ` : html`<span class="element-pill-spacer"></span>`}
                           <span class="card-flip-prompt">Click to flip ↺</span>
                         </div>
 
@@ -327,25 +328,36 @@ if (typeof CMS !== 'undefined') {
                           ${el.type === 'perspective' && html`
                             <blockquote class="card-main-quote" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.quote) }} />
                           `}
-                          ${el.type === 'information' && html`
-                            <div class="card-main-title" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
-                          `}
+                          ${el.type === 'information' && (() => {
+                            const cleanText = (el.text || '').replace(/\r\n/g, '\n');
+                            const lines = cleanText.split('\n').map(l => l.trim()).filter(Boolean);
+                            const firstLine = lines.length > 0 ? lines[0] : '';
+                            return html`
+                              <div class="card-info-front-content">
+                                <div class="card-front-title" dangerouslySetInnerHTML=${{ __html: renderMarkdown(firstLine) }} />
+                                ${el.image && html`
+                                  <div class="card-front-image-wrap">
+                                    <img src=${el.image} alt="Card visual" class="card-front-image" />
+                                  </div>
+                                `}
+                              </div>
+                            `;
+                          })()}
                           ${el.type === 'takeaways' && html`
-                            <div class="card-main-title" style="color: #86198f;">Key Takeaways</div>
+                            <div class="card-main-title" style="color: var(--ct-color-deep-redwood);">Key Takeaways</div>
                             <div style="font-size: 0.95rem; color: var(--color-slate);">Flip for summary points</div>
                           `}
                         </div>
 
                         <div class="card-face-footer">
-                          <span class="card-side-tag front">Front Side</span>
-                          <span class="card-flip-btn">Flip to Back →</span>
+                          <span class="card-flip-btn">${el.type === 'quiz_question' ? 'Flip to Answer →' : 'Flip to Details →'}</span>
                         </div>
                       </div>
 
                       <!-- BACK -->
                       <div class="card-face card-face-back">
                         <div class="card-face-header">
-                          <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">
+                          <span class="element-pill" style="background: rgba(0, 68, 124, 0.1); color: var(--ct-color-fjord); border: 1px solid rgba(0, 68, 124, 0.2);">
                             ${el.type === 'quiz_question' ? 'Answer & Explanation' :
                               el.type === 'statistic' ? 'Context & Insight' :
                               el.type === 'perspective' ? 'Attribution' : 'Details'}
@@ -374,10 +386,10 @@ if (typeof CMS !== 'undefined') {
                             `}
                           `}
                           ${el.type === 'information' && html`
-                            <div style="font-size: 0.95rem; line-height: 1.5;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
+                            <div class="card-back-text" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
                           `}
                           ${el.type === 'takeaways' && html`
-                            <div style="font-size: 0.9rem; line-height: 1.5;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
+                            <div class="card-back-text" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
                           `}
 
                           ${el.citation && html`
@@ -388,7 +400,6 @@ if (typeof CMS !== 'undefined') {
                         </div>
 
                         <div class="card-face-footer">
-                          <span class="card-side-tag back">Back Side</span>
                           <span class="card-flip-btn">← Flip to Front</span>
                         </div>
                       </div>
