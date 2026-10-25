@@ -11,21 +11,21 @@
     </a>
 
     <nav class="site-nav" aria-label="Primary Navigation">
-      <!-- 1. Register -->
+      <!-- 1. Register (Assigned section color: Coral) -->
       <a href="{{ "pages/register/" | relLangURL }}" 
-         class="nav-link{{ if $isRegister }} active{{ end }}">
+         class="nav-link nav-link-register{{ if $isRegister }} active{{ end }}">
         Register
       </a>
 
-      <!-- 2. Guidance (Lands on /pages/) -->
+      <!-- 2. Guidance (Assigned section color: Fjord Navy) -->
       <a href="{{ "pages/" | relLangURL }}" 
-         class="nav-link{{ if $isGuidance }} active{{ end }}">
+         class="nav-link nav-link-guidance{{ if $isGuidance }} active{{ end }}">
         Guidance
       </a>
 
-      <!-- 3. Resources -->
+      <!-- 3. Resources (Assigned section color: Pine Teal) -->
       <a href="{{ "modules/" | relLangURL }}" 
-         class="nav-link{{ if $isResources }} active{{ end }}">
+         class="nav-link nav-link-resources{{ if $isResources }} active{{ end }}">
         Resources
       </a>
 
@@ -53,51 +53,57 @@
     </nav>
   </div>
 
-  <!-- Level 2: Contextual Secondary Bar (Centered, no prefix) -->
-  {{ if $isGuidance }}
-  <nav class="sub-nav-bar" aria-label="Guidance Stages">
+  <!-- Level 2: Coloured Bar per section, links separated by |, aligned under 1st level nav -->
+  {{ if $isRegister }}
+  <nav class="sub-nav-bar sub-bar-register" aria-label="Register Navigation">
     <div class="sub-nav-container">
-      <div class="sub-nav-links">
+      <div class="sub-nav-align-group align-register">
+        <span class="sub-nav-plain">Register a Community Assembly</span>
+      </div>
+    </div>
+  </nav>
+  {{ else if $isGuidance }}
+  <nav class="sub-nav-bar sub-bar-guidance" aria-label="Guidance Navigation">
+    <div class="sub-nav-container">
+      <div class="sub-nav-align-group align-guidance">
         <a href="{{ "pages/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/" | relLangURL) }} active{{ end }}"
-           {{ if eq .RelPermalink ("/pages/" | relLangURL) }}aria-current="page"{{ end }}>
+           class="sub-nav-link{{ if eq .RelPermalink ("/pages/" | relLangURL) }} active{{ end }}">
           Overview
         </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
         <a href="{{ "pages/prepare/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/prepare/" | relLangURL) }} active{{ end }}"
-           {{ if eq .RelPermalink ("/pages/prepare/" | relLangURL) }}aria-current="page"{{ end }}>
-          <span class="sub-nav-badge">1</span> Prepare
+           class="sub-nav-link{{ if eq .RelPermalink ("/pages/prepare/" | relLangURL) }} active{{ end }}">
+          Prepare
         </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
         <a href="{{ "pages/facilitate/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/facilitate/" | relLangURL) }} active{{ end }}"
-           {{ if eq .RelPermalink ("/pages/facilitate/" | relLangURL) }}aria-current="page"{{ end }}>
-          <span class="sub-nav-badge">2</span> Facilitate
+           class="sub-nav-link{{ if eq .RelPermalink ("/pages/facilitate/" | relLangURL) }} active{{ end }}">
+          Facilitate
         </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
         <a href="{{ "pages/follow-up/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/follow-up/" | relLangURL) }} active{{ end }}"
-           {{ if eq .RelPermalink ("/pages/follow-up/" | relLangURL) }}aria-current="page"{{ end }}>
-          <span class="sub-nav-badge">3</span> Follow-up
+           class="sub-nav-link{{ if eq .RelPermalink ("/pages/follow-up/" | relLangURL) }} active{{ end }}">
+          Follow-up
         </a>
       </div>
     </div>
   </nav>
   {{ else if $isResources }}
-  <nav class="sub-nav-bar" aria-label="Toolkit Resources">
+  <nav class="sub-nav-bar sub-bar-resources" aria-label="Resources Navigation">
     <div class="sub-nav-container">
-      <div class="sub-nav-links">
+      <div class="sub-nav-align-group align-resources">
         <a href="{{ "modules/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .Section "modules" }} active{{ end }}"
-           {{ if eq .Section "modules" }}aria-current="page"{{ end }}>
+           class="sub-nav-link{{ if eq .Section "modules" }} active{{ end }}">
           Modules
         </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
         <a href="{{ "activities/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .Section "activities" }} active{{ end }}"
-           {{ if eq .Section "activities" }}aria-current="page"{{ end }}>
+           class="sub-nav-link{{ if eq .Section "activities" }} active{{ end }}">
           Activities
         </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
         <a href="{{ "content-collections/" | relLangURL }}" 
-           class="sub-nav-link{{ if or (eq .Section "content-collections") (eq .Section "content") }} active{{ end }}"
-           {{ if or (eq .Section "content-collections") (eq .Section "content") }}aria-current="page"{{ end }}>
+           class="sub-nav-link{{ if or (eq .Section "content-collections") (eq .Section "content") }} active{{ end }}">
           Learning
         </a>
       </div>
