@@ -1,0 +1,149 @@
+/**
+ * Citizens' Track AI — Brand Design Tokens
+ * Version 1.0 (October 2026)
+ * Source: Citizens' Track AI Brand Guidelines
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Parkinsans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  /* ==========================================================================
+     PRIMARY COLOR PALETTE
+     The Primary palette should be used for the main elements of a design 
+     and should be the design's dominant colours.
+     ========================================================================== */
+  --ct-color-cerulean: #40a9ff;
+  --ct-color-cerulean-rgb: 64, 169, 255;
+  --ct-color-cerulean-cmyk: 75, 34, 0, 0;
+
+  --ct-color-fjord: #00447c;
+  --ct-color-fjord-rgb: 0, 68, 124;
+  --ct-color-fjord-cmyk: 100, 45, 0, 51;
+
+  --ct-color-spring-wood: #efeee5;
+  --ct-color-spring-wood-rgb: 239, 238, 229;
+  --ct-color-spring-wood-cmyk: 0, 0, 4, 6;
+
+  --ct-color-ebony-clay: #242c36;
+  --ct-color-ebony-clay-rgb: 36, 44, 54;
+  --ct-color-ebony-clay-cmyk: 33, 19, 0, 79;
+
+  /* ==========================================================================
+     SECONDARY COLOR PALETTE
+     The secondary palette supports the primary palette as required.
+     ========================================================================== */
+  --ct-color-coral: #ff5f6f;
+  --ct-color-coral-rgb: 255, 95, 111;
+  --ct-color-coral-cmyk: 0, 63, 56, 0;
+
+  --ct-color-reef-teal: #00d8b4;
+  --ct-color-reef-teal-rgb: 0, 216, 180;
+  --ct-color-reef-teal-cmyk: 100, 0, 17, 15;
+
+  --ct-color-goldenrod: #ffc440;
+  --ct-color-goldenrod-rgb: 255, 196, 64;
+  --ct-color-goldenrod-cmyk: 0, 23, 75, 0;
+
+  --ct-color-deep-redwood: #7c0018;
+  --ct-color-deep-redwood-rgb: 124, 0, 24;
+  --ct-color-deep-redwood-cmyk: 0, 100, 81, 51;
+
+  /* ==========================================================================
+     SEMANTIC APPLICATION TOKENS (LIGHT THEME DEFAULT)
+     ========================================================================== */
+  --ct-bg-app: var(--ct-color-spring-wood);
+  --ct-bg-surface: #ffffff;
+  --ct-bg-surface-subtle: #f8f7f2;
+  --ct-bg-surface-inverse: var(--ct-color-ebony-clay);
+
+  --ct-text-primary: var(--ct-color-ebony-clay);
+  --ct-text-secondary: #5a6574;
+  --ct-text-inverse: #ffffff;
+  --ct-text-accent: var(--ct-color-fjord);
+
+  --ct-border-default: #dcd9cd;
+  --ct-border-subtle: #eae7dc;
+  --ct-border-strong: var(--ct-color-ebony-clay);
+
+  --ct-brand-primary: var(--ct-color-fjord);
+  --ct-brand-accent: var(--ct-color-cerulean);
+  --ct-brand-highlight: var(--ct-color-goldenrod);
+
+  --ct-status-success: var(--ct-color-reef-teal);
+  --ct-status-warning: var(--ct-color-goldenrod);
+  --ct-status-danger: var(--ct-color-coral);
+  --ct-status-critical: var(--ct-color-deep-redwood);
+
+  /* ==========================================================================
+     TYPOGRAPHY
+     Primary: Parkinsans (Google Fonts)
+     Fallback: Arial, sans-serif
+     ========================================================================== */
+  --ct-font-family: 'Parkinsans', Arial, sans-serif;
+  --ct-font-family-fallback: Arial, sans-serif;
+
+  --ct-font-weight-light: 300;
+  --ct-font-weight-regular: 400;
+  --ct-font-weight-medium: 500;
+  --ct-font-weight-semibold: 600;
+  --ct-font-weight-bold: 700;
+  --ct-font-weight-extrabold: 800;
+
+  /* Sizing scale */
+  --ct-font-size-xs: 0.75rem;     /* 12px */
+  --ct-font-size-sm: 0.875rem;    /* 14px */
+  --ct-font-size-base: 1rem;      /* 16px */
+  --ct-font-size-lg: 1.125rem;    /* 18px */
+  --ct-font-size-xl: 1.25rem;     /* 20px */
+  --ct-font-size-2xl: 1.5rem;     /* 24px */
+  --ct-font-size-3xl: 2rem;       /* 32px */
+  --ct-font-size-4xl: 2.5rem;     /* 40px */
+  --ct-font-size-5xl: 3.25rem;    /* 52px */
+
+  --ct-line-height-tight: 1.15;
+  --ct-line-height-snug: 1.25;
+  --ct-line-height-normal: 1.5;
+  --ct-line-height-relaxed: 1.625;
+
+  /* ==========================================================================
+     SPACING & LAYOUT
+     ========================================================================== */
+  --ct-space-1: 0.25rem;   /* 4px */
+  --ct-space-2: 0.5rem;    /* 8px */
+  --ct-space-3: 0.75rem;   /* 12px */
+  --ct-space-4: 1rem;      /* 16px */
+  --ct-space-6: 1.5rem;    /* 24px */
+  --ct-space-8: 2rem;      /* 32px */
+  --ct-space-12: 3rem;     /* 48px */
+  --ct-space-16: 4rem;     /* 64px */
+
+  /* Radius */
+  --ct-radius-sm: 4px;
+  --ct-radius-md: 8px;
+  --ct-radius-lg: 16px;
+  --ct-radius-xl: 24px;
+  --ct-radius-full: 9999px;
+}
+
+/* ==========================================================================
+   DARK THEME APPLICATION TOKENS
+   ========================================================================== */
+[data-theme='dark'],
+.theme-dark {
+  --ct-bg-app: var(--ct-color-ebony-clay);
+  --ct-bg-surface: #1a2028;
+  --ct-bg-surface-subtle: #2d3642;
+  --ct-bg-surface-inverse: var(--ct-color-spring-wood);
+
+  --ct-text-primary: #ffffff;
+  --ct-text-secondary: #c5cbd3;
+  --ct-text-inverse: var(--ct-color-ebony-clay);
+  --ct-text-accent: var(--ct-color-cerulean);
+
+  --ct-border-default: #3b4654;
+  --ct-border-subtle: #2e3743;
+  --ct-border-strong: var(--ct-color-cerulean);
+
+  --ct-brand-primary: var(--ct-color-cerulean);
+  --ct-brand-accent: var(--ct-color-reef-teal);
+}

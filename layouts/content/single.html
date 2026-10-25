@@ -77,10 +77,10 @@
 <div id="content-view-page" class="view-section active">
   <article class="page-header">
     <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
-      <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Content Item</span>
+      <span class="collection-badge">Content Item</span>
       {{ with $linkedCollections }}
         {{ range . }}
-          <a href="{{ .RelPermalink }}" class="element-pill" style="background: #f1f5f9; color: var(--color-slate); text-decoration: none;">
+          <a href="{{ .RelPermalink }}" class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-slate); border: 1px solid var(--color-border); text-decoration: none;">
             📁 Collection: {{ .Title }}
           </a>
         {{ end }}
@@ -160,7 +160,7 @@
 
             {{ else if eq $element.type "takeaways" }}
               <div class="takeaways-box">
-                <div style="font-weight: 700; color: #86198f; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">
+                <div style="font-weight: 700; color: var(--ct-color-deep-redwood); margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase;">
                   Key Takeaways
                 </div>
                 <div>{{ $element.text | markdownify }}</div>
@@ -248,7 +248,7 @@
                     {{ $element.text | markdownify }}
                   </div>
                 {{ else if eq $element.type "takeaways" }}
-                  <div class="card-main-title" style="color: #86198f;">
+                  <div class="card-main-title" style="color: var(--ct-color-deep-redwood);">
                     Key Takeaways & Summary
                   </div>
                   <div style="font-size: 0.95rem; color: var(--color-slate);">
@@ -266,7 +266,7 @@
             <!-- CARD BACK -->
             <div class="card-face card-face-back">
               <div class="card-face-header">
-                <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">
+                <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: var(--ct-color-fjord); border: 1px solid rgba(64, 169, 255, 0.3);">
                   {{ if eq $element.type "quiz_question" }}Answer & Explanation
                   {{ else if eq $element.type "statistic" }}Context & Insight
                   {{ else if eq $element.type "perspective" }}Attribution & Context
@@ -279,7 +279,7 @@
 
               <div class="card-face-body">
                 {{ if eq $element.type "quiz_question" }}
-                  <div style="font-size: 1.05rem; font-weight: 600; color: #581c87; margin-bottom: 0.5rem;">
+                  <div style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
                     {{ $element.answer | markdownify }}
                   </div>
                   {{ with $element.explanation }}
@@ -288,7 +288,7 @@
                     </div>
                   {{ end }}
                 {{ else if eq $element.type "statistic" }}
-                  <div style="font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem;">
+                  <div style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">
                     {{ $element.description }}
                   </div>
                   {{ with $element.explanation }}
@@ -298,7 +298,7 @@
                   {{ end }}
                 {{ else if eq $element.type "perspective" }}
                   {{ with $element.attribution }}
-                    <div style="font-size: 1.05rem; font-weight: 700; color: #047857; margin-bottom: 0.5rem;">
+                    <div style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
                       — {{ . }}
                     </div>
                   {{ end }}
@@ -342,15 +342,27 @@
   <div class="slideshow-container" id="slideshow">
     <div class="slide-progress-bar" id="slide-progress"></div>
 
+    <div class="slides-top-brand">
+      <div class="slide-brand-left">
+        <img src="{{ "images/logos/logo-wide-negative.svg" | relURL }}" alt="Citizens' Track on AI" height="26" class="slide-brand-logo">
+        <span class="slide-deck-crumb">{{ .Title }}</span>
+      </div>
+      <div class="slide-brand-right">
+        <span class="slide-mode-badge">Slide Deck</span>
+      </div>
+    </div>
+
+    <img src="{{ "images/logos/emblem-white.svg" | relURL }}" class="slides-watermark" alt="" aria-hidden="true">
+
     <div class="slides-viewport">
       <!-- Slide 1: Title Slide (without facilitator overview) -->
-      <div class="slide-item active">
-        <span class="slide-tag">Presentation</span>
-        <h2 class="slide-title" style="font-size: 3rem; margin-bottom: 2rem;">{{ .Title }}</h2>
+      <div class="slide-item active slide-item-cover">
+        <span class="slide-tag slide-tag-presentation">Presentation</span>
+        <h2 class="slide-title slide-title-cover">{{ .Title }}</h2>
         {{ with $linkedCollections }}
           <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
             {{ range . }}
-              <span class="element-pill" style="background: rgba(255,255,255,0.15); color: #5eead4; font-size: 0.85rem; padding: 0.35rem 0.85rem;">
+              <span class="element-pill slide-pill-collection">
                 📁 Collection: {{ .Title }}
               </span>
             {{ end }}
@@ -364,30 +376,30 @@
           {{ if eq $element.type "quiz_question" }}
             <!-- Quiz Slide A: Question -->
             <div class="slide-item">
-              <span class="slide-tag">Quiz Question</span>
-              <div class="slide-title" style="font-size: 2.2rem; line-height: 1.35;">
+              <span class="slide-tag slide-tag-quiz">Quiz Question</span>
+              <div class="slide-title slide-title-quiz">
                 {{ $element.question | markdownify }}
               </div>
               {{ with $element.image }}
                 <div style="margin-top: 1.5rem;">
-                  <img src="{{ . | relURL }}" alt="Quiz visual" style="max-height: 300px; border-radius: var(--radius-md);">
+                  <img src="{{ . | relURL }}" alt="Quiz visual" style="max-height: 300px; border-radius: var(--ct-radius-md);">
                 </div>
               {{ end }}
             </div>
 
             <!-- Quiz Slide B: Answer & Explanation -->
             <div class="slide-item">
-              <span class="slide-tag" style="background: rgba(20, 184, 166, 0.25); color: #5eead4;">Quiz Answer</span>
-              <div class="slide-title" style="font-size: 2rem; color: #5eead4; line-height: 1.35; margin-bottom: 1.25rem;">
+              <span class="slide-tag slide-tag-answer">Quiz Answer</span>
+              <div class="slide-title slide-title-answer">
                 {{ $element.answer | markdownify }}
               </div>
               {{ with $element.explanation }}
-                <div class="slide-body" style="font-size: 1.25rem; color: #cbd5e1; line-height: 1.5;">
+                <div class="slide-body slide-body-explanation">
                   {{ . | markdownify }}
                 </div>
               {{ end }}
               {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                <div class="slide-citation">
                   Source: {{ . }}
                 </div>
               {{ end }}
@@ -395,14 +407,14 @@
 
           {{ else if eq $element.type "statistic" }}
             <div class="slide-item">
-              <span class="slide-tag">Key Statistic</span>
+              <span class="slide-tag slide-tag-stat">Key Statistic</span>
               <div class="slide-stat-figure">{{ $element.figure }}</div>
-              <div class="slide-title" style="font-size: 2rem;">{{ $element.description }}</div>
+              <div class="slide-title slide-title-stat">{{ $element.description }}</div>
               {{ with $element.explanation }}
                 <div class="slide-body">{{ . | markdownify }}</div>
               {{ end }}
               {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                <div class="slide-citation">
                   Source: {{ . }}
                 </div>
               {{ end }}
@@ -410,7 +422,7 @@
 
           {{ else if eq $element.type "perspective" }}
             <div class="slide-item">
-              <span class="slide-tag">Perspective</span>
+              <span class="slide-tag slide-tag-perspective">Perspective</span>
               <blockquote class="slide-quote">
                 {{ $element.quote | markdownify }}
               </blockquote>
@@ -418,7 +430,7 @@
                 <div class="slide-attribution">— {{ . }}</div>
               {{ end }}
               {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                <div class="slide-citation">
                   Source: {{ . }}
                 </div>
               {{ end }}
@@ -426,12 +438,12 @@
 
           {{ else if eq $element.type "information" }}
             <div class="slide-item">
-              <span class="slide-tag">Information</span>
-              <div class="slide-body" style="font-size: 1.6rem; color: white; line-height: 1.6;">
+              <span class="slide-tag slide-tag-info">Information</span>
+              <div class="slide-body slide-body-info">
                 {{ $element.text | markdownify }}
               </div>
               {{ with $element.citation }}
-                <div style="margin-top: 2rem; font-size: 0.8rem; color: #64748b;">
+                <div class="slide-citation">
                   Source: {{ . }}
                 </div>
               {{ end }}
@@ -439,8 +451,8 @@
 
           {{ else if eq $element.type "takeaways" }}
             <div class="slide-item">
-              <span class="slide-tag" style="background: rgba(240, 171, 252, 0.2); color: #f0abfc;">Key Takeaways</span>
-              <div class="slide-title" style="font-size: 2rem; color: #f0abfc;">Key Takeaways</div>
+              <span class="slide-tag slide-tag-takeaways">Key Takeaways</span>
+              <div class="slide-title slide-title-takeaways">Key Takeaways</div>
               <div class="slide-body">{{ $element.text | markdownify }}</div>
             </div>
           {{ end }}
@@ -468,7 +480,7 @@
         <span class="slide-key-badge">F (Fullscreen)</span>
       </div>
 
-      <button type="button" class="action-btn" id="btn-toggle-fullscreen" style="background: #1e293b; color: white; border-color: #334155;">
+      <button type="button" class="slide-fullscreen-btn" id="btn-toggle-fullscreen">
         ⛶ Fullscreen
       </button>
     </div>

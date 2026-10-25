@@ -1,5 +1,5 @@
 baseURL: "https://magenta-sable-1da286.netlify.app"
-title: "Citizens Track Toolkit"
+title: "Citizens' Track on AI Toolkit"
 
 defaultContentLanguage: en
 defaultContentLanguageInSubdir: false
@@ -10,22 +10,22 @@ languages:
     label: English
     contentDir: content/en
     weight: 1
-    title: "Citizens Track Toolkit"
+    title: "Citizens' Track on AI Toolkit"
   es:
     locale: es-ES
     label: Español
     contentDir: content/es
     weight: 2
-    title: "Citizens Track Toolkit (ES)"
+    title: "Citizens' Track on AI Toolkit (ES)"
   fr:
     locale: fr-FR
     label: Français
     contentDir: content/fr
     weight: 3
-    title: "Citizens Track Toolkit (FR)"
+    title: "Citizens' Track on AI Toolkit (FR)"
   de:
     locale: de-DE
     label: Deutsch
     contentDir: content/de
     weight: 4
-    title: "Citizens Track Toolkit (DE)"
+    title: "Citizens' Track on AI Toolkit (DE)"

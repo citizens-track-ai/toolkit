@@ -1,7 +1,7 @@
 {{ define "main" }}
 
 <div class="page-header" style="margin-bottom: 2.5rem;">
-  <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark);">Index</span>
+  <span class="collection-badge" style="background: rgba(0, 68, 124, 0.1); color: var(--ct-color-fjord); border: 1px solid rgba(0, 68, 124, 0.2);">Index</span>
   <h1 class="page-title">All Content Items</h1>
   <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
     Standalone and collection-associated learning elements, quizzes, statistics, and community perspectives.
@@ -47,7 +47,7 @@
         {{ with $linkedCollections }}
           <div style="margin-bottom: 0.75rem; display: flex; flex-wrap: wrap; gap: 0.25rem;">
             {{ range . }}
-              <a href="{{ .RelPermalink }}" style="font-size: 0.725rem; font-weight: 600; background: #f1f5f9; color: var(--color-slate); padding: 0.15rem 0.45rem; border-radius: 4px; text-decoration: none;">
+              <a href="{{ .RelPermalink }}" style="font-size: 0.725rem; font-weight: 600; background: var(--color-surface-subtle); color: var(--color-slate); border: 1px solid var(--color-border); padding: 0.15rem 0.45rem; border-radius: 4px; text-decoration: none;">
                 📁 {{ .Title }}
               </a>
             {{ end }}
