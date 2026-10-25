@@ -3,7 +3,7 @@
 backend:
   name: github
   repo: citizens-track-ai/toolkit
-  branch: staging
+  branch: handbook
   api_root: https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev
   auth_methods: [oauth, token]
   open_authoring: false
@@ -28,7 +28,7 @@ collections:
     label: Guidance & Pages
     label_singular: Page
     folder: content/{{locale}}/pages
-    summary: '{{title}} (Order: {{weight}}) [{{locales}}]'
+    summary: '{{title}} [{{locales}}]'
     i18n: true
     create: true
     fields:
@@ -37,6 +37,7 @@ collections:
       - { name: weight, label: Chapter Order / Weight, widget: number, value_type: int, default: 10, i18n: duplicate, hint: "Order in the handbook reading sequence: 10 (Intro), 20 (Prepare), 30 (Facilitate), 40 (Follow-up), etc." }
       - { name: group, label: Navigation Group, widget: select, options: [{label: "Guidance", value: "guidance"}, {label: "Register", value: "register"}, {label: "General", value: "general"}], default: "guidance", i18n: duplicate }
       - { name: stage, label: Stage (for Guidance), widget: select, options: [{label: "None", value: ""}, {label: "1. Prepare", value: "prepare"}, {label: "2. Facilitate", value: "facilitate"}, {label: "3. Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: aliases, label: URL Aliases, widget: list, required: false, i18n: duplicate }
       - { name: description, label: Description / Lead Text, widget: text, required: false, i18n: true }
       - { name: body, label: Page Content, widget: richtext, required: false, i18n: true }
 
