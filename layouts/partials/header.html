@@ -5,30 +5,39 @@
 <header class="site-header">
   <!-- Level 1: Primary Header Bar -->
   <div class="header-container">
-    <a href="{{ .Site.Home.RelPermalink }}" class="brand-wrapper" aria-label="The Citizens' Track on AI Toolkit Home">
-      <img src="{{ "images/logos/logo-wide-positive.svg" | relURL }}" alt="The Citizens' Track on AI" height="38" class="brand-logo-img">
-      <span class="brand-badge">Toolkit</span>
-    </a>
-
-    <nav class="site-nav" aria-label="Primary Navigation">
-      <!-- 1. Register (Assigned section color: Coral) -->
-      <a href="{{ "pages/register/" | relLangURL }}" 
-         class="nav-link nav-link-register{{ if $isRegister }} active{{ end }}">
-        Register
+    <div class="header-brand-wrap">
+      <a href="{{ .Site.Home.RelPermalink }}" class="brand-wrapper" aria-label="The Citizens' Track on AI Toolkit Home">
+        <img src="{{ "images/logos/logo-wide-positive.svg" | relURL }}" alt="The Citizens' Track on AI" height="38" class="brand-logo-img">
+        <span class="brand-badge">Toolkit</span>
       </a>
+    </div>
 
-      <!-- 2. Guidance (Assigned section color: Fjord Navy) -->
-      <a href="{{ "pages/" | relLangURL }}" 
-         class="nav-link nav-link-guidance{{ if $isGuidance }} active{{ end }}">
-        Guidance
-      </a>
+    <div class="header-nav-center">
+      <nav class="site-nav-sections" aria-label="Primary Navigation">
+        <!-- 1. Register (Coral) -->
+        <a href="{{ "pages/register/" | relLangURL }}" 
+           class="nav-link nav-link-register{{ if $isRegister }} active{{ end }}">
+          <span class="nav-color-indicator indicator-register" aria-hidden="true"></span>
+          <span>Register</span>
+        </a>
 
-      <!-- 3. Resources (Assigned section color: Pine Teal) -->
-      <a href="{{ "modules/" | relLangURL }}" 
-         class="nav-link nav-link-resources{{ if $isResources }} active{{ end }}">
-        Resources
-      </a>
+        <!-- 2. Guidance (Fjord Navy) -->
+        <a href="{{ "pages/" | relLangURL }}" 
+           class="nav-link nav-link-guidance{{ if $isGuidance }} active{{ end }}">
+          <span class="nav-color-indicator indicator-guidance" aria-hidden="true"></span>
+          <span>Guidance</span>
+        </a>
 
+        <!-- 3. Resources (Pine Teal) -->
+        <a href="{{ "modules/" | relLangURL }}" 
+           class="nav-link nav-link-resources{{ if $isResources }} active{{ end }}">
+          <span class="nav-color-indicator indicator-resources" aria-hidden="true"></span>
+          <span>Resources</span>
+        </a>
+      </nav>
+    </div>
+
+    <div class="site-nav-tools">
       {{ if hugo.IsMultilingual }}
       <div class="lang-switcher">
         {{ $currentLang := .Language.Lang }}
@@ -50,22 +59,25 @@
         </svg>
         CMS Admin
       </a>
-    </nav>
+    </div>
   </div>
 
-  <!-- Level 2: Coloured Bar per section, links separated by |, aligned under 1st level nav -->
+  <!-- Level 2: Section Colored Bar aligned directly beneath .site-nav-sections -->
   {{ if $isRegister }}
   <nav class="sub-nav-bar sub-bar-register" aria-label="Register Navigation">
     <div class="sub-nav-container">
-      <div class="sub-nav-align-group align-register">
+      <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
+      <div class="sub-nav-content">
         <span class="sub-nav-plain">Register a Community Assembly</span>
       </div>
+      <div class="sub-nav-tools-spacer" aria-hidden="true"></div>
     </div>
   </nav>
   {{ else if $isGuidance }}
   <nav class="sub-nav-bar sub-bar-guidance" aria-label="Guidance Navigation">
     <div class="sub-nav-container">
-      <div class="sub-nav-align-group align-guidance">
+      <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
+      <div class="sub-nav-content">
         <a href="{{ "pages/" | relLangURL }}" 
            class="sub-nav-link{{ if eq .RelPermalink ("/pages/" | relLangURL) }} active{{ end }}">
           Overview
@@ -86,12 +98,14 @@
           Follow-up
         </a>
       </div>
+      <div class="sub-nav-tools-spacer" aria-hidden="true"></div>
     </div>
   </nav>
   {{ else if $isResources }}
   <nav class="sub-nav-bar sub-bar-resources" aria-label="Resources Navigation">
     <div class="sub-nav-container">
-      <div class="sub-nav-align-group align-resources">
+      <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
+      <div class="sub-nav-content">
         <a href="{{ "modules/" | relLangURL }}" 
            class="sub-nav-link{{ if eq .Section "modules" }} active{{ end }}">
           Modules
@@ -107,6 +121,7 @@
           Learning
         </a>
       </div>
+      <div class="sub-nav-tools-spacer" aria-hidden="true"></div>
     </div>
   </nav>
   {{ end }}
