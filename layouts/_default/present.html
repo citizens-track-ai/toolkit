@@ -29,6 +29,7 @@
       --text-muted: #A8B4C0;
       --border-subtle: rgba(255, 255, 255, 0.12);
       --font-family: 'Parkinsans', Arial, sans-serif;
+      --slide-font-scale: 1;
     }
 
     * { box-sizing: border-box; }
@@ -48,13 +49,13 @@
       top: 0;
       left: 0;
       right: 0;
-      height: 60px;
+      height: 64px;
       z-index: 100;
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      padding: 0 1.5rem;
-      background: linear-gradient(180deg, rgba(15, 23, 42, 0.95) 0%, rgba(15, 23, 42, 0.7) 80%, transparent 100%);
+      justify-content: flex-start;
+      padding: 0 1.75rem;
+      background: linear-gradient(180deg, rgba(26, 33, 41, 0.96) 0%, rgba(26, 33, 41, 0.75) 80%, transparent 100%);
       pointer-events: none;
       transition: opacity 0.3s ease;
     }
@@ -64,84 +65,305 @@
     .deck-brand-wrap {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1.25rem;
     }
 
-    .deck-back-btn {
+    .deck-topbar-brand {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      color: var(--text-muted);
       text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      padding: 0.35rem 0.65rem;
-      border-radius: 6px;
-      background: rgba(30, 41, 59, 0.6);
-      border: 1px solid var(--border-subtle);
-      transition: all 0.15s ease;
+      transition: opacity 0.15s ease, transform 0.15s ease;
     }
 
-    .deck-back-btn:hover {
-      color: #ffffff;
-      background: var(--bg-surface-elevated);
-      border-color: var(--brand-cerulean);
+    .deck-topbar-brand:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .deck-logo-img {
+      height: 32px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      display: block;
     }
 
     .deck-title-badge {
-      font-size: 0.8rem;
+      font-size: 0.825rem;
       font-weight: 700;
       background: rgba(0, 68, 124, 0.65);
       border: 1px solid rgba(64, 169, 255, 0.4);
-      padding: 0.25rem 0.65rem;
+      padding: 0.3rem 0.8rem;
       border-radius: 999px;
       color: var(--brand-cerulean);
       letter-spacing: 0.03em;
       white-space: nowrap;
-      max-width: 380px;
+      max-width: 480px;
       overflow: hidden;
       text-overflow: ellipsis;
     }
 
-    .deck-controls-group {
+    /* Floating Dock at Bottom-Right */
+    .deck-dock-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1000;
       display: flex;
-      align-items: center;
-      gap: 0.5rem;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      pointer-events: none;
     }
 
-    .deck-btn {
+    .deck-dock-container * {
+      pointer-events: auto;
+    }
+
+    /* Floating Pill Dock Bar */
+    .deck-dock-bar {
       display: inline-flex;
       align-items: center;
-      gap: 0.35rem;
-      background: rgba(30, 41, 59, 0.85);
-      color: var(--text-main);
-      border: 1px solid var(--border-subtle);
-      border-radius: 6px;
-      padding: 0.35rem 0.75rem;
-      font-family: var(--font-family);
-      font-size: 0.85rem;
-      font-weight: 600;
+      gap: 6px;
+      padding: 6px 8px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+
+    .deck-dock-bar:hover {
+      border-color: rgba(64, 169, 255, 0.45);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 14px rgba(64, 169, 255, 0.2);
+    }
+
+    .dock-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.07);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       cursor: pointer;
-      transition: all 0.15s ease;
-      backdrop-filter: blur(8px);
+      text-decoration: none;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      box-sizing: border-box;
     }
 
-    .deck-btn:hover {
+    .dock-icon-btn:hover {
       background: var(--brand-fjord);
-      border-color: var(--brand-cerulean);
       color: #ffffff;
+      border-color: var(--brand-cerulean);
+      transform: translateY(-2px);
     }
 
-    .deck-btn.primary {
+    .dock-icon-btn.primary {
       background: var(--brand-cerulean);
       color: #0f172a;
       border-color: var(--brand-cerulean);
-      font-weight: 700;
     }
 
-    .deck-btn.primary:hover {
-      background: #68bdff;
-      color: #000000;
+    .dock-icon-btn.primary:hover {
+      background: #70c0ff;
+      color: #000;
+    }
+
+    .dock-icon-btn.active {
+      background: var(--brand-cerulean);
+      color: #0f172a;
+      border-color: var(--brand-cerulean);
+    }
+
+    .dock-expand-icon {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dock-icon-btn.active .dock-expand-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Expanded Options Popover */
+    .deck-dock-popover {
+      width: 300px;
+      background: rgba(30, 41, 59, 0.97);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      transform-origin: bottom right;
+      animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .deck-dock-popover.open {
+      display: flex;
+    }
+
+    @keyframes popoverFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .popover-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--brand-cerulean);
+    }
+
+    .popover-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .popover-menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #f1f5f9;
+      font-family: var(--font-family);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .popover-menu-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+      color: #ffffff;
+      transform: translateX(2px);
+    }
+
+    .popover-menu-btn .emoji-icon {
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .popover-menu-btn .shortcut-hint {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Text-Size Control in Popover */
+    .popover-text-size-section {
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .text-size-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .text-size-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .text-size-display {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--brand-cerulean);
+      background: rgba(64, 169, 255, 0.15);
+      border: 1px solid rgba(64, 169, 255, 0.3);
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+
+    .text-size-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .text-size-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: var(--font-family);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .text-size-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+    }
+
+    .text-size-reset-btn {
+      padding: 0 10px;
+      height: 32px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: var(--font-family);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .text-size-reset-btn:hover {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
     }
 
     /* Reveal Container Styling */
@@ -207,7 +429,7 @@
     }
 
     .slide-main-title {
-      font-size: 3rem;
+      font-size: calc(3rem * var(--slide-font-scale, 1));
       line-height: 1.25;
       font-weight: 800;
       margin: 0 0 1.5rem 0;
@@ -216,11 +438,11 @@
     }
 
     .slide-main-title.small {
-      font-size: 2.2rem;
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
     }
 
     .slide-body-text {
-      font-size: 1.65rem;
+      font-size: calc(1.65rem * var(--slide-font-scale, 1));
       line-height: 1.55;
       color: #e2e8f0;
       margin: 0;
@@ -229,7 +451,7 @@
 
     .slide-body-text h1, .slide-body-text h2, .slide-body-text h3 {
       color: #ffffff;
-      font-size: 2.2rem;
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
       line-height: 1.3;
       margin-top: 0;
       margin-bottom: 1rem;
@@ -297,7 +519,7 @@
 
     /* Key Statistic Display */
     .stat-hero-number {
-      font-size: 5.5rem;
+      font-size: calc(5.5rem * var(--slide-font-scale, 1));
       font-weight: 800;
       line-height: 1;
       color: var(--brand-coral);
@@ -313,7 +535,7 @@
     }
 
     .perspective-quote-text {
-      font-size: 2.2rem;
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
       line-height: 1.4;
       font-style: italic;
       color: #f1f5f9;
@@ -321,7 +543,7 @@
     }
 
     .perspective-attribution {
-      font-size: 1.3rem;
+      font-size: calc(1.3rem * var(--slide-font-scale, 1));
       font-weight: 700;
       color: var(--brand-reef-teal);
     }
@@ -360,7 +582,7 @@
     }
 
     .slide-chapter-title {
-      font-size: 4rem;
+      font-size: calc(4rem * var(--slide-font-scale, 1));
       font-weight: 800;
       color: #ffffff;
       margin: 0 0 1.5rem 0;
@@ -369,7 +591,7 @@
     }
 
     .slide-chapter-desc {
-      font-size: 1.6rem;
+      font-size: calc(1.6rem * var(--slide-font-scale, 1));
       line-height: 1.5;
       color: var(--text-muted);
       max-width: 900px;
@@ -639,8 +861,8 @@
 
     /* Custom Reveal Controls styling */
     .reveal .controls {
-      bottom: 20px;
-      right: 20px;
+      bottom: 24px;
+      right: 180px;
     }
 
     .reveal .progress {
@@ -656,11 +878,13 @@
       font-family: var(--font-family);
       font-size: 0.85rem;
       color: var(--text-muted);
-      background: rgba(15, 23, 42, 0.7);
+      background: rgba(26, 33, 41, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
       padding: 0.35rem 0.65rem;
       border-radius: 6px;
-      right: 80px;
-      bottom: 20px;
+      left: 24px;
+      right: auto;
+      bottom: 24px;
     }
 
     /* Loading overlay */
@@ -724,28 +948,90 @@
   <!-- Persistent Top Header HUD -->
   <header class="deck-topbar" id="deck-topbar">
     <div class="deck-brand-wrap">
-      <a href="{{ `content/` | relLangURL }}" class="deck-back-btn" title="Back to Content Items">
-        &larr; Toolkit
+      <a href="{{ `content/` | relLangURL }}" class="deck-topbar-brand" title="Citizens' Track on AI - Toolkit">
+        <img src="{{ "images/logos/logo-wide-negative.svg" | relURL }}" alt="Citizens' Track on AI" class="deck-logo-img">
       </a>
-      <img src="{{ "images/brand/emblem-white.svg" | relURL }}" alt="CT//AI" style="height: 22px; width: auto; opacity: 0.9;">
       <div class="deck-title-badge" id="hud-deck-title">Presentation</div>
     </div>
+  </header>
 
-    <div class="deck-controls-group">
-      <button type="button" class="deck-btn" id="btn-open-playlist" title="Choose or combine slide decks (Press P)">
-        📋 Combined Playlist (<span id="hud-deck-count">1</span>)
+  <!-- Floating Bottom-Right Controls Dock -->
+  <aside class="deck-dock-container" id="deck-dock-container" aria-label="Presentation controls">
+    
+    <!-- Expanded Options Popover Menu -->
+    <div class="deck-dock-popover" id="deck-dock-popover" role="dialog" aria-label="Presentation options">
+      <div class="popover-header">
+        <span class="popover-title">Deck Options</span>
+      </div>
+
+      <div class="popover-menu-list">
+        <button type="button" class="popover-menu-btn" id="dock-btn-playlist" title="Choose or combine slide decks (Press P)">
+          <span class="emoji-icon">📋</span>
+          <span>Combined Playlist (<span id="hud-deck-count">1</span>)</span>
+          <span class="shortcut-hint">P</span>
+        </button>
+
+        <button type="button" class="popover-menu-btn" id="dock-btn-speaker" title="Open Speaker View with notes (Press S)">
+          <span class="emoji-icon">🎙️</span>
+          <span>Speaker View</span>
+          <span class="shortcut-hint">S</span>
+        </button>
+
+        <button type="button" class="popover-menu-btn" id="dock-btn-overview" title="Slide Overview Grid (Press ESC)">
+          <span class="emoji-icon">🔲</span>
+          <span>Overview Grid</span>
+          <span class="shortcut-hint">ESC</span>
+        </button>
+      </div>
+
+      <div class="popover-text-size-section">
+        <div class="text-size-header">
+          <span class="text-size-label">Slide Text Size</span>
+          <span class="text-size-display" id="text-size-display">100%</span>
+        </div>
+        <div class="text-size-controls">
+          <button type="button" class="text-size-btn" id="btn-text-size-decrease" title="Smaller slide text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>A-</span>
+          </button>
+          <button type="button" class="text-size-btn" id="btn-text-size-increase" title="Larger slide text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>A+</span>
+          </button>
+          <button type="button" class="text-size-reset-btn" id="btn-text-size-reset" title="Reset font size to default (100%)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Visible Dock Pill Bar -->
+    <div class="deck-dock-bar">
+      <!-- Back Icon Button -->
+      <a href="{{ `content/` | relLangURL }}" class="dock-icon-btn" id="dock-btn-back" title="Back to Toolkit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+
+      <!-- Fullscreen Icon Button -->
+      <button type="button" class="dock-icon-btn" id="dock-btn-fullscreen" title="Toggle Fullscreen (F)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
       </button>
-      <button type="button" class="deck-btn" id="btn-toggle-speaker" title="Open Speaker View with notes (Press S)">
-        🎙️ Speaker (S)
-      </button>
-      <button type="button" class="deck-btn" id="btn-toggle-overview" title="Slide Overview Grid (Press ESC)">
-        🔲 Overview
-      </button>
-      <button type="button" class="deck-btn" id="btn-toggle-fullscreen" title="Toggle Fullscreen (Press F)">
-        ⛶ Fullscreen
+
+      <!-- Expand (+) Icon Button -->
+      <button type="button" class="dock-icon-btn primary" id="dock-btn-expand" title="More Options & Settings" aria-expanded="false" aria-controls="deck-dock-popover">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="dock-expand-icon">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
       </button>
     </div>
-  </header>
+
+  </aside>
 
   <!-- Reveal Container -->
   <div class="reveal">
@@ -836,6 +1122,7 @@
     let presentationMode = '2d'; // '2d' or 'linear'
     let revealDeck = null;
 
+    const logoWideNegativeUrl = '{{ "images/logos/logo-wide-negative.svg" | relURL }}';
     const slidesUrl = '{{ "content/slides.json" | relLangURL }}';
     const slidesRoot = document.getElementById('reveal-slides-root');
     const loadingOverlay = document.getElementById('deck-loading-overlay');
@@ -1082,7 +1369,7 @@
       return `
         <section class="slide-card-container">
           <div class="slide-watermark" style="position: absolute; bottom: 2rem; right: 2.5rem; opacity: 0.22; pointer-events: none; z-index: 10;">
-            <img src="/images/brand/logo-wide-negative.svg" alt="Citizens' Track on AI" style="height: 32px; width: auto;">
+            <img src="${logoWideNegativeUrl}" alt="Citizens' Track on AI" style="height: 32px; width: auto;">
           </div>
           <div class="slide-chapter-card">
             <span class="slide-chapter-tag">Citizens' Track on AI</span>
@@ -1344,36 +1631,144 @@
       });
     });
 
-    // Topbar buttons
-    document.getElementById('btn-open-playlist').addEventListener('click', openPlaylistModal);
+    // Modal close button
     document.getElementById('btn-close-playlist').addEventListener('click', closePlaylistModal);
     playlistModal.addEventListener('click', (e) => {
       if (e.target === playlistModal) closePlaylistModal();
     });
 
-    document.getElementById('btn-toggle-speaker').addEventListener('click', () => {
-      if (revealDeck) {
-        const notesPlugin = revealDeck.getPlugin('notes');
-        if (notesPlugin && notesPlugin.open) {
-          notesPlugin.open();
-        } else {
-          // Trigger Reveal keyboard 's' key
-          window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', keyCode: 83 }));
+    // Floating Bottom-Right Dock & Popover
+    const dockExpandBtn = document.getElementById('dock-btn-expand');
+    const dockPopover = document.getElementById('deck-dock-popover');
+
+    function toggleDockPopover(forceState) {
+      if (!dockPopover) return;
+      const isOpen = typeof forceState === 'boolean' ? forceState : !dockPopover.classList.contains('open');
+      dockPopover.classList.toggle('open', isOpen);
+      if (dockExpandBtn) {
+        dockExpandBtn.classList.toggle('active', isOpen);
+        dockExpandBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+    }
+
+    if (dockExpandBtn) {
+      dockExpandBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDockPopover();
+      });
+    }
+
+    // Close popover when clicking anywhere outside
+    document.addEventListener('click', (e) => {
+      if (dockPopover && dockPopover.classList.contains('open')) {
+        if (!dockPopover.contains(e.target) && dockExpandBtn && !dockExpandBtn.contains(e.target)) {
+          toggleDockPopover(false);
         }
       }
     });
 
-    document.getElementById('btn-toggle-overview').addEventListener('click', () => {
-      if (revealDeck) revealDeck.toggleOverview();
-    });
+    // Dock Action: Playlist
+    const dockPlaylistBtn = document.getElementById('dock-btn-playlist');
+    if (dockPlaylistBtn) {
+      dockPlaylistBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        openPlaylistModal();
+      });
+    }
 
-    document.getElementById('btn-toggle-fullscreen').addEventListener('click', () => {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => console.log(err));
-      } else {
-        document.exitFullscreen().catch(err => console.log(err));
+    // Dock Action: Speaker View
+    const dockSpeakerBtn = document.getElementById('dock-btn-speaker');
+    if (dockSpeakerBtn) {
+      dockSpeakerBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        if (revealDeck) {
+          const notesPlugin = revealDeck.getPlugin('notes');
+          if (notesPlugin && notesPlugin.open) {
+            notesPlugin.open();
+          } else {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', keyCode: 83 }));
+          }
+        }
+      });
+    }
+
+    // Dock Action: Overview Grid
+    const dockOverviewBtn = document.getElementById('dock-btn-overview');
+    if (dockOverviewBtn) {
+      dockOverviewBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        if (revealDeck) revealDeck.toggleOverview();
+      });
+    }
+
+    // Dock Action: Fullscreen
+    const dockFullscreenBtn = document.getElementById('dock-btn-fullscreen');
+    if (dockFullscreenBtn) {
+      dockFullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen().catch(err => console.log(err));
+        }
+      });
+    }
+
+    // Slide Font Size Scaling Logic
+    const FONT_SCALES = [0.75, 0.85, 1.0, 1.15, 1.3, 1.5, 1.7];
+    let currentFontScaleIndex = 2; // 1.0 = 100%
+
+    function applyFontScale(index) {
+      if (index < 0) index = 0;
+      if (index >= FONT_SCALES.length) index = FONT_SCALES.length - 1;
+      currentFontScaleIndex = index;
+      const scale = FONT_SCALES[currentFontScaleIndex];
+      document.documentElement.style.setProperty('--slide-font-scale', scale);
+      const percent = Math.round(scale * 100) + '%';
+      const displayEl = document.getElementById('text-size-display');
+      if (displayEl) displayEl.textContent = percent;
+      try {
+        localStorage.setItem('reveal_slide_font_scale_idx', currentFontScaleIndex);
+      } catch (err) {}
+      if (revealDeck && typeof revealDeck.layout === 'function') {
+        revealDeck.layout();
       }
-    });
+    }
+
+    // Load saved font scale on startup
+    try {
+      const savedIdx = localStorage.getItem('reveal_slide_font_scale_idx');
+      if (savedIdx !== null && !isNaN(parseInt(savedIdx, 10))) {
+        applyFontScale(parseInt(savedIdx, 10));
+      } else {
+        applyFontScale(2);
+      }
+    } catch (e) {
+      applyFontScale(2);
+    }
+
+    const btnFontDecrease = document.getElementById('btn-text-size-decrease');
+    if (btnFontDecrease) {
+      btnFontDecrease.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(currentFontScaleIndex - 1);
+      });
+    }
+
+    const btnFontIncrease = document.getElementById('btn-text-size-increase');
+    if (btnFontIncrease) {
+      btnFontIncrease.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(currentFontScaleIndex + 1);
+      });
+    }
+
+    const btnFontReset = document.getElementById('btn-text-size-reset');
+    if (btnFontReset) {
+      btnFontReset.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(2);
+      });
+    }
 
     // Keyboard shortcuts
     window.addEventListener('keydown', (e) => {
@@ -1386,9 +1781,24 @@
         } else {
           openPlaylistModal();
         }
-      } else if (e.key === 'Escape' && playlistModal.classList.contains('open')) {
+      } else if (e.key === 'Escape') {
+        if (dockPopover && dockPopover.classList.contains('open')) {
+          e.preventDefault();
+          toggleDockPopover(false);
+          return;
+        }
+        if (playlistModal.classList.contains('open')) {
+          e.preventDefault();
+          closePlaylistModal();
+          return;
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
         e.preventDefault();
-        closePlaylistModal();
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen().catch(err => console.log(err));
+        }
       }
     });
 
