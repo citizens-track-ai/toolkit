@@ -10,14 +10,14 @@
 
 <article class="page-header">
   <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
-    <span class="collection-badge" style="background: #e0f2fe; color: #0369a1;">Activity</span>
+    <span class="collection-badge" style="background: rgba(255, 196, 64, 0.18); color: #7a5000; border: 1px solid rgba(255, 196, 64, 0.35);">Activity</span>
     {{ with .Params.duration }}
-      <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+      <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-dark); border: 1px solid var(--color-border);">
         ⏱️ {{ .min }}-{{ .max }} mins
       </span>
     {{ end }}
     {{ with .Params.license }}
-      <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+      <span class="element-pill" style="background: rgba(0, 216, 180, 0.14); color: #005a4b; border: 1px solid rgba(0, 216, 180, 0.3);">
         ⚖️ {{ .name | default "Open License" }}
       </span>
     {{ end }}
@@ -70,7 +70,7 @@
 {{ with .Params.files }}
   <div class="element-block" style="margin-bottom: 2rem;">
     <div class="element-block-header">
-      <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">📁 Files & Attached Resources</span>
+      <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: var(--ct-color-fjord); border: 1px solid rgba(64, 169, 255, 0.3);">📁 Files & Attached Resources</span>
     </div>
     <div class="element-block-content">
       <div style="display: flex; flex-direction: column; gap: 0.75rem;">

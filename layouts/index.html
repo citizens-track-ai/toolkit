@@ -1,31 +1,58 @@
 {{ define "main" }}
 
 <div class="hero">
-  <div class="hero-tag">Toolkit Draft</div>
-  <h1>Citizens Track Toolkit</h1>
-  <p>
-    This is a WORK IN PROGRESS prototype for the creation of a toolkit for community assemblies on AI.
-  </p>
-  <p>
-    Members of the co-design cohort are invited to share review comments in the working document.
-  </p>
-
-  {{ $allCollections := where .Site.RegularPages "Section" "content-collections" }}
-  {{ $allItems := where .Site.RegularPages "Section" "content" }}
-  {{ $allActivities := where .Site.RegularPages "Section" "activities" }}
-
-  <div class="hero-stats">
-    <div class="stat-box">
-      <span class="stat-num">{{ len $allCollections }}</span>
-      <span class="stat-label">Collections</span>
+  <div class="hero-content">
+    <div class="hero-tag">
+      <span class="hero-tag-dot"></span>
+      Citizens' Track on AI // Toolkit
     </div>
-    <div class="stat-box">
-      <span class="stat-num">{{ len $allItems }}</span>
-      <span class="stat-label">Content Items</span>
-    </div>
-    <div class="stat-box">
-      <span class="stat-num">{{ len $allActivities }}</span>
-      <span class="stat-label">Activities</span>
+    <h1 class="hero-headline">Participatory AI Deliberation Toolkit</h1>
+    <p class="hero-lead">
+      Open educational resources, interactive activities, and modular content designed for citizen assemblies, civic workshops, and community deliberation on artificial intelligence governance.
+    </p>
+
+    {{ $allCollections := where .Site.RegularPages "Section" "content-collections" }}
+    {{ $allItems := where .Site.RegularPages "Section" "content" }}
+    {{ $allActivities := where .Site.RegularPages "Section" "activities" }}
+    {{ $allModules := where .Site.RegularPages "Section" "modules" }}
+
+    <div class="hero-stats">
+      <div class="stat-box stat-collections">
+        <div class="stat-icon-wrapper">
+          <img src="{{ "images/icons/cerulean/icon-open-book.svg" | relURL }}" alt="Collections" width="28" height="28">
+        </div>
+        <div class="stat-content">
+          <span class="stat-num">{{ len $allCollections }}</span>
+          <span class="stat-label">Collections</span>
+        </div>
+      </div>
+      <div class="stat-box stat-items">
+        <div class="stat-icon-wrapper">
+          <img src="{{ "images/icons/teal/icon-ai-network.svg" | relURL }}" alt="Content Items" width="28" height="28">
+        </div>
+        <div class="stat-content">
+          <span class="stat-num">{{ len $allItems }}</span>
+          <span class="stat-label">Content Items</span>
+        </div>
+      </div>
+      <div class="stat-box stat-activities">
+        <div class="stat-icon-wrapper">
+          <img src="{{ "images/icons/goldenrod/icon-globe-chart.svg" | relURL }}" alt="Activities" width="28" height="28">
+        </div>
+        <div class="stat-content">
+          <span class="stat-num">{{ len $allActivities }}</span>
+          <span class="stat-label">Activities</span>
+        </div>
+      </div>
+      <div class="stat-box stat-modules">
+        <div class="stat-icon-wrapper">
+          <img src="{{ "images/icons/coral/icon-journey-map.svg" | relURL }}" alt="Modules" width="28" height="28">
+        </div>
+        <div class="stat-content">
+          <span class="stat-num">{{ len $allModules }}</span>
+          <span class="stat-label">Modules</span>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -193,76 +220,72 @@
   </div>
 
   {{ if gt (len $allActivities) 0 }}
-  <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
-    {{ range $allActivities }}
-    <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-      <div>
-        <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
-          <span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Activity</span>
-          {{ with .Params.duration }}
-          <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
-            ⏱️ {{ .min }}-{{ .max }}m
-          </span>
-          {{ end }}
-          {{ with .Params.license }}
-          <span class="element-pill" style="background: #ecfdf5; color: #047857;">
-            ⚖️ {{ .name | default "Open" }}
-          </span>
-          {{ end }}
+    <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
+      {{ range $allActivities }}
+        <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+          <div>
+            <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+              <span class="element-pill" style="background: rgba(255, 196, 64, 0.18); color: #7a5000; border: 1px solid rgba(255, 196, 64, 0.35); font-weight: 700;">Activity</span>
+              {{ with .Params.duration }}
+                <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-dark); border: 1px solid var(--color-border);">
+                  ⏱️ {{ .min }}-{{ .max }}m
+                </span>
+              {{ end }}
+              {{ with .Params.license }}
+                <span class="element-pill" style="background: rgba(0, 216, 180, 0.14); color: #005a4b; border: 1px solid rgba(0, 216, 180, 0.3);">
+                  ⚖️ {{ .name | default "Open" }}
+                </span>
+              {{ end }}
+            </div>
+
+            <h3 class="item-card-title" style="font-size: 1.2rem;">
+              <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+            </h3>
+
+            {{ with .Params.creators }}
+              <div style="font-size: 0.8rem; color: var(--color-muted); margin: 0.4rem 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
+                <span>By</span>
+                {{ if reflect.IsSlice . }}
+                  {{ range $i, $c := . }}
+                    {{ if gt $i 0 }}<span>•</span>{{ end }}
+                    {{ if reflect.IsMap $c }}
+                      <strong>{{ index $c "name" }}</strong>
+                    {{ else }}
+                      <strong>{{ $c }}</strong>
+                    {{ end }}
+                  {{ end }}
+                {{ else if reflect.IsMap . }}
+                  {{ range $name, $url := . }}
+                    <strong>{{ $name }}</strong>
+                  {{ end }}
+                {{ else }}
+                  <strong>{{ . }}</strong>
+                {{ end }}
+              </div>
+            {{ end }}
+
+            {{ with .Summary }}
+              <p class="item-card-overview" style="font-size: 0.88rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1rem;">
+                {{ . | plainify | truncate 150 }}
+              </p>
+            {{ end }}
+          </div>
+
+          <div class="item-card-footer" style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border-subtle);">
+            {{ with .Params.files }}
+              <span style="font-size: 0.75rem; color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.25rem;">
+                📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
+              </span>
+            {{ else }}
+              <span></span>
+            {{ end }}
+            <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">
+              View Activity &rarr;
+            </a>
+          </div>
         </div>
-
-        <h3 class="item-card-title" style="font-size: 1.2rem;">
-          <a href="{{ .RelPermalink }}">{{ .Title }}</a>
-        </h3>
-
-        {{ with .Params.creators }}
-        <div
-          style="font-size: 0.8rem; color: var(--color-muted); margin: 0.4rem 0 0.75rem; display: flex; flex-wrap: wrap; gap: 0.35rem; align-items: center;">
-          <span>By</span>
-          {{ if reflect.IsSlice . }}
-          {{ range $i, $c := . }}
-          {{ if gt $i 0 }}<span>•</span>{{ end }}
-          {{ if reflect.IsMap $c }}
-          <strong>{{ index $c "name" }}</strong>
-          {{ else }}
-          <strong>{{ $c }}</strong>
-          {{ end }}
-          {{ end }}
-          {{ else if reflect.IsMap . }}
-          {{ range $name, $url := . }}
-          <strong>{{ $name }}</strong>
-          {{ end }}
-          {{ else }}
-          <strong>{{ . }}</strong>
-          {{ end }}
-        </div>
-        {{ end }}
-
-        {{ with .Summary }}
-        <p class="item-card-overview"
-          style="font-size: 0.88rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1rem;">
-          {{ . | plainify | truncate 150 }}
-        </p>
-        {{ end }}
-      </div>
-
-      <div class="item-card-footer"
-        style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--color-border-subtle);">
-        {{ with .Params.files }}
-        <span
-          style="font-size: 0.75rem; color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.25rem;">
-          📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
-        </span>
-        {{ else }}
-        <span></span>
-        {{ end }}
-        <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">
-          View Activity &rarr;
-        </a>
-      </div>
+      {{ end }}
     </div>
-    {{ end }}
-  </div>
   {{ else }}
   <div
     style="background: white; border: 1px solid var(--color-border); padding: 3rem; text-align: center; border-radius: var(--radius-lg);">

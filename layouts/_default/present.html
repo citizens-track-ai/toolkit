@@ -1,0 +1,1947 @@
+<!DOCTYPE html>
+<html lang="{{ .Language.Lang | default "en" }}" dir="{{ if .Language.Params.rtl }}rtl{{ else }}ltr{{ end }}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>{{ .Title }} | Reveal.js Presenter | Citizens' Track on AI</title>
+  
+  <link rel="stylesheet" href="{{ "css/brand-tokens.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "vendor/reveal/reveal.css" | relURL }}">
+  
+  <style>
+    :root {
+      --brand-cerulean: #40A9FF;
+      --brand-fjord: #00447C;
+      --brand-spring-wood: #EFEEE5;
+      --brand-ebony-clay: #242C36;
+      --brand-coral: #FF5F6F;
+      --brand-reef-teal: #00D8B4;
+      --brand-goldenrod: #FFC440;
+      --brand-deep-redwood: #7C0018;
+
+      --bg-canvas: #1A2129;
+      --bg-surface: #242C36;
+      --bg-surface-elevated: #323D4A;
+      --text-main: #FBFBFA;
+      --text-muted: #A8B4C0;
+      --border-subtle: rgba(255, 255, 255, 0.12);
+      --font-family: 'Parkinsans', Arial, sans-serif;
+      --slide-font-scale: 1;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      background-color: var(--bg-canvas);
+      color: var(--text-main);
+      font-family: var(--font-family);
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+
+    /* Fixed Top Navigation Bar */
+    .deck-topbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 52px;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 0 1.5rem;
+      background: linear-gradient(180deg, rgba(26, 33, 41, 0.95) 0%, rgba(26, 33, 41, 0.6) 80%, transparent 100%);
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .deck-topbar * { pointer-events: auto; }
+
+    .deck-brand-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+    }
+
+    .deck-topbar-brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+
+    .deck-topbar-brand:hover {
+      opacity: 0.88;
+      transform: translateY(-1px);
+    }
+
+    .deck-logo-img {
+      height: 26px;
+      width: auto;
+      max-width: 190px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .deck-title-badge {
+      font-size: 0.8rem;
+      font-weight: 700;
+      background: rgba(0, 68, 124, 0.65);
+      border: 1px solid rgba(64, 169, 255, 0.4);
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      color: var(--brand-cerulean);
+      letter-spacing: 0.03em;
+      white-space: nowrap;
+      max-width: 480px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    /* Accessibility Skip Link */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      z-index: 10001;
+      padding: 0.6rem 1.25rem;
+      background: var(--brand-fjord, #00447C);
+      color: #FFFFFF;
+      font-weight: 700;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: top 0.2s ease;
+      font-size: 0.9rem;
+    }
+    .skip-link:focus,
+    .skip-link:focus-visible {
+      top: 1rem;
+      outline: 3px solid var(--brand-cerulean, #40A9FF);
+    }
+    [dir="rtl"] .skip-link {
+      left: auto;
+      right: 1rem;
+    }
+
+    .deck-fallback-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(255, 196, 64, 0.2);
+      border: 1px solid rgba(255, 196, 64, 0.5);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--brand-goldenrod, #FFC440);
+      margin-inline-start: 1rem;
+    }
+
+    /* Floating Dock at Bottom-Left with Safe-Area Inset Support */
+    .deck-dock-container {
+      position: fixed;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
+      right: auto;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+      pointer-events: none;
+    }
+
+    [dir="rtl"] .deck-dock-container {
+      left: auto;
+      right: calc(24px + env(safe-area-inset-right, 0px));
+      align-items: flex-end;
+    }
+
+    .deck-dock-container * {
+      pointer-events: auto;
+    }
+
+
+    /* Floating Pill Dock Bar */
+    .deck-dock-bar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 8px;
+      background: rgba(30, 41, 59, 0.9);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 999px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.2s ease;
+    }
+
+    .deck-dock-bar:hover {
+      border-color: rgba(64, 169, 255, 0.45);
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 14px rgba(64, 169, 255, 0.2);
+    }
+
+    .dock-icon-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.07);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    .dock-icon-btn:hover {
+      background: var(--brand-fjord);
+      color: #ffffff;
+      border-color: var(--brand-cerulean);
+      transform: translateY(-2px);
+    }
+
+    .dock-icon-btn.primary {
+      background: var(--brand-cerulean);
+      color: #0f172a;
+      border-color: var(--brand-cerulean);
+    }
+
+    .dock-icon-btn.primary:hover {
+      background: #70c0ff;
+      color: #000;
+    }
+
+    .dock-icon-btn.active {
+      background: var(--brand-cerulean);
+      color: #0f172a;
+      border-color: var(--brand-cerulean);
+    }
+
+    .dock-expand-icon {
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .dock-icon-btn.active .dock-expand-icon {
+      transform: rotate(45deg);
+    }
+
+    /* Expanded Options Popover */
+    .deck-dock-popover {
+      width: 300px;
+      background: rgba(30, 41, 59, 0.97);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 16px;
+      padding: 14px;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      transform-origin: bottom left;
+      animation: popoverFadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .deck-dock-popover.open {
+      display: flex;
+    }
+
+    @keyframes popoverFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px) scale(0.95);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .popover-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .popover-title {
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--brand-cerulean);
+    }
+
+    .popover-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .popover-menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      width: 100%;
+      padding: 8px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      color: #f1f5f9;
+      font-family: var(--font-family);
+      font-size: 0.875rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.15s ease;
+    }
+
+    .popover-menu-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+      color: #ffffff;
+      transform: translateX(2px);
+    }
+
+    .popover-menu-btn .emoji-icon {
+      font-size: 1.05rem;
+      flex-shrink: 0;
+      line-height: 1;
+    }
+
+    .popover-menu-btn .shortcut-hint {
+      margin-left: auto;
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      background: rgba(0, 0, 0, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 500;
+    }
+
+    /* Text-Size Control in Popover */
+    .popover-text-size-section {
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .text-size-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .text-size-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .text-size-display {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: var(--brand-cerulean);
+      background: rgba(64, 169, 255, 0.15);
+      border: 1px solid rgba(64, 169, 255, 0.3);
+      padding: 1px 7px;
+      border-radius: 999px;
+    }
+
+    .text-size-controls {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .text-size-btn {
+      flex: 1;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      height: 32px;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      color: #ffffff;
+      font-family: var(--font-family);
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .text-size-btn:hover {
+      background: var(--brand-fjord);
+      border-color: var(--brand-cerulean);
+    }
+
+    .text-size-reset-btn {
+      padding: 0 10px;
+      height: 32px;
+      background: transparent;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      color: var(--text-muted);
+      font-family: var(--font-family);
+      font-size: 0.75rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .text-size-reset-btn:hover {
+      color: #ffffff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    /* Reveal Container Styling */
+    .reveal {
+      font-family: var(--font-family);
+      color: var(--text-main);
+      background-color: var(--bg-canvas);
+    }
+
+    .reveal .slides {
+      text-align: left;
+    }
+
+    .reveal .slides section {
+      padding: 0;
+      height: 100%;
+      top: 0 !important;
+    }
+
+    /* Slide Content Card Layout */
+    .slide-card-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8.5rem 6.5rem 5.5rem 6.5rem;
+      box-sizing: border-box;
+      position: relative;
+    }
+
+    .slide-badge-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .slide-tag {
+      font-size: 0.85rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 0.35rem 0.85rem;
+      border-radius: 999px;
+      background: rgba(64, 169, 255, 0.2);
+      color: var(--brand-cerulean);
+      border: 1px solid rgba(64, 169, 255, 0.35);
+      display: inline-block;
+    }
+
+    .slide-tag.quiz { background: rgba(255, 196, 64, 0.2); color: var(--brand-goldenrod); border-color: rgba(255, 196, 64, 0.4); }
+    .slide-tag.answer { background: rgba(0, 216, 180, 0.2); color: var(--brand-reef-teal); border-color: rgba(0, 216, 180, 0.4); }
+    .slide-tag.stat { background: rgba(255, 95, 111, 0.2); color: var(--brand-coral); border-color: rgba(255, 95, 111, 0.4); }
+    .slide-tag.perspective { background: rgba(64, 169, 255, 0.2); color: var(--brand-cerulean); border-color: rgba(64, 169, 255, 0.4); }
+    .slide-tag.takeaways { background: rgba(124, 0, 24, 0.35); color: #ffb8c5; border-color: rgba(255, 95, 111, 0.45); }
+
+    .slide-deck-breadcrumb {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .slide-main-title {
+      font-size: calc(3rem * var(--slide-font-scale, 1));
+      line-height: 1.25;
+      font-weight: 800;
+      margin: 0 0 1.5rem 0;
+      color: #ffffff;
+      letter-spacing: -0.015em;
+    }
+
+    .slide-main-title.small {
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
+    }
+
+    .slide-body-text {
+      font-size: calc(1.65rem * var(--slide-font-scale, 1));
+      line-height: 1.55;
+      color: #e2e8f0;
+      margin: 0;
+      max-width: 1400px;
+    }
+
+    .slide-body-text h1, .slide-body-text h2, .slide-body-text h3 {
+      color: #ffffff;
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
+      line-height: 1.3;
+      margin-top: 0;
+      margin-bottom: 1rem;
+    }
+
+    .slide-body-text p {
+      margin: 0 0 1rem 0;
+    }
+
+    .slide-body-text ul, .slide-body-text ol {
+      margin: 0 0 1.5rem 2rem;
+      padding: 0;
+    }
+
+    .slide-body-text li {
+      margin-bottom: 0.6rem;
+    }
+
+    .slide-body-text hr {
+      border: 0;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: 2rem 0;
+    }
+
+    .slide-body-text a {
+      color: var(--brand-cerulean);
+      text-decoration: underline;
+    }
+
+    /* Split Image Layout */
+    .slide-split-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 3.5rem;
+      align-items: center;
+      width: 100%;
+    }
+
+    .slide-media-wrap {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      border-radius: 12px;
+      overflow: hidden;
+      background: rgba(30, 41, 59, 0.5);
+      border: 1px solid var(--border-subtle);
+      padding: 0.75rem;
+    }
+
+    .slide-media-img {
+      max-height: 480px;
+      width: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      background: #000000;
+    }
+
+    .slide-media-caption {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+      padding: 0 0.25rem;
+    }
+
+    /* Key Statistic Display */
+    .stat-hero-number {
+      font-size: calc(5.5rem * var(--slide-font-scale, 1));
+      font-weight: 800;
+      line-height: 1;
+      color: var(--brand-coral);
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.02em;
+    }
+
+    /* Perspective Quote */
+    .perspective-quote-wrap {
+      border-left: 6px solid var(--brand-reef-teal);
+      padding-left: 2rem;
+      margin: 1.5rem 0;
+    }
+
+    .perspective-quote-text {
+      font-size: calc(2.2rem * var(--slide-font-scale, 1));
+      line-height: 1.4;
+      font-style: italic;
+      color: #f1f5f9;
+      margin: 0 0 1rem 0;
+    }
+
+    .perspective-attribution {
+      font-size: calc(1.3rem * var(--slide-font-scale, 1));
+      font-weight: 700;
+      color: var(--brand-reef-teal);
+    }
+
+    /* Citation Footer */
+    .slide-citation {
+      margin-top: 2rem;
+      font-size: 0.9rem;
+      color: #64748b;
+      font-style: italic;
+    }
+
+    /* Chapter Title Slide */
+    .slide-chapter-card {
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      padding: 8.5rem 4rem 4rem 4rem;
+      box-sizing: border-box;
+    }
+
+    .slide-chapter-tag {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: var(--brand-cerulean);
+      background: rgba(64, 169, 255, 0.15);
+      border: 1px solid rgba(64, 169, 255, 0.3);
+      padding: 0.4rem 1.25rem;
+      border-radius: 999px;
+      margin-bottom: 1.5rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .slide-chapter-title {
+      font-size: calc(4rem * var(--slide-font-scale, 1));
+      font-weight: 800;
+      color: #ffffff;
+      margin: 0 0 1.5rem 0;
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+    }
+
+    .slide-chapter-desc {
+      font-size: calc(1.6rem * var(--slide-font-scale, 1));
+      line-height: 1.5;
+      color: var(--text-muted);
+      max-width: 900px;
+      margin: 0 0 2rem 0;
+    }
+
+    .slide-chapter-meta {
+      display: inline-flex;
+      align-items: center;
+      gap: 1rem;
+      background: rgba(30, 41, 59, 0.7);
+      padding: 0.5rem 1.25rem;
+      border-radius: 999px;
+      border: 1px solid var(--border-subtle);
+      font-size: 0.95rem;
+      color: #cbd5e1;
+    }
+
+    /* Modal / Playlist Combiner Drawer */
+    .playlist-modal-backdrop {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(10px);
+      z-index: 200;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .playlist-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .playlist-modal {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 720px;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.7);
+      overflow: hidden;
+      animation: modalSlideUp 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.97); }
+      to { transform: translateY(0) scale(1); }
+    }
+
+    .modal-header {
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .modal-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .modal-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0.25rem;
+      line-height: 1;
+      border-radius: 4px;
+    }
+
+    .modal-close-btn:hover { color: #ffffff; }
+
+    .modal-body {
+      padding: 1.5rem 1.75rem;
+      overflow-y: auto;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
+    .deck-selection-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .deck-item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 0.75rem 1rem;
+      transition: all 0.15s ease;
+      cursor: pointer;
+    }
+
+    .deck-item-row:hover {
+      background: rgba(30, 41, 59, 0.9);
+      border-color: rgba(64, 169, 255, 0.35);
+    }
+
+    .deck-item-row.selected {
+      border-color: var(--brand-cerulean);
+      background: rgba(0, 68, 124, 0.25);
+    }
+
+    .deck-row-left {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+      flex: 1;
+    }
+
+    .deck-checkbox {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--brand-cerulean);
+      cursor: pointer;
+    }
+
+    .deck-info-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 0.15rem;
+    }
+
+    .deck-info-desc {
+      font-size: 0.825rem;
+      color: var(--text-muted);
+      line-height: 1.35;
+    }
+
+    .deck-row-right {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .deck-badge-count {
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(255, 255, 255, 0.1);
+      color: #cbd5e1;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .order-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .order-mini-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border: none;
+      color: var(--text-muted);
+      border-radius: 3px;
+      width: 20px;
+      height: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.65rem;
+    }
+
+    .order-mini-btn:hover {
+      background: var(--brand-cerulean);
+      color: #000;
+    }
+
+    /* Mode Selection Switcher */
+    .mode-select-group {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid var(--border-subtle);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .mode-select-label {
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      margin-bottom: 0.65rem;
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mode-options-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+    }
+
+    .mode-option-card {
+      border: 1px solid var(--border-subtle);
+      border-radius: 6px;
+      padding: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      background: rgba(30, 41, 59, 0.4);
+    }
+
+    .mode-option-card.active {
+      border-color: var(--brand-cerulean);
+      background: rgba(0, 68, 124, 0.3);
+    }
+
+    .mode-option-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .mode-option-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      line-height: 1.3;
+    }
+
+    .modal-footer {
+      padding: 1rem 1.75rem;
+      border-top: 1px solid var(--border-subtle);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(15, 23, 42, 0.4);
+    }
+
+    .selection-summary {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .selection-summary strong { color: var(--brand-cerulean); }
+
+    /* Custom Reveal Controls styling */
+    .reveal .controls {
+      bottom: 20px;
+      right: 95px;
+    }
+
+    .reveal .progress {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .reveal .progress span {
+      background: var(--brand-cerulean);
+    }
+
+    .reveal .slide-number {
+      font-family: var(--font-family);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      background: rgba(26, 33, 41, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      padding: 0.35rem 0.65rem;
+      border-radius: 6px;
+      right: 24px;
+      left: auto;
+      bottom: 24px;
+    }
+
+    /* Loading overlay */
+    #deck-loading-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--bg-canvas);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 150;
+      transition: opacity 0.3s ease;
+    }
+
+    .spinner {
+      width: 48px;
+      height: 48px;
+      border: 4px solid rgba(64, 169, 255, 0.2);
+      border-top-color: var(--brand-cerulean);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-bottom: 1.5rem;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* Toast notification */
+    .toast-msg {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(100px);
+      background: #0f172a;
+      border: 1px solid var(--brand-cerulean);
+      color: #ffffff;
+      padding: 0.65rem 1.25rem;
+      border-radius: 8px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      z-index: 300;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      pointer-events: none;
+    }
+
+    .toast-msg.show {
+      transform: translateX(-50%) translateY(0);
+    }
+  </style>
+</head>
+<body>
+  <!-- Accessibility Skip Link -->
+  <a href="#reveal-slides-root" class="skip-link">{{ i18n "skip_to_main" | default "Skip to main content" }}</a>
+
+  <!-- Loading State -->
+  <div id="deck-loading-overlay">
+    <div class="spinner"></div>
+    <div style="font-size: 1.15rem; font-weight: 600; color: #ffffff;">Preparing Reveal.js presentation…</div>
+    <p style="color: var(--text-muted); font-size: 0.9rem; margin-top: 0.5rem;" id="loading-detail">Loading deck fragments</p>
+  </div>
+
+  <!-- Persistent Top Header HUD -->
+  <header class="deck-topbar" id="deck-topbar">
+    <div class="deck-brand-wrap">
+      <a href="{{ `content/` | relLangURL }}" class="deck-topbar-brand" title="Citizens' Track on AI - Toolkit">
+        <img src="{{ "images/logos/logo-wide-negative.svg" | relURL }}" alt="Citizens' Track on AI" class="deck-logo-img">
+      </a>
+      <div class="deck-title-badge" id="hud-deck-title">Presentation</div>
+      <div id="deck-fallback-badge-container"></div>
+    </div>
+  </header>
+
+  <!-- Floating Bottom-Right Controls Dock -->
+  <aside class="deck-dock-container" id="deck-dock-container" aria-label="Presentation controls">
+    
+    <!-- Expanded Options Popover Menu -->
+    <div class="deck-dock-popover" id="deck-dock-popover" role="dialog" aria-modal="true" aria-label="Presentation options">
+      <div class="popover-header">
+        <span class="popover-title">Deck Options</span>
+      </div>
+
+      <div class="popover-menu-list">
+        <button type="button" class="popover-menu-btn" id="dock-btn-playlist" title="Choose or combine slide decks (Press P)">
+          <span class="emoji-icon">📋</span>
+          <span>Combined Playlist (<span id="hud-deck-count">1</span>)</span>
+          <span class="shortcut-hint">P</span>
+        </button>
+
+        <button type="button" class="popover-menu-btn" id="dock-btn-speaker" title="Open Speaker View with notes (Press S)">
+          <span class="emoji-icon">🎙️</span>
+          <span>Speaker View</span>
+          <span class="shortcut-hint">S</span>
+        </button>
+
+        <button type="button" class="popover-menu-btn" id="dock-btn-overview" title="Slide Overview Grid (Press ESC)">
+          <span class="emoji-icon">🔲</span>
+          <span>Overview Grid</span>
+          <span class="shortcut-hint">ESC</span>
+        </button>
+      </div>
+
+      <div class="popover-text-size-section">
+        <div class="text-size-header">
+          <span class="text-size-label">Slide Text Size</span>
+          <span class="text-size-display" id="text-size-display">100%</span>
+        </div>
+        <div class="text-size-controls">
+          <button type="button" class="text-size-btn" id="btn-text-size-decrease" title="Smaller slide text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>A-</span>
+          </button>
+          <button type="button" class="text-size-btn" id="btn-text-size-increase" title="Larger slide text">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+            <span>A+</span>
+          </button>
+          <button type="button" class="text-size-reset-btn" id="btn-text-size-reset" title="Reset font size to default (100%)">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Visible Dock Pill Bar -->
+    <div class="deck-dock-bar">
+      <!-- Back Icon Button -->
+      <a href="{{ `content/` | relLangURL }}" class="dock-icon-btn" id="dock-btn-back" title="Back to Toolkit">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M19 12H5"></path>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+
+      <!-- Fullscreen Icon Button -->
+      <button type="button" class="dock-icon-btn" id="dock-btn-fullscreen" title="Toggle Fullscreen (F)">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"></path>
+        </svg>
+      </button>
+
+      <!-- Expand (+) Icon Button -->
+      <button type="button" class="dock-icon-btn primary" id="dock-btn-expand" title="More Options & Settings" aria-expanded="false" aria-controls="deck-dock-popover">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="dock-expand-icon">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </button>
+    </div>
+
+  </aside>
+
+  <!-- Reveal Container -->
+  <div class="reveal">
+    <div class="slides" id="reveal-slides-root">
+      <!-- Injected dynamically by presentation engine -->
+    </div>
+  </div>
+
+  <!-- Playlist / Deck Combiner Modal -->
+  <div class="playlist-modal-backdrop" id="playlist-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="playlist-modal-title">
+    <div class="playlist-modal">
+      <div class="modal-header">
+        <div class="modal-title" id="playlist-modal-title">
+          <span>🎛️ Combine Slide Decks</span>
+        </div>
+        <button type="button" class="modal-close-btn" id="btn-close-playlist" aria-label="Close modal">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <label style="font-size: 0.85rem; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.05em;">
+            Select Decks to Include
+          </label>
+          <div style="display: flex; gap: 0.5rem;">
+            <button type="button" class="deck-btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" id="btn-select-all">Select All</button>
+            <button type="button" class="deck-btn" style="padding: 0.2rem 0.5rem; font-size: 0.75rem;" id="btn-clear-all">Clear</button>
+          </div>
+        </div>
+
+        <div class="deck-selection-list" id="deck-selection-list">
+          <!-- Rendered dynamically from manifest -->
+        </div>
+
+        <!-- Mode Selection -->
+        <div class="mode-select-group">
+          <span class="mode-select-label">Navigation Hierarchy</span>
+          <div class="mode-options-grid">
+            <div class="mode-option-card active" data-mode="2d" id="mode-card-2d">
+              <div class="mode-option-title">
+                <span>🔲 2D Chapter Grid</span>
+              </div>
+              <div class="mode-option-desc">
+                Horizontal arrows switch between decks/topics. Vertical arrows navigate cards within each topic.
+              </div>
+            </div>
+            <div class="mode-option-card" data-mode="linear" id="mode-card-linear">
+              <div class="mode-option-title">
+                <span>➡️ Continuous Linear</span>
+              </div>
+              <div class="mode-option-desc">
+                All cards flow in one continuous 1D sequence from start to finish.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <div class="selection-summary">
+          <span id="modal-selected-summary"><strong>0</strong> decks selected</span>
+        </div>
+        <div style="display: flex; gap: 0.5rem;">
+          <button type="button" class="deck-btn" id="btn-copy-link" title="Copy direct link to this combined presentation">
+            🔗 Copy Link
+          </button>
+          <button type="button" class="deck-btn primary" id="btn-launch-presentation">
+            ▶️ Launch Presentation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast message -->
+  <div class="toast-msg" id="toast-msg">Link copied to clipboard!</div>
+
+  <!-- Reveal.js & Notes Plugin (Locally Vendored for Offline Resilience) -->
+  <script src="{{ "vendor/reveal/reveal.js" | relURL }}"></script>
+  <script src="{{ "vendor/reveal/plugin/notes/notes.js" | relURL }}"></script>
+
+  <script>
+  (function() {
+    'use strict';
+
+    // State
+    let allAvailableDecks = [];
+    let selectedDeckSlugs = [];
+    let presentationMode = '2d'; // '2d' or 'linear'
+    let revealDeck = null;
+    let modalTriggerElement = null;
+
+    const logoWideNegativeUrl = '{{ "images/logos/logo-wide-negative.svg" | relURL }}';
+    const slidesUrl = '{{ "content/slides.json" | relLangURL }}';
+    const defaultSlidesUrl = '{{ "content/slides.json" | relURL }}';
+    const fallbackText = {{ i18n "showing_fallback_deck" | default "⚠️ Showing English (untranslated deck)" }};
+
+    const slidesRoot = document.getElementById('reveal-slides-root');
+    const loadingOverlay = document.getElementById('deck-loading-overlay');
+    const loadingDetail = document.getElementById('loading-detail');
+    const playlistModal = document.getElementById('playlist-modal-backdrop');
+    const selectionList = document.getElementById('deck-selection-list');
+    const modalSummary = document.getElementById('modal-selected-summary');
+    const hudDeckTitle = document.getElementById('hud-deck-title');
+    const hudDeckCount = document.getElementById('hud-deck-count');
+    const toastEl = document.getElementById('toast-msg');
+
+    // Security sanitizers to prevent attribute injection & XSS
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function sanitizeUrl(url) {
+      if (!url) return '';
+      const trimmed = String(url).trim();
+      if (/^(?:https?:|\/|\.\/|\.\.\/)/i.test(trimmed)) {
+        return escapeAttr(trimmed);
+      }
+      return '';
+    }
+
+    function showToast(msg) {
+      if (!toastEl) return;
+      toastEl.textContent = msg;
+      toastEl.classList.add('show');
+      setTimeout(() => toastEl.classList.remove('show'), 2500);
+    }
+
+    // Parse URL query params
+    function parseParams() {
+      const url = new URL(window.location.href);
+      const decksParam = url.searchParams.get('decks') || url.searchParams.get('items');
+      const modeParam = url.searchParams.get('mode');
+
+      if (modeParam === 'linear' || modeParam === '2d') {
+        presentationMode = modeParam;
+      }
+
+      if (decksParam) {
+        selectedDeckSlugs = decksParam.split(',').map(s => s.trim()).filter(Boolean);
+      } else {
+        selectedDeckSlugs = [];
+      }
+    }
+
+    // Fetch master slide manifest with untranslated fallback
+    async function loadDecks() {
+      try {
+        loadingDetail.textContent = 'Fetching deck index…';
+        let res;
+        let isFallback = false;
+
+        try {
+          res = await fetch(slidesUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${slidesUrl}`);
+        } catch (fetchErr) {
+          if (slidesUrl !== defaultSlidesUrl) {
+            console.warn(`Deck not found for current language at ${slidesUrl}, falling back to default ${defaultSlidesUrl}`);
+            res = await fetch(defaultSlidesUrl);
+            if (!res.ok) throw new Error(`HTTP ${res.status} fetching default slides`);
+            isFallback = true;
+          } else {
+            throw fetchErr;
+          }
+        }
+
+        const data = await res.json();
+        allAvailableDecks = data.items || [];
+
+        if (isFallback) {
+          const container = document.getElementById('deck-fallback-badge-container');
+          if (container) {
+            container.innerHTML = `<span class="deck-fallback-badge" role="status">${escapeAttr(fallbackText)}</span>`;
+          }
+        }
+
+        parseParams();
+
+        // If no decks specified in query string, default to first deck or open combiner
+        if (selectedDeckSlugs.length === 0) {
+          if (allAvailableDecks.length > 0) {
+            // Default to first deck
+            selectedDeckSlugs = [allAvailableDecks[0].slug];
+            renderPlaylistModal();
+            openPlaylistModal();
+          }
+        }
+
+        renderPlaylistModal();
+        buildAndMountPresentation();
+      } catch (err) {
+        console.error('Failed to load slides:', err);
+        loadingDetail.innerHTML = `<span style="color: #ff5f6f;">Error loading slides: ${escapeAttr(err.message)}</span>`;
+      }
+    }
+
+    // Render an individual card element into HTML (with strict attribute escaping to prevent XSS)
+    function renderElementSlide(el, deckTitle) {
+      const type = el.type;
+      let badgeClass = 'slide-tag';
+      let tagText = 'Information';
+
+      if (type === 'quiz_question') { badgeClass += ' quiz'; tagText = 'Quiz Question'; }
+      else if (type === 'statistic') { badgeClass += ' stat'; tagText = 'Statistic'; }
+      else if (type === 'perspective') { badgeClass += ' perspective'; tagText = 'Perspective'; }
+      else if (type === 'takeaways') { badgeClass += ' takeaways'; tagText = 'Takeaways'; }
+
+      const safeDeckTitle = escapeAttr(deckTitle);
+      const safeImg = sanitizeUrl(el.image);
+      const safeAlt = escapeAttr(el.image_alt || '');
+      const safeAttribution = escapeAttr(el.image_attribution || '');
+      const safeCitation = escapeAttr(el.citation || '');
+      let speakerNotes = el.notes || '';
+
+      // QUIZ QUESTION: generates 2 slides (Question slide, then Answer slide)
+      if (type === 'quiz_question') {
+        const questionSlide = `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
+            </div>
+            ${safeImg ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="slide-main-title small">${el.question || ''}</div>
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAlt || safeAttribution ? `
+                    <div class="slide-media-caption">
+                      ${safeAlt ? `<span>${safeAlt}</span>` : ''}
+                      ${safeAttribution ? `<span> — Credit: ${safeAttribution}</span>` : ''}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="slide-main-title">${el.question || ''}</div>
+            `}
+            <aside class="notes">
+              <p><strong>Question Slide:</strong></p>
+              ${speakerNotes || '<p>Invite participants to discuss or guess before advancing to reveal the answer.</p>'}
+            </aside>
+          </section>
+        `;
+
+        const answerSlide = `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="slide-tag answer">Quiz Answer</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
+            </div>
+            <div class="slide-main-title small" style="color: var(--brand-reef-teal);">
+              ${el.answer || ''}
+            </div>
+            ${el.explanation ? `
+              <div class="slide-body-text" style="font-size: 1.45rem; color: #cbd5e1; margin-top: 1rem;">
+                ${el.explanation}
+              </div>
+            ` : ''}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Answer & Explanation:</strong></p>
+              ${speakerNotes || el.explanation || '<p>Debrief and answer questions.</p>'}
+            </aside>
+          </section>
+        `;
+
+        return questionSlide + answerSlide;
+      }
+
+      // STATISTIC
+      if (type === 'statistic') {
+        const safeFigure = escapeAttr(el.figure || '');
+        const safeDesc = escapeAttr(el.description || '');
+        return `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
+            </div>
+            ${safeImg ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="stat-hero-number">${safeFigure}</div>
+                  <div class="slide-main-title small">${safeDesc}</div>
+                  ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.35rem; color: #cbd5e1;">${el.explanation}</div>` : ''}
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAttribution ? `<div class="slide-media-caption">Credit: ${safeAttribution}</div>` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="stat-hero-number">${safeFigure}</div>
+              <div class="slide-main-title small">${safeDesc}</div>
+              ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.4rem; color: #cbd5e1; margin-top: 1rem;">${el.explanation}</div>` : ''}
+            `}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Statistic Insight:</strong></p>
+              ${speakerNotes || el.explanation || '<p>Share background context on this data point.</p>'}
+            </aside>
+          </section>
+        `;
+      }
+
+      // PERSPECTIVE
+      if (type === 'perspective') {
+        const safePerspectiveAttr = escapeAttr(el.attribution || '');
+        return `
+          <section class="slide-card-container">
+            <div class="slide-badge-header">
+              <span class="${badgeClass}">${tagText}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
+            </div>
+            ${safeImg ? `
+              <div class="slide-split-grid">
+                <div>
+                  <div class="perspective-quote-wrap">
+                    <div class="perspective-quote-text">“${el.quote || ''}”</div>
+                    ${safePerspectiveAttr ? `<div class="perspective-attribution">— ${safePerspectiveAttr}</div>` : ''}
+                  </div>
+                </div>
+                <div class="slide-media-wrap">
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAttribution ? `<div class="slide-media-caption">Credit: ${safeAttribution}</div>` : ''}
+                </div>
+              </div>
+            ` : `
+              <div class="perspective-quote-wrap">
+                <div class="perspective-quote-text">“${el.quote || ''}”</div>
+                ${safePerspectiveAttr ? `<div class="perspective-attribution">— ${safePerspectiveAttr}</div>` : ''}
+              </div>
+            `}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
+            <aside class="notes">
+              <p><strong>Perspective Discussion:</strong></p>
+              ${speakerNotes || '<p>Ask participants how this perspective resonates with their lived experience.</p>'}
+            </aside>
+          </section>
+        `;
+      }
+
+      // INFORMATION or TAKEAWAYS (Default)
+      return `
+        <section class="slide-card-container">
+          <div class="slide-badge-header">
+            <span class="${badgeClass}">${tagText}</span>
+            <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
+          </div>
+          ${safeImg ? `
+            <div class="slide-split-grid">
+              <div class="slide-body-text">
+                ${el.text || ''}
+              </div>
+              <div class="slide-media-wrap">
+                <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                ${safeAlt || safeAttribution ? `
+                  <div class="slide-media-caption">
+                    ${safeAlt ? `<span>${safeAlt}</span>` : ''}
+                    ${safeAttribution ? `<span> — Credit: ${safeAttribution}</span>` : ''}
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          ` : `
+            <div class="slide-body-text">
+              ${el.text || ''}
+            </div>
+          `}
+          ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
+          <aside class="notes">
+            <p><strong>Speaker Notes:</strong></p>
+            ${speakerNotes || '<p>Deliver key concept and check for comprehension.</p>'}
+          </aside>
+        </section>
+      `;
+    }
+
+    // Chapter Title Slide for a deck
+    function renderChapterSlide(deck) {
+      const safeTitle = escapeAttr(deck.title || '');
+      const safeDesc = escapeAttr(deck.description || '');
+      return `
+        <section class="slide-card-container">
+          <div class="slide-watermark" style="position: absolute; bottom: 2rem; right: 2.5rem; opacity: 0.22; pointer-events: none; z-index: 10;">
+            <img src="${logoWideNegativeUrl}" alt="Citizens' Track on AI" style="height: 32px; width: auto;">
+          </div>
+          <div class="slide-chapter-card">
+            <span class="slide-chapter-tag">Citizens' Track on AI</span>
+            <h1 class="slide-chapter-title">${safeTitle}</h1>
+            ${safeDesc ? `<p class="slide-chapter-desc">${safeDesc}</p>` : ''}
+            <div class="slide-chapter-meta">
+              <span>🃏 ${deck.elements ? deck.elements.length : 0} Cards</span>
+              <span>•</span>
+              <span>CT//AI Toolkit</span>
+            </div>
+          </div>
+          <aside class="notes">
+            <p><strong>Facilitator Overview (${safeTitle}):</strong></p>
+            ${deck.overview || safeDesc || '<p>Introduce the session topic and goals.</p>'}
+          </aside>
+        </section>
+      `;
+    }
+
+    // Build the Reveal slide tree and mount
+    function buildAndMountPresentation() {
+      // Find matching deck objects in the selected order
+      const activeDecks = [];
+      selectedDeckSlugs.forEach(slug => {
+        const found = allAvailableDecks.find(d => d.slug === slug);
+        if (found) activeDecks.push(found);
+      });
+
+      if (activeDecks.length === 0 && allAvailableDecks.length > 0) {
+        activeDecks.push(allAvailableDecks[0]);
+      }
+
+      // Update HUD title and badge
+      if (activeDecks.length === 1) {
+        hudDeckTitle.textContent = activeDecks[0].title;
+      } else {
+        hudDeckTitle.textContent = `${activeDecks.length} Combined Decks (${activeDecks.map(d => d.title).join(', ')})`;
+      }
+      hudDeckCount.textContent = activeDecks.length;
+
+      // Construct slide HTML
+      let html = '';
+
+      if (presentationMode === '2d') {
+        // 2D GRID: Each Deck is an outer horizontal <section>; slides within are vertical <section> tags
+        activeDecks.forEach(deck => {
+          let deckSlides = renderChapterSlide(deck);
+          if (deck.elements && deck.elements.length > 0) {
+            deck.elements.forEach(el => {
+              deckSlides += renderElementSlide(el, deck.title);
+            });
+          }
+          html += `<section>${deckSlides}</section>`;
+        });
+      } else {
+        // CONTINUOUS LINEAR: Flat sequence of slides
+        activeDecks.forEach(deck => {
+          html += renderChapterSlide(deck);
+          if (deck.elements && deck.elements.length > 0) {
+            deck.elements.forEach(el => {
+              html += renderElementSlide(el, deck.title);
+            });
+          }
+        });
+      }
+
+      // Teardown previous Reveal instance if already initialized
+      if (revealDeck) {
+        revealDeck.destroy();
+        revealDeck = null;
+      }
+
+      slidesRoot.innerHTML = html;
+
+      // Initialize Reveal.js with responsive viewport, RTL, and motion preferences
+      const isRtl = document.documentElement.dir === 'rtl';
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobilePortrait = window.innerWidth < 768 && window.innerHeight > window.innerWidth;
+
+      revealDeck = new Reveal({
+        hash: true,
+        history: true,
+        slideNumber: 'c/t',
+        controls: true,
+        controlsTutorial: true,
+        progress: true,
+        center: false,
+        transition: prefersReducedMotion ? 'none' : 'fade',
+        transitionSpeed: 'fast',
+        backgroundTransition: prefersReducedMotion ? 'none' : 'fade',
+        rtl: isRtl,
+        overview: true,
+        width: isMobilePortrait ? 1080 : 1920,
+        height: isMobilePortrait ? 1920 : 1080,
+        margin: isMobilePortrait ? 0.04 : 0.08,
+        minScale: 0.2,
+        maxScale: 2.5,
+        plugins: [ RevealNotes ]
+      });
+
+      revealDeck.initialize().then(() => {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => { loadingOverlay.style.display = 'none'; }, 300);
+      });
+    }
+
+    // Playlist / Combiner Modal logic
+    function renderPlaylistModal() {
+      selectionList.innerHTML = '';
+
+      // Build ordered array: selected slugs first in order, then remaining
+      const orderedSlugs = [...selectedDeckSlugs];
+      allAvailableDecks.forEach(d => {
+        if (!orderedSlugs.includes(d.slug)) {
+          orderedSlugs.push(d.slug);
+        }
+      });
+
+      orderedSlugs.forEach((slug, idx) => {
+        const deck = allAvailableDecks.find(d => d.slug === slug);
+        if (!deck) return;
+
+        const isChecked = selectedDeckSlugs.includes(slug);
+        const row = document.createElement('div');
+        row.className = `deck-item-row ${isChecked ? 'selected' : ''}`;
+        row.dataset.slug = slug;
+
+        row.innerHTML = `
+          <div class="deck-row-left">
+            <input type="checkbox" class="deck-checkbox" ${isChecked ? 'checked' : ''} data-slug="${slug}">
+            <div>
+              <div class="deck-info-title">${deck.title}</div>
+              <div class="deck-info-desc">${deck.description || (deck.overview ? deck.overview.replace(/<[^>]*>?/gm, '').substring(0, 90) + '…' : '')}</div>
+            </div>
+          </div>
+          <div class="deck-row-right">
+            <span class="deck-badge-count">${deck.element_count || (deck.elements ? deck.elements.length : 0)} cards</span>
+            <div class="order-btn-group">
+              <button type="button" class="order-mini-btn btn-move-up" title="Move Up" ${idx === 0 ? 'disabled style="opacity:0.3"' : ''}>▲</button>
+              <button type="button" class="order-mini-btn btn-move-down" title="Move Down" ${idx === orderedSlugs.length - 1 ? 'disabled style="opacity:0.3"' : ''}>▼</button>
+            </div>
+          </div>
+        `;
+
+        // Checkbox change
+        const checkbox = row.querySelector('.deck-checkbox');
+        checkbox.addEventListener('change', (e) => {
+          e.stopPropagation();
+          toggleDeckSelection(slug, checkbox.checked);
+        });
+
+        // Click row to toggle
+        row.addEventListener('click', (e) => {
+          if (e.target.closest('.order-mini-btn')) return;
+          checkbox.checked = !checkbox.checked;
+          toggleDeckSelection(slug, checkbox.checked);
+        });
+
+        // Up / Down reordering
+        const btnUp = row.querySelector('.btn-move-up');
+        const btnDown = row.querySelector('.btn-move-down');
+        btnUp.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveDeck(slug, -1);
+        });
+        btnDown.addEventListener('click', (e) => {
+          e.stopPropagation();
+          moveDeck(slug, 1);
+        });
+
+        selectionList.appendChild(row);
+      });
+
+      updateModalSummary();
+    }
+
+    function toggleDeckSelection(slug, isSelected) {
+      if (isSelected) {
+        if (!selectedDeckSlugs.includes(slug)) selectedDeckSlugs.push(slug);
+      } else {
+        selectedDeckSlugs = selectedDeckSlugs.filter(s => s !== slug);
+      }
+      renderPlaylistModal();
+    }
+
+    function moveDeck(slug, delta) {
+      const idx = selectedDeckSlugs.indexOf(slug);
+      if (idx !== -1) {
+        const targetIdx = idx + delta;
+        if (targetIdx >= 0 && targetIdx < selectedDeckSlugs.length) {
+          const temp = selectedDeckSlugs[idx];
+          selectedDeckSlugs[idx] = selectedDeckSlugs[targetIdx];
+          selectedDeckSlugs[targetIdx] = temp;
+          renderPlaylistModal();
+        }
+      }
+    }
+
+    function updateModalSummary() {
+      modalSummary.innerHTML = `<strong>${selectedDeckSlugs.length}</strong> of ${allAvailableDecks.length} decks selected`;
+    }
+
+    function openPlaylistModal() {
+      modalTriggerElement = document.activeElement;
+      renderPlaylistModal();
+      playlistModal.classList.add('open');
+      const closeBtn = document.getElementById('btn-close-playlist');
+      if (closeBtn) closeBtn.focus();
+    }
+
+    function closePlaylistModal() {
+      playlistModal.classList.remove('open');
+      if (modalTriggerElement && typeof modalTriggerElement.focus === 'function') {
+        modalTriggerElement.focus();
+        modalTriggerElement = null;
+      }
+    }
+
+    // Modal Focus Trap
+    playlistModal.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = playlistModal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          last.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    });
+
+    // Mode cards toggle
+    const modeCard2D = document.getElementById('mode-card-2d');
+    const modeCardLinear = document.getElementById('mode-card-linear');
+
+    function setPresentationMode(mode) {
+      presentationMode = mode;
+      modeCard2D.classList.toggle('active', mode === '2d');
+      modeCardLinear.classList.toggle('active', mode === 'linear');
+    }
+
+    modeCard2D.addEventListener('click', () => setPresentationMode('2d'));
+    modeCardLinear.addEventListener('click', () => setPresentationMode('linear'));
+
+    // Select All / Clear All
+    document.getElementById('btn-select-all').addEventListener('click', () => {
+      selectedDeckSlugs = allAvailableDecks.map(d => d.slug);
+      renderPlaylistModal();
+    });
+
+    document.getElementById('btn-clear-all').addEventListener('click', () => {
+      selectedDeckSlugs = [];
+      renderPlaylistModal();
+    });
+
+    // Launch presentation from modal
+    document.getElementById('btn-launch-presentation').addEventListener('click', () => {
+      if (selectedDeckSlugs.length === 0 && allAvailableDecks.length > 0) {
+        selectedDeckSlugs = [allAvailableDecks[0].slug];
+      }
+
+      // Update URL query string
+      const url = new URL(window.location.href);
+      url.searchParams.set('decks', selectedDeckSlugs.join(','));
+      url.searchParams.set('mode', presentationMode);
+      window.history.replaceState(null, null, url.toString());
+
+      closePlaylistModal();
+      loadingOverlay.style.display = 'flex';
+      loadingOverlay.style.opacity = '1';
+      loadingDetail.textContent = 'Assembling combined presentation…';
+      setTimeout(() => buildAndMountPresentation(), 100);
+    });
+
+    // Copy direct presentation link
+    document.getElementById('btn-copy-link').addEventListener('click', () => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('decks', selectedDeckSlugs.join(','));
+      url.searchParams.set('mode', presentationMode);
+      navigator.clipboard.writeText(url.toString()).then(() => {
+        showToast('Presentation link copied to clipboard!');
+      }).catch(() => {
+        showToast('URL: ' + url.toString());
+      });
+    });
+
+    // Modal close button
+    document.getElementById('btn-close-playlist').addEventListener('click', closePlaylistModal);
+    playlistModal.addEventListener('click', (e) => {
+      if (e.target === playlistModal) closePlaylistModal();
+    });
+
+    // Floating Bottom-Right Dock & Popover
+    const dockExpandBtn = document.getElementById('dock-btn-expand');
+    const dockPopover = document.getElementById('deck-dock-popover');
+
+    function toggleDockPopover(forceState) {
+      if (!dockPopover) return;
+      const isOpen = typeof forceState === 'boolean' ? forceState : !dockPopover.classList.contains('open');
+      dockPopover.classList.toggle('open', isOpen);
+      if (dockExpandBtn) {
+        dockExpandBtn.classList.toggle('active', isOpen);
+        dockExpandBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      }
+    }
+
+    if (dockExpandBtn) {
+      dockExpandBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleDockPopover();
+      });
+    }
+
+    // Close popover when clicking anywhere outside
+    document.addEventListener('click', (e) => {
+      if (dockPopover && dockPopover.classList.contains('open')) {
+        if (!dockPopover.contains(e.target) && dockExpandBtn && !dockExpandBtn.contains(e.target)) {
+          toggleDockPopover(false);
+        }
+      }
+    });
+
+    // Dock Action: Playlist
+    const dockPlaylistBtn = document.getElementById('dock-btn-playlist');
+    if (dockPlaylistBtn) {
+      dockPlaylistBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        openPlaylistModal();
+      });
+    }
+
+    // Dock Action: Speaker View
+    const dockSpeakerBtn = document.getElementById('dock-btn-speaker');
+    if (dockSpeakerBtn) {
+      dockSpeakerBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        if (revealDeck) {
+          const notesPlugin = revealDeck.getPlugin('notes');
+          if (notesPlugin && notesPlugin.open) {
+            notesPlugin.open();
+          } else {
+            window.dispatchEvent(new KeyboardEvent('keydown', { key: 's', keyCode: 83 }));
+          }
+        }
+      });
+    }
+
+    // Dock Action: Overview Grid
+    const dockOverviewBtn = document.getElementById('dock-btn-overview');
+    if (dockOverviewBtn) {
+      dockOverviewBtn.addEventListener('click', () => {
+        toggleDockPopover(false);
+        if (revealDeck) revealDeck.toggleOverview();
+      });
+    }
+
+    // Dock Action: Fullscreen
+    const dockFullscreenBtn = document.getElementById('dock-btn-fullscreen');
+    if (dockFullscreenBtn) {
+      dockFullscreenBtn.addEventListener('click', () => {
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen().catch(err => console.log(err));
+        }
+      });
+    }
+
+    // Slide Font Size Scaling Logic
+    const FONT_SCALES = [0.75, 0.85, 1.0, 1.15, 1.3, 1.5, 1.7];
+    let currentFontScaleIndex = 2; // 1.0 = 100%
+
+    function applyFontScale(index) {
+      if (index < 0) index = 0;
+      if (index >= FONT_SCALES.length) index = FONT_SCALES.length - 1;
+      currentFontScaleIndex = index;
+      const scale = FONT_SCALES[currentFontScaleIndex];
+      document.documentElement.style.setProperty('--slide-font-scale', scale);
+      const percent = Math.round(scale * 100) + '%';
+      const displayEl = document.getElementById('text-size-display');
+      if (displayEl) displayEl.textContent = percent;
+      try {
+        localStorage.setItem('reveal_slide_font_scale_idx', currentFontScaleIndex);
+      } catch (err) {}
+      if (revealDeck && typeof revealDeck.layout === 'function') {
+        revealDeck.layout();
+      }
+    }
+
+    // Load saved font scale on startup
+    try {
+      const savedIdx = localStorage.getItem('reveal_slide_font_scale_idx');
+      if (savedIdx !== null && !isNaN(parseInt(savedIdx, 10))) {
+        applyFontScale(parseInt(savedIdx, 10));
+      } else {
+        applyFontScale(2);
+      }
+    } catch (e) {
+      applyFontScale(2);
+    }
+
+    const btnFontDecrease = document.getElementById('btn-text-size-decrease');
+    if (btnFontDecrease) {
+      btnFontDecrease.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(currentFontScaleIndex - 1);
+      });
+    }
+
+    const btnFontIncrease = document.getElementById('btn-text-size-increase');
+    if (btnFontIncrease) {
+      btnFontIncrease.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(currentFontScaleIndex + 1);
+      });
+    }
+
+    const btnFontReset = document.getElementById('btn-text-size-reset');
+    if (btnFontReset) {
+      btnFontReset.addEventListener('click', (e) => {
+        e.stopPropagation();
+        applyFontScale(2);
+      });
+    }
+
+    // Keyboard shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+      if (e.key === 'p' || e.key === 'P') {
+        e.preventDefault();
+        if (playlistModal.classList.contains('open')) {
+          closePlaylistModal();
+        } else {
+          openPlaylistModal();
+        }
+      } else if (e.key === 'Escape') {
+        if (dockPopover && dockPopover.classList.contains('open')) {
+          e.preventDefault();
+          toggleDockPopover(false);
+          return;
+        }
+        if (playlistModal.classList.contains('open')) {
+          e.preventDefault();
+          closePlaylistModal();
+          return;
+        }
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        if (!document.fullscreenElement) {
+          document.documentElement.requestFullscreen().catch(err => console.log(err));
+        } else {
+          document.exitFullscreen().catch(err => console.log(err));
+        }
+      }
+    });
+
+    // Kickoff load
+    loadDecks();
+  })();
+  </script>
+</body>
+</html>

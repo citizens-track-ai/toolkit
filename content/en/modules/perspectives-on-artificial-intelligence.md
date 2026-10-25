@@ -33,18 +33,11 @@ action: |-
 
   In the last 30 minutes of the session you should work to identify priority **messages** from the group for different audiences.
 
-  * **Hold a brief brainstorm to ask "who can affect AI?"**
+  Use the 'Messages and Actions' slide show.
 
-  * **Introduce the 'People, Government, Companies' canvas** which has 9 boxes representing different levels at which people, governments, and companies make decisions about AI. 
+  {{< content-item "messages-and-actions" >}}
 
-  * **Either:** 
-      - **Invite individuals to come up with "messages" they want to share about the future of AI**
-  or 
-      - **If you are responding to a particular opportunity for input, summarise the framing question, and invite responses.** 
+  Print the actions cards.
 
-  * **Map the messages or question responses onto the canvas** **and cluster**
-
-  * **Use dot-voting to identify priorities**
-
-  Write up a prioritised list of messages.
+  {{< content-item "actions" >}}
 ---
