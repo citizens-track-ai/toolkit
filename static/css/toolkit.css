@@ -1,5 +1,30 @@
 @import url('brand-tokens.css');
 
+/* Accessibility Skip Link */
+.skip-link {
+  position: absolute;
+  top: -100px;
+  left: 1rem;
+  z-index: 10000;
+  padding: 0.6rem 1.25rem;
+  background: var(--ct-color-fjord);
+  color: #ffffff;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  transition: top 0.15s ease;
+  box-shadow: var(--shadow-md);
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 1rem;
+  outline: 3px solid var(--ct-color-cerulean);
+}
+[dir="rtl"] .skip-link {
+  left: auto;
+  right: 1rem;
+}
+
 :root {
   --font-sans: var(--ct-font-family);
   --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
@@ -1111,13 +1136,13 @@ a:hover {
   min-height: 330px;
   height: 330px;
   perspective: 1200px;
-  cursor: pointer;
   user-select: none;
   outline: none;
   border-radius: var(--radius-lg);
+  position: relative;
 }
 
-.card-3d-wrapper:focus-visible .card-3d-inner {
+.card-3d-wrapper:focus-within .card-3d-inner {
   box-shadow: 0 0 0 3px var(--ct-color-cerulean), var(--shadow-lg);
 }
 
@@ -1125,7 +1150,7 @@ a:hover {
   position: relative;
   width: 100%;
   height: 100%;
-  text-align: left;
+  text-align: start;
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   transform-style: preserve-3d;
   border-radius: var(--radius-lg);
@@ -1135,6 +1160,11 @@ a:hover {
 .card-3d-wrapper.is-flipped .card-3d-inner,
 .card-3d-wrapper[data-flipped="true"] .card-3d-inner {
   transform: rotateY(180deg);
+}
+
+[dir="rtl"] .card-3d-wrapper.is-flipped .card-3d-inner,
+[dir="rtl"] .card-3d-wrapper[data-flipped="true"] .card-3d-inner {
+  transform: rotateY(-180deg);
 }
 
 .card-face {
@@ -1168,6 +1198,10 @@ a:hover {
   border-style: dashed;
 }
 
+[dir="rtl"] .card-face-back {
+  transform: rotateY(-180deg);
+}
+
 .card-face-header {
   display: flex;
   justify-content: space-between;
@@ -1183,6 +1217,30 @@ a:hover {
   height: 1px;
 }
 
+.card-flip-prompt-btn {
+  background: var(--color-bg-alt);
+  border: 1px solid var(--color-border);
+  border-radius: 9999px;
+  padding: 0.25rem 0.65rem;
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: var(--color-muted);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  transition: all 0.15s ease;
+  margin-inline-start: auto;
+}
+
+.card-flip-prompt-btn:hover,
+.card-flip-prompt-btn:focus-visible {
+  background: rgba(64, 169, 255, 0.15);
+  color: var(--ct-color-fjord);
+  border-color: var(--ct-color-cerulean);
+  outline: 2px solid var(--ct-color-cerulean);
+}
+
 .card-flip-prompt {
   font-size: 0.725rem;
   font-weight: 700;
@@ -1195,7 +1253,7 @@ a:hover {
   border-radius: 9999px;
   border: 1px solid var(--color-border);
   transition: all 0.15s ease;
-  margin-left: auto;
+  margin-inline-start: auto;
 }
 
 .card-3d-wrapper:hover .card-flip-prompt {
@@ -1208,16 +1266,37 @@ a:hover {
   flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
+  align-items: stretch;
   overflow: hidden;
   padding: 0.25rem 0;
   min-height: 0;
+  position: relative;
+}
+
+.card-face-body.is-truncated::after {
+  content: '…';
+  position: absolute;
+  bottom: 0;
+  inset-inline-end: 0;
+  font-size: 1.25rem;
+  font-weight: 800;
+  line-height: 1;
+  color: var(--color-dark);
+  background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.95) 50%, #ffffff);
+  padding-inline-start: 1.5rem;
+  pointer-events: none;
 }
 
 .card-face-back .card-face-body {
   justify-content: flex-start;
   overflow-y: auto;
 }
+
+.card-face-back .card-face-body.is-truncated::after {
+  background: linear-gradient(to right, transparent, rgba(248, 247, 242, 0.95) 50%, var(--color-surface-subtle));
+}
+
 
 /* Card Front: Information Content (Title & Image) */
 .card-info-front-content {
@@ -1569,11 +1648,18 @@ a:hover {
   box-sizing: border-box;
 }
 
+.print-style-option input[type="radio"]:focus-visible + .print-style-card,
+.print-tile-option input[type="radio"]:focus-visible + .print-tile {
+  outline: 3px solid var(--ct-color-cerulean);
+  outline-offset: 2px;
+}
+
 .print-tile-option input[type="radio"]:checked + .print-tile {
   border-color: var(--color-primary, #0284c7);
   background: #f0f9ff;
   box-shadow: 0 0 0 1px var(--color-primary, #0284c7);
 }
+
 
 .tile-number {
   font-size: 1.4rem;
@@ -1959,6 +2045,79 @@ a:hover {
     max-height: 88mm !important;
     padding: 4.5mm 6.5mm !important;
   }
+
+  /* Paper Size Profiles: US Letter adjustments (215.9mm x 279.4mm) */
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-1 .print-folding-item {
+    height: 172mm !important;
+    max-height: 172mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-1 .print-card-face {
+    height: 172mm !important;
+    max-height: 172mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-2 .print-folding-item {
+    height: 82mm !important;
+    max-height: 82mm !important;
+    margin: 0 0 5mm 0 !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-2 .print-card-face {
+    height: 82mm !important;
+    max-height: 82mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-4 .print-folding-item {
+    height: 56mm !important;
+    max-height: 56mm !important;
+    margin: 0 0 3mm 0 !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-folding-page.per-sheet-4 .print-card-face {
+    height: 56mm !important;
+    max-height: 56mm !important;
+  }
+
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-1 {
+    height: 172mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-1 .print-card-face {
+    height: 155mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-2 {
+    height: 172mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-2 .print-card-face {
+    height: 82mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-4 {
+    height: 172mm !important;
+    grid-template-rows: 82mm 82mm !important;
+    gap: 5mm 6mm !important;
+  }
+  #print-cards-stage[data-paper="letter"] .print-duplex-page.per-sheet-4 .print-card-face {
+    height: 82mm !important;
+  }
+
+  /* Paper Size Profiles: US Legal adjustments (215.9mm x 355.6mm) */
+  #print-cards-stage[data-paper="legal"] .print-folding-page.per-sheet-2 .print-folding-item {
+    height: 92mm !important;
+    max-height: 92mm !important;
+  }
+  #print-cards-stage[data-paper="legal"] .print-folding-page.per-sheet-2 .print-card-face {
+    height: 92mm !important;
+  }
+
+  /* RTL Folding Inversion: Front on right, Back on left */
+  [dir="rtl"] .print-folding-item {
+    direction: rtl !important;
+  }
+  [dir="rtl"] .print-folding-item .print-card-face-front {
+    border-right: none !important;
+    border-left: 1.5px dashed #64748b !important;
+  }
+
+  /* Duplex Long Edge Flip Binding (rotates backs 180deg) */
+  #print-cards-stage[data-flip-binding="long"] .print-duplex-page.print-page-backs .print-card-face {
+    transform: rotate(180deg) !important;
+  }
+
 
   /* --------------------------------------------------------------------------
      CARD FACE INTERNAL FORMATTING (Inside #print-cards-stage)
@@ -2764,6 +2923,38 @@ a:hover {
     gap: 0.75rem;
   }
 }
+
+/* Vestibular Motion Safety */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+
+  .card-3d-inner {
+    transition: none !important;
+  }
+
+  .card-3d-wrapper.is-flipped .card-3d-inner,
+  .card-3d-wrapper[data-flipped="true"] .card-3d-inner {
+    transform: none !important;
+  }
+
+  .card-3d-wrapper.is-flipped .card-face-front,
+  .card-3d-wrapper[data-flipped="true"] .card-face-front {
+    display: none !important;
+  }
+
+  .card-3d-wrapper.is-flipped .card-face-back,
+  .card-3d-wrapper[data-flipped="true"] .card-face-back {
+    display: flex !important;
+    transform: none !important;
+  }
+}
+
 
 
 

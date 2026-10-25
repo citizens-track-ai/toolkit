@@ -1,0 +1,116 @@
+skip_to_main:
+  other: "Passer au contenu principal"
+view_page:
+  other: "Vue page"
+view_cards:
+  other: "Cartes recto-verso"
+view_slides:
+  other: "Présentation de diapositives ↗"
+hide_notes:
+  other: "Masquer les notes"
+show_notes:
+  other: "Afficher les notes"
+print_worksheet:
+  other: "Imprimer la fiche participant"
+print_facilitator:
+  other: "Imprimer la vue facilitateur"
+flip_all:
+  other: "Retourner toutes les cartes"
+flip_all_front:
+  other: "Retourner tout au recto"
+print_cards:
+  other: "Imprimer les cartes"
+print_options:
+  other: "Options d'impression des cartes"
+print_style:
+  other: "Style d'impression"
+folding_style:
+  other: "Style pliable (recto seul)"
+folding_desc:
+  other: "Imprime recto et verso côte à côte avec une ligne de pliage centrale."
+duplex_style:
+  other: "Recto-verso (duplex)"
+duplex_desc:
+  other: "Alterne les pages recto et verso pour l'impression recto-verso."
+paper_size:
+  other: "Format du papier"
+cards_per_sheet:
+  other: "Cartes par feuille"
+large_format:
+  other: "Grand format"
+standard_rec:
+  other: "Standard (Recommandé)"
+compact_deck:
+  other: "Jeu compact"
+flip_binding:
+  other: "Bord de retournement"
+flip_short:
+  other: "Bord court (Par défaut)"
+flip_long:
+  other: "Bord long"
+cancel:
+  other: "Annuler"
+open_print_dialog:
+  other: "Ouvrir la boîte d'impression"
+facilitator_overview:
+  other: "Aperçu facilitateur"
+facilitator_note:
+  other: "Note facilitateur"
+adaptation_guidance:
+  other: "Conseils d'adaptation et de localisation"
+key_takeaways:
+  other: "Points clés"
+quiz_question:
+  other: "Question du quiz"
+quiz_questions:
+  other: "Questions du quiz"
+quiz_answer:
+  other: "Réponse et explication"
+statistic:
+  other: "Statistique"
+statistics:
+  other: "Statistiques"
+perspective:
+  other: "Perspective"
+perspectives:
+  other: "Perspectives"
+information:
+  other: "Information"
+source_citation:
+  other: "Source / Citation"
+credit:
+  other: "Crédit"
+flip_to_answer:
+  other: "Voir la réponse →"
+flip_to_details:
+  other: "Voir les détails →"
+flip_to_front:
+  other: "← Revenir au recto"
+click_to_flip:
+  other: "Cliquer pour retourner ↺"
+cards_intro_hint:
+  other: "Cliquez sur une carte (ou appuyez sur Espace/Entrée) pour basculer entre recto et verso."
+cards_intro_ready:
+  other: "Prêt pour impression sur papier cartonné pour ateliers."
+card_aria_label:
+  other: "Carte interactive"
+showing_fallback_deck:
+  other: "⚠️ Affichage en anglais (non traduit)"
+close_dialog:
+  other: "Fermer la boîte de dialogue"
+collections:
+  other: "Collections"
+content_items:
+  other: "Éléments de contenu"
+activities:
+  other: "Activités"
+modules:
+  other: "Modules"
+home:
+  other: "Accueil"
+collection:
+  other: "Collection"
+content_item:
+  other: "Élément de contenu"
+explore_content:
+  other: "Explorer le contenu et la présentation →"

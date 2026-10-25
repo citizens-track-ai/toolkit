@@ -1,0 +1,116 @@
+skip_to_main:
+  other: "Skip to main content"
+view_page:
+  other: "Page View"
+view_cards:
+  other: "Two-Sided Cards"
+view_slides:
+  other: "Slide Presentation ↗"
+hide_notes:
+  other: "Hide Notes"
+show_notes:
+  other: "Show Notes"
+print_worksheet:
+  other: "Print Worksheet"
+print_facilitator:
+  other: "Print Facilitator View"
+flip_all:
+  other: "Flip All Cards"
+flip_all_front:
+  other: "Flip All to Front"
+print_cards:
+  other: "Print Cards"
+print_options:
+  other: "Print Cards Options"
+print_style:
+  other: "Printing Style"
+folding_style:
+  other: "Folding Style (Single-Sided)"
+folding_desc:
+  other: "Prints Front and Back side-by-side with a central fold line. Fold in half for instant sturdy cards."
+duplex_style:
+  other: "Double-Sided (Duplex)"
+duplex_desc:
+  other: "Alternates a page of Fronts and a page of Backs. Print double-sided and cut out."
+paper_size:
+  other: "Paper Size"
+cards_per_sheet:
+  other: "Cards Per Sheet"
+large_format:
+  other: "Large format"
+standard_rec:
+  other: "Standard (Recommended)"
+compact_deck:
+  other: "Compact deck"
+flip_binding:
+  other: "Duplex Binding Edge"
+flip_short:
+  other: "Flip on Short Edge (Default)"
+flip_long:
+  other: "Flip on Long Edge"
+cancel:
+  other: "Cancel"
+open_print_dialog:
+  other: "Open Print Dialog"
+facilitator_overview:
+  other: "Facilitator Overview"
+facilitator_note:
+  other: "Facilitator Note"
+adaptation_guidance:
+  other: "Adaptation & Localisation Guidance"
+key_takeaways:
+  other: "Key Takeaways"
+quiz_question:
+  other: "Quiz Question"
+quiz_questions:
+  other: "Quiz Questions"
+quiz_answer:
+  other: "Answer & Explanation"
+statistic:
+  other: "Statistic"
+statistics:
+  other: "Statistics"
+perspective:
+  other: "Perspective"
+perspectives:
+  other: "Perspectives"
+information:
+  other: "Information"
+source_citation:
+  other: "Source / Citation"
+credit:
+  other: "Credit"
+flip_to_answer:
+  other: "Flip to Answer →"
+flip_to_details:
+  other: "Flip to Details →"
+flip_to_front:
+  other: "← Flip to Front"
+click_to_flip:
+  other: "Click to flip ↺"
+cards_intro_hint:
+  other: "Click any card (or press Space/Enter) to flip between Front and Back."
+cards_intro_ready:
+  other: "Ready for printing onto cardstock for physical workshops."
+card_aria_label:
+  other: "Interactive card"
+showing_fallback_deck:
+  other: "⚠️ Showing English (untranslated deck)"
+close_dialog:
+  other: "Close dialog"
+collections:
+  other: "Collections"
+content_items:
+  other: "Content Items"
+activities:
+  other: "Activities"
+modules:
+  other: "Modules"
+home:
+  other: "Home"
+collection:
+  other: "Collection"
+content_item:
+  other: "Content Item"
+explore_content:
+  other: "Explore Content & Presentation →"

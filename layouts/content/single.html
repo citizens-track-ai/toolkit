@@ -39,42 +39,42 @@
 <div class="view-switcher-bar">
   <div class="view-tabs" role="tablist">
     <button class="view-tab active" data-target="content-view-page" role="tab" id="tab-page" aria-selected="true">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-      Page View
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      {{ i18n "view_page" | default "Page View" }}
     </button>
     <button class="view-tab" data-target="content-view-cards" role="tab" id="tab-cards" aria-selected="false">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
-      Two-Sided Cards
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+      {{ i18n "view_cards" | default "Two-Sided Cards" }}
     </button>
-    <a href="{{ "present/" | relLangURL }}?decks={{ .File.TranslationBaseName }}" class="view-tab view-tab-link" target="_blank" rel="noopener" title="Open this deck in full Reveal.js presentation mode" style="text-decoration: none;">
-      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
-      Slide Presentation ↗
+    <a href="{{ "present/" | relLangURL }}?decks={{ .File.TranslationBaseName }}" class="view-tab view-tab-link" target="_blank" rel="noopener" title="{{ i18n "view_slides" | default "Slide Presentation ↗" }}" style="text-decoration: none;">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+      {{ i18n "view_slides" | default "Slide Presentation ↗" }}
     </a>
   </div>
 
   <div class="view-actions" id="page-actions">
-    <button type="button" class="action-btn" id="btn-toggle-notes" aria-pressed="true" title="Toggle facilitator notes on or off">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-      <span id="btn-toggle-notes-text">Hide Notes</span>
+    <button type="button" class="action-btn" id="btn-toggle-notes" aria-pressed="true" title="Toggle facilitator notes">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
+      <span id="btn-toggle-notes-text">{{ i18n "hide_notes" | default "Hide Notes" }}</span>
     </button>
-    <button type="button" class="action-btn" id="btn-print-worksheet" title="Print as participant worksheet (without facilitator overview and notes)">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-      Print Worksheet
+    <button type="button" class="action-btn" id="btn-print-worksheet" title="Print worksheet">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      {{ i18n "print_worksheet" | default "Print Worksheet" }}
     </button>
-    <button type="button" class="action-btn primary" id="btn-print-facilitator" title="Print full facilitator view (with overview and notes)">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-      Print Facilitator View
+    <button type="button" class="action-btn primary" id="btn-print-facilitator" title="Print facilitator view">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      {{ i18n "print_facilitator" | default "Print Facilitator View" }}
     </button>
   </div>
 
   <div class="view-actions" id="cards-actions" style="display: none;">
     <button type="button" class="action-btn" id="btn-flip-all">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
-      Flip All Cards
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+      <span id="btn-flip-all-text">{{ i18n "flip_all" | default "Flip All Cards" }}</span>
     </button>
     <button type="button" class="action-btn primary" id="btn-print-cards">
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-      Print Cards
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+      {{ i18n "print_cards" | default "Print Cards" }}
     </button>
   </div>
 </div>
@@ -82,85 +82,142 @@
 <!-- =========================================================================
      PRINT CARDS CONFIGURATION MODAL
      ========================================================================= -->
-<dialog id="print-cards-modal" class="print-modal">
+<dialog id="print-cards-modal" class="print-modal" aria-labelledby="print-modal-title">
   <div class="print-modal-inner">
     <div class="print-modal-header">
-      <div class="print-modal-title">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-        Print Cards Options
+      <div class="print-modal-title" id="print-modal-title">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+        {{ i18n "print_options" | default "Print Cards Options" }}
       </div>
-      <button type="button" class="print-modal-close" id="btn-close-print-modal" aria-label="Close dialog">&times;</button>
+      <button type="button" class="print-modal-close" id="btn-close-print-modal" aria-label="{{ i18n "close_dialog" | default "Close dialog" }}">&times;</button>
     </div>
 
     <form id="print-cards-form" method="dialog">
       <div class="print-modal-section">
-        <label class="print-section-label">Printing Style</label>
+        <label class="print-section-label">{{ i18n "print_style" | default "Printing Style" }}</label>
         <div class="print-style-cards">
           <label class="print-style-option">
             <input type="radio" name="printStyle" value="folding" checked>
             <div class="print-style-card">
-              <div class="print-style-icon">✂️</div>
+              <div class="print-style-icon" aria-hidden="true">✂️</div>
               <div class="print-style-content">
-                <strong>Folding Style (Single-Sided)</strong>
-                <p>Prints Front and Back side-by-side with a central fold line. Fold in half for instant sturdy cards.</p>
+                <strong>{{ i18n "folding_style" | default "Folding Style (Single-Sided)" }}</strong>
+                <p>{{ i18n "folding_desc" | default "Prints Front and Back side-by-side with a central fold line. Fold in half for instant sturdy cards." }}</p>
               </div>
             </div>
           </label>
           <label class="print-style-option">
             <input type="radio" name="printStyle" value="duplex">
             <div class="print-style-card">
-              <div class="print-style-icon">🔄</div>
+              <div class="print-style-icon" aria-hidden="true">🔄</div>
               <div class="print-style-content">
-                <strong>Double-Sided (Duplex)</strong>
-                <p>Alternates a page of Fronts and a page of Backs. Print double-sided (flip on short edge) and cut out.</p>
+                <strong>{{ i18n "duplex_style" | default "Double-Sided (Duplex)" }}</strong>
+                <p>{{ i18n "duplex_desc" | default "Alternates a page of Fronts and a page of Backs. Print double-sided and cut out." }}</p>
               </div>
             </div>
           </label>
         </div>
       </div>
 
+      <!-- Paper Size Selection (Universal Print Support) -->
       <div class="print-modal-section">
-        <label class="print-section-label">Cards Per Sheet</label>
+        <label class="print-section-label">{{ i18n "paper_size" | default "Paper Size" }}</label>
+        <div class="print-radio-tiles">
+          <label class="print-tile-option">
+            <input type="radio" name="paperSize" value="a4" checked>
+            <div class="print-tile">
+              <span class="tile-number" style="font-size: 1.15rem;">A4</span>
+              <span class="tile-desc">210 × 297 mm</span>
+            </div>
+          </label>
+          <label class="print-tile-option">
+            <input type="radio" name="paperSize" value="letter">
+            <div class="print-tile">
+              <span class="tile-number" style="font-size: 1.15rem;">Letter</span>
+              <span class="tile-desc">8.5 × 11 in</span>
+            </div>
+          </label>
+          <label class="print-tile-option">
+            <input type="radio" name="paperSize" value="legal">
+            <div class="print-tile">
+              <span class="tile-number" style="font-size: 1.15rem;">Legal</span>
+              <span class="tile-desc">8.5 × 14 in</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Cards Per Sheet Selection -->
+      <div class="print-modal-section">
+        <label class="print-section-label">{{ i18n "cards_per_sheet" | default "Cards Per Sheet" }}</label>
         <div class="print-radio-tiles">
           <label class="print-tile-option">
             <input type="radio" name="perSheet" value="1">
             <div class="print-tile">
               <span class="tile-number">1</span>
-              <span class="tile-desc">Large format</span>
+              <span class="tile-desc">{{ i18n "large_format" | default "Large format" }}</span>
             </div>
           </label>
           <label class="print-tile-option">
             <input type="radio" name="perSheet" value="2" checked>
             <div class="print-tile">
               <span class="tile-number">2</span>
-              <span class="tile-desc">Standard (Recommended)</span>
+              <span class="tile-desc">{{ i18n "standard_rec" | default "Standard (Recommended)" }}</span>
             </div>
           </label>
           <label class="print-tile-option">
             <input type="radio" name="perSheet" value="4">
             <div class="print-tile">
               <span class="tile-number">4</span>
-              <span class="tile-desc">Compact deck</span>
+              <span class="tile-desc">{{ i18n "compact_deck" | default "Compact deck" }}</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- Duplex Flip Binding Orientation (Appears when Duplex is active) -->
+      <div class="print-modal-section" id="duplex-binding-group" style="display: none;">
+        <label class="print-section-label">{{ i18n "flip_binding" | default "Duplex Binding Edge" }}</label>
+        <div class="print-style-cards">
+          <label class="print-style-option">
+            <input type="radio" name="flipBinding" value="short" checked>
+            <div class="print-style-card">
+              <div class="print-style-icon" aria-hidden="true">↔️</div>
+              <div class="print-style-content">
+                <strong>{{ i18n "flip_short" | default "Flip on Short Edge (Default)" }}</strong>
+                <p>Standard for landscape orientation cards.</p>
+              </div>
+            </div>
+          </label>
+          <label class="print-style-option">
+            <input type="radio" name="flipBinding" value="long">
+            <div class="print-style-card">
+              <div class="print-style-icon" aria-hidden="true">↕️</div>
+              <div class="print-style-content">
+                <strong>{{ i18n "flip_long" | default "Flip on Long Edge" }}</strong>
+                <p>Select if your printer rotates around the long edge.</p>
+              </div>
             </div>
           </label>
         </div>
       </div>
 
       <div class="print-summary-banner">
-        <span class="summary-icon" id="print-summary-icon">✂️</span>
-        <span class="summary-text" id="print-summary-text">Prints 2 cards per sheet in landscape. Front and back are side-by-side with center fold line and cut guide.</span>
+        <span class="summary-icon" id="print-summary-icon" aria-hidden="true">✂️</span>
+        <span class="summary-text" id="print-summary-text">Prints 2 cards per sheet. Front and back are side-by-side with center fold line and cut guide.</span>
       </div>
 
       <div class="print-modal-actions">
-        <button type="button" class="action-btn" id="btn-cancel-print">Cancel</button>
+        <button type="button" class="action-btn" id="btn-cancel-print">{{ i18n "cancel" | default "Cancel" }}</button>
         <button type="submit" class="action-btn primary" id="btn-confirm-print">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
-          Open Print Dialog
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"></polyline><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path><rect x="6" y="14" width="12" height="8"></rect></svg>
+          {{ i18n "open_print_dialog" | default "Open Print Dialog" }}
         </button>
       </div>
     </form>
   </div>
 </dialog>
+
 
 <!-- =========================================================================
      VIEW (a): STANDARD PAGE VIEW (Quiz answers collapsed by default)
@@ -347,206 +404,11 @@
   {{ with .Params.elements }}
     <div class="cards-grid">
       {{ range $idx, $element := . }}
-        <div class="card-3d-wrapper" tabindex="0" role="button" aria-label="Interactive 2-sided card #{{ add $idx 1 }}. Click to flip." data-flipped="false">
-          <div class="card-3d-inner">
-            
-            <!-- CARD FRONT -->
-            <div class="card-face card-face-front{{ if eq $element.type "information" }} card-front-info{{ end }}">
-              <div class="card-face-header">
-                {{ if ne $element.type "information" }}
-                  <span class="element-pill {{ $element.type }}">
-                    {{ if eq $element.type "quiz_question" }}Quiz Question
-                    {{ else if eq $element.type "statistic" }}Statistic / Key Figure
-                    {{ else if eq $element.type "perspective" }}Perspective
-                    {{ else if eq $element.type "takeaways" }}Takeaways
-                    {{ else }}{{ $element.type }}{{ end }}
-                  </span>
-                {{ else }}
-                  <span class="element-pill-spacer"></span>
-                {{ end }}
-                <span class="card-flip-prompt">Click to flip ↺</span>
-              </div>
-
-              <div class="card-face-body">
-                {{ if eq $element.type "quiz_question" }}
-                  <div class="card-main-title">
-                    {{ $element.question | markdownify }}
-                  </div>
-                  {{ with $element.image }}
-                    {{ $alt := or $element.image_alt $element.alt "" }}
-                    {{ $attribution := or $element.image_attribution "" }}
-                    <div class="card-front-image-wrap">
-                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
-                    </div>
-                    {{ if or $alt $attribution }}
-                      <div class="card-image-caption">
-                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
-                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
-                      </div>
-                    {{ end }}
-                  {{ end }}
-                {{ else if eq $element.type "statistic" }}
-                  <div class="card-main-stat">{{ $element.figure }}</div>
-                  <div class="card-main-title">{{ $element.description }}</div>
-                  {{ with $element.image }}
-                    {{ $alt := or $element.image_alt $element.alt "" }}
-                    {{ $attribution := or $element.image_attribution "" }}
-                    <div class="card-front-image-wrap">
-                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
-                    </div>
-                    {{ if or $alt $attribution }}
-                      <div class="card-image-caption">
-                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
-                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
-                      </div>
-                    {{ end }}
-                  {{ end }}
-                {{ else if eq $element.type "perspective" }}
-                  <blockquote class="card-main-quote">
-                    {{ $element.quote | markdownify }}
-                  </blockquote>
-                  {{ with $element.image }}
-                    {{ $alt := or $element.image_alt $element.alt "" }}
-                    {{ $attribution := or $element.image_attribution "" }}
-                    <div class="card-front-image-wrap">
-                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
-                    </div>
-                    {{ if or $alt $attribution }}
-                      <div class="card-image-caption">
-                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
-                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
-                      </div>
-                    {{ end }}
-                  {{ end }}
-                {{ else if eq $element.type "information" }}
-                  {{- $cleanText := replace $element.text "\r\n" "\n" -}}
-                  {{- $lines := split $cleanText "\n" -}}
-                  {{- $firstLine := "" -}}
-                  {{- range $lines -}}
-                    {{- $trimmed := trim . " \t\r\n" -}}
-                    {{- if and (eq $firstLine "") (ne $trimmed "") -}}
-                      {{- $firstLine = $trimmed -}}
-                    {{- end -}}
-                  {{- end -}}
-                  <div class="card-info-front-content">
-                    <div class="card-front-title">
-                      {{ $firstLine | markdownify }}
-                    </div>
-                    {{ with $element.image }}
-                      {{ $alt := or $element.image_alt $element.alt "" }}
-                      {{ $attribution := or $element.image_attribution "" }}
-                      <div class="card-front-image-wrap">
-                        <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
-                      </div>
-                      {{ if or $alt $attribution }}
-                        <div class="card-image-caption">
-                          {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
-                          {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
-                        </div>
-                      {{ end }}
-                    {{ end }}
-                  </div>
-                {{ else if eq $element.type "takeaways" }}
-                  <div class="card-main-title" style="color: var(--ct-color-deep-redwood);">
-                    Key Takeaways & Summary
-                  </div>
-                  <div style="font-size: 0.95rem; color: var(--color-slate);">
-                    Flip to reveal key reflection points
-                  </div>
-                  {{ with $element.image }}
-                    {{ $alt := or $element.image_alt $element.alt "" }}
-                    {{ $attribution := or $element.image_attribution "" }}
-                    <div class="card-front-image-wrap">
-                      <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image">
-                    </div>
-                    {{ if or $alt $attribution }}
-                      <div class="card-image-caption">
-                        {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
-                        {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}Credit: {{ . }}</span>{{ end }}
-                      </div>
-                    {{ end }}
-                  {{ end }}
-                {{ end }}
-              </div>
-
-              <div class="card-face-footer">
-                <button type="button" class="card-flip-btn" tabindex="-1">
-                  {{ if eq $element.type "quiz_question" }}Flip to Answer &rarr;{{ else }}Flip to Details &rarr;{{ end }}
-                </button>
-              </div>
-            </div>
-
-            <!-- CARD BACK -->
-            <div class="card-face card-face-back">
-              <div class="card-face-header">
-                <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: var(--ct-color-fjord); border: 1px solid rgba(64, 169, 255, 0.3);">
-                  {{ if eq $element.type "quiz_question" }}Answer & Explanation
-                  {{ else if eq $element.type "statistic" }}Context & Insight
-                  {{ else if eq $element.type "perspective" }}Attribution & Context
-                  {{ else if eq $element.type "information" }}Details & Notes
-                  {{ else if eq $element.type "takeaways" }}Key Takeaways
-                  {{ else }}Details{{ end }}
-                </span>
-                <span class="card-flip-prompt">Click to flip ↺</span>
-              </div>
-
-              <div class="card-face-body">
-                {{ if eq $element.type "quiz_question" }}
-                  <div style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
-                    {{ $element.answer | markdownify }}
-                  </div>
-                  {{ with $element.explanation }}
-                    <div style="font-size: 0.875rem; color: var(--color-slate); line-height: 1.5; margin-top: 0.5rem;">
-                      {{ . | markdownify }}
-                    </div>
-                  {{ end }}
-                {{ else if eq $element.type "statistic" }}
-                  <div style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">
-                    {{ $element.description }}
-                  </div>
-                  {{ with $element.explanation }}
-                    <div style="font-size: 0.875rem; color: var(--color-slate); line-height: 1.5;">
-                      {{ . | markdownify }}
-                    </div>
-                  {{ end }}
-                {{ else if eq $element.type "perspective" }}
-                  {{ with $element.attribution }}
-                    <div style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
-                      — {{ . }}
-                    </div>
-                  {{ end }}
-                  <div style="font-size: 0.85rem; color: var(--color-muted); font-style: italic;">
-                    Speaker / Source Perspective
-                  </div>
-                {{ else if eq $element.type "information" }}
-                  <div class="card-back-text">
-                    {{ $element.text | markdownify }}
-                  </div>
-                {{ else if eq $element.type "takeaways" }}
-                  <div class="card-back-text">
-                    {{ $element.text | markdownify }}
-                  </div>
-                {{ end }}
-
-                {{ with $element.citation }}
-                  <div class="citation-line" style="margin-top: 0.5rem; font-size: 0.7rem;">
-                    Source: {{ . }}
-                  </div>
-                {{ end }}
-              </div>
-
-              <div class="card-face-footer">
-                <button type="button" class="card-flip-btn" tabindex="-1">&larr; Flip to Front</button>
-              </div>
-            </div>
-
-          </div>
-        </div>
+        {{ partial "components/card.html" (dict "element" $element "index" $idx "pageContext" $) }}
       {{ end }}
     </div>
   {{ end }}
 </div>
-
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -569,6 +431,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (pageActions) pageActions.style.display = targetId === 'content-view-page' ? 'flex' : 'none';
     if (cardsActions) cardsActions.style.display = targetId === 'content-view-cards' ? 'flex' : 'none';
+
+    if (targetId === 'content-view-cards') {
+      fitAllCardTexts();
+    }
 
     // Update URL hash
     const viewName = targetId.replace('content-view-', '');
@@ -604,7 +470,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (btnToggleNotes) {
       btnToggleNotes.setAttribute('aria-pressed', notesVisible.toString());
       if (btnToggleNotesText) {
-        btnToggleNotesText.textContent = notesVisible ? 'Hide Notes' : 'Show Notes';
+        btnToggleNotesText.textContent = notesVisible ? '{{ i18n "hide_notes" | default "Hide Notes" }}' : '{{ i18n "show_notes" | default "Show Notes" }}';
       }
     }
   }
@@ -646,47 +512,121 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 
   // =========================================================================
-  // 2. TWO-SIDED CARDS (3D FLIP LOGIC ON SCREEN)
+  // 2. TWO-SIDED CARDS: AUTO-RESIZING (DOWN TO 12pt) & ACCESSIBLE FLIP
   // =========================================================================
+  function fitAllCardTexts(container = document) {
+    const cardFaces = container.querySelectorAll('.card-face');
+    cardFaces.forEach(face => {
+      const body = face.querySelector('.card-face-body');
+      const fitTargets = face.querySelectorAll('.card-fit-text');
+      if (!body || fitTargets.length === 0) return;
+
+      fitTargets.forEach(el => {
+        let fontSize = parseFloat(window.getComputedStyle(el).fontSize);
+        const minSizePx = 16; // 12pt = 16px min
+
+        while (body.scrollHeight > body.clientHeight && fontSize > minSizePx) {
+          fontSize -= 0.5;
+          el.style.fontSize = fontSize + 'px';
+          el.style.lineHeight = '1.25';
+        }
+
+        if (body.scrollHeight > body.clientHeight) {
+          body.classList.add('is-truncated');
+        } else {
+          body.classList.remove('is-truncated');
+        }
+      });
+    });
+  }
+
+  // Initial fit
+  setTimeout(fitAllCardTexts, 100);
+  window.addEventListener('resize', () => {
+    clearTimeout(window._cardResizeTimer);
+    window._cardResizeTimer = setTimeout(fitAllCardTexts, 150);
+  });
+
+  // Card Flip Logic: Accessible & Touch-Friendly
   const cardWrappers = document.querySelectorAll('#content-view-cards .card-3d-wrapper');
-  cardWrappers.forEach(card => {
-    function toggleCard() {
-      const isFlipped = card.dataset.flipped === 'true';
-      card.dataset.flipped = (!isFlipped).toString();
-      card.classList.toggle('is-flipped', !isFlipped);
+  const isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+
+  function flipCard(card, targetState) {
+    const isCurrentlyFlipped = card.dataset.flipped === 'true';
+    const nextState = typeof targetState === 'boolean' ? targetState : !isCurrentlyFlipped;
+
+    card.dataset.flipped = nextState.toString();
+    card.classList.toggle('is-flipped', nextState);
+
+    const front = card.querySelector('.card-face-front');
+    const back = card.querySelector('.card-face-back');
+    const triggers = card.querySelectorAll('.card-flip-trigger');
+
+    if (front && back) {
+      if (nextState) {
+        front.setAttribute('aria-hidden', 'true');
+        front.setAttribute('inert', '');
+        back.removeAttribute('aria-hidden');
+        back.removeAttribute('inert');
+      } else {
+        back.setAttribute('aria-hidden', 'true');
+        back.setAttribute('inert', '');
+        front.removeAttribute('aria-hidden');
+        front.removeAttribute('inert');
+      }
     }
 
-    card.addEventListener('click', (e) => {
-      if (e.target.tagName.toLowerCase() === 'a') return;
-      toggleCard();
+    triggers.forEach(trig => {
+      trig.setAttribute('aria-expanded', nextState.toString());
+    });
+  }
+
+  cardWrappers.forEach(card => {
+    // Explicit flip triggers
+    const triggers = card.querySelectorAll('.card-flip-trigger');
+    triggers.forEach(trig => {
+      trig.addEventListener('click', (e) => {
+        e.stopPropagation();
+        flipCard(card);
+      });
     });
 
+    // On non-touch desktop, clicking the card body flips (unless clicking link/button)
+    if (!isTouchDevice) {
+      card.addEventListener('click', (e) => {
+        if (e.target.closest('a, button, input, summary, details')) return;
+        flipCard(card);
+      });
+    }
+
+    // Keyboard support: Space or Enter on card wrapper
     card.addEventListener('keydown', (e) => {
+      if (e.target.closest('a, button, input')) return;
       if (e.key === ' ' || e.key === 'Enter') {
         e.preventDefault();
-        toggleCard();
+        flipCard(card);
       }
     });
   });
 
   // Flip All Cards button
   const btnFlipAll = document.getElementById('btn-flip-all');
+  const btnFlipAllText = document.getElementById('btn-flip-all-text');
   let allFlipped = false;
   if (btnFlipAll) {
     btnFlipAll.addEventListener('click', () => {
       allFlipped = !allFlipped;
-      cardWrappers.forEach(card => {
-        card.dataset.flipped = allFlipped.toString();
-        card.classList.toggle('is-flipped', allFlipped);
-      });
-      btnFlipAll.textContent = allFlipped ? '↺ Flip All to Front' : '↺ Flip All Cards';
+      cardWrappers.forEach(card => flipCard(card, allFlipped));
+      if (btnFlipAllText) {
+        btnFlipAllText.textContent = allFlipped 
+          ? '{{ i18n "flip_all_front" | default "Flip All to Front" }}' 
+          : '{{ i18n "flip_all" | default "Flip All Cards" }}';
+      }
     });
   }
 
   // =========================================================================
-  // PRINT CARDS MODAL & ISOLATED PRINT STAGING
-  // Operates completely on a detached clone (#print-cards-stage)
-  // so the live page DOM is never modified or disrupted.
+  // PRINT CARDS MODAL & MULTI-PAPER-SIZE STAGING ENGINE
   // =========================================================================
   const printModal = document.getElementById('print-cards-modal');
   const printForm = document.getElementById('print-cards-form');
@@ -694,29 +634,38 @@ document.addEventListener('DOMContentLoaded', () => {
   const btnCancelPrint = document.getElementById('btn-cancel-print');
   const printSummaryText = document.getElementById('print-summary-text');
   const printSummaryIcon = document.getElementById('print-summary-icon');
+  const duplexBindingGroup = document.getElementById('duplex-binding-group');
+  let lastFocusedTrigger = null;
 
   function updatePrintSummary() {
     if (!printForm || !printSummaryText) return;
     const perSheet = printForm.elements['perSheet'].value;
     const style = printForm.elements['printStyle'].value;
+    const paper = printForm.elements['paperSize'].value;
+
+    if (duplexBindingGroup) {
+      duplexBindingGroup.style.display = style === 'duplex' ? 'block' : 'none';
+    }
+
+    const paperLabel = paper === 'letter' ? 'Letter (8.5×11in)' : (paper === 'legal' ? 'Legal (8.5×14in)' : 'A4 (210×297mm)');
 
     if (style === 'folding') {
       if (printSummaryIcon) printSummaryIcon.textContent = '✂️';
       if (perSheet === '1') {
-        printSummaryText.textContent = 'Prints 1 large card per sheet in landscape. Front and back are side-by-side with a central fold line.';
+        printSummaryText.textContent = `Prints 1 large card per sheet (${paperLabel}). Front and back are side-by-side with a central fold line.`;
       } else if (perSheet === '2') {
-        printSummaryText.textContent = 'Prints 2 cards per sheet in landscape. Front and back are side-by-side with center fold line and cut guide.';
+        printSummaryText.textContent = `Prints 2 cards per sheet (${paperLabel}). Front and back are side-by-side with center fold line and cut guide.`;
       } else {
-        printSummaryText.textContent = 'Prints 4 cards per sheet in portrait. Front and back are side-by-side with center fold line and cut guides.';
+        printSummaryText.textContent = `Prints 4 cards per sheet (${paperLabel}). Front and back are side-by-side with center fold line and cut guides.`;
       }
     } else {
       if (printSummaryIcon) printSummaryIcon.textContent = '📄';
       if (perSheet === '1') {
-        printSummaryText.textContent = 'Double-sided (duplex): Sheet 1 is Front, Sheet 2 is Back. Set "Print on both sides" in your printer dialog.';
+        printSummaryText.textContent = `Double-sided (duplex, ${paperLabel}): Sheet 1 is Front, Sheet 2 is Back. Set "Print on both sides" in your printer.`;
       } else if (perSheet === '2') {
-        printSummaryText.textContent = 'Double-sided (duplex): Alternates a page of 2 Fronts and a page of 2 Backs. Set "Print on both sides".';
+        printSummaryText.textContent = `Double-sided (duplex, ${paperLabel}): Alternates a page of 2 Fronts and a page of 2 Backs.`;
       } else {
-        printSummaryText.textContent = 'Double-sided (duplex): Alternates a 2x2 grid of 4 Fronts and mirrored 4 Backs for cutting. Set "Print on both sides".';
+        printSummaryText.textContent = `Double-sided (duplex, ${paperLabel}): Alternates a 2×2 grid of 4 Fronts and mirrored 4 Backs for cutting.`;
       }
     }
   }
@@ -727,26 +676,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
   const savedStyle = localStorage.getItem('cardPrintStyle') || 'folding';
   const savedPerSheet = localStorage.getItem('cardPrintPerSheet') || '2';
+  const savedPaper = localStorage.getItem('cardPrintPaper') || 'a4';
+  const savedBinding = localStorage.getItem('cardPrintBinding') || 'short';
+
   if (printForm) {
     if (printForm.elements['printStyle']) printForm.elements['printStyle'].value = savedStyle;
     if (printForm.elements['perSheet']) printForm.elements['perSheet'].value = savedPerSheet;
+    if (printForm.elements['paperSize']) printForm.elements['paperSize'].value = savedPaper;
+    if (printForm.elements['flipBinding']) printForm.elements['flipBinding'].value = savedBinding;
     updatePrintSummary();
   }
 
-  if (btnClosePrintModal) btnClosePrintModal.addEventListener('click', () => printModal.close());
-  if (btnCancelPrint) btnCancelPrint.addEventListener('click', () => printModal.close());
+  function closeAndRestorePrintModal() {
+    if (printModal && typeof printModal.close === 'function') {
+      printModal.close();
+    }
+    if (lastFocusedTrigger) {
+      lastFocusedTrigger.focus();
+    }
+  }
 
-  function prepareAndPrintCards(style, perSheet) {
+  if (btnClosePrintModal) btnClosePrintModal.addEventListener('click', closeAndRestorePrintModal);
+  if (btnCancelPrint) btnCancelPrint.addEventListener('click', closeAndRestorePrintModal);
+
+  function prepareAndPrintCards(style, perSheet, paperSize, flipBinding) {
     document.body.dataset.printingCards = 'true';
 
     const orientation = (style === 'folding' && perSheet === '4') ? 'portrait' : 'landscape';
+    let sizeDecl = orientation;
+    if (paperSize === 'a4') sizeDecl = `a4 ${orientation}`;
+    else if (paperSize === 'letter') sizeDecl = `letter ${orientation}`;
+    else if (paperSize === 'legal') sizeDecl = `legal ${orientation}`;
+    else sizeDecl = orientation;
+
     let styleEl = document.getElementById('dynamic-print-page');
     if (!styleEl) {
       styleEl = document.createElement('style');
       styleEl.id = 'dynamic-print-page';
       document.head.appendChild(styleEl);
     }
-    styleEl.textContent = `@page { size: ${orientation}; margin: 8mm 10mm; }`;
+    styleEl.textContent = `@page { size: ${sizeDecl}; margin: 6mm 8mm; }`;
 
     let stage = document.getElementById('print-cards-stage');
     if (!stage) {
@@ -758,10 +727,23 @@ document.addEventListener('DOMContentLoaded', () => {
     stage.innerHTML = '';
     stage.dataset.style = style;
     stage.dataset.perSheet = perSheet;
+    stage.dataset.paper = paperSize;
+    stage.dataset.flipBinding = flipBinding;
 
     const wrappers = Array.from(document.querySelectorAll('#content-view-cards .card-3d-wrapper'));
     const count = wrappers.length;
     const n = parseInt(perSheet, 10);
+
+    function cloneCardFace(face, type) {
+      const clone = face.cloneNode(true);
+      clone.removeAttribute('id');
+      clone.removeAttribute('aria-hidden');
+      clone.removeAttribute('inert');
+      clone.className = `card-face print-card-face print-card-face-${type}`;
+      if (face.classList.contains('card-front-info')) clone.classList.add('card-front-info');
+      clone.querySelectorAll('.card-flip-prompt-btn, .card-flip-btn, .card-flip-prompt').forEach(el => el.remove());
+      return clone;
+    }
 
     if (style === 'folding') {
       for (let i = 0; i < count; i += n) {
@@ -776,17 +758,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const item = document.createElement('div');
             item.className = 'print-folding-item';
 
-            const frontClone = front.cloneNode(true);
-            frontClone.className = 'card-face print-card-face print-card-face-front';
-            if (front.classList.contains('card-front-info')) frontClone.classList.add('card-front-info');
-            frontClone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-
-            const backClone = back.cloneNode(true);
-            backClone.className = 'card-face print-card-face print-card-face-back';
-            backClone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-
-            item.appendChild(frontClone);
-            item.appendChild(backClone);
+            item.appendChild(cloneCardFace(front, 'front'));
+            item.appendChild(cloneCardFace(back, 'back'));
             page.appendChild(item);
           }
         });
@@ -801,11 +774,7 @@ document.addEventListener('DOMContentLoaded', () => {
         batch.forEach(card => {
           const front = card.querySelector('.card-face-front');
           if (front) {
-            const clone = front.cloneNode(true);
-            clone.className = 'card-face print-card-face print-card-face-front';
-            if (front.classList.contains('card-front-info')) clone.classList.add('card-front-info');
-            clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-            frontsPage.appendChild(clone);
+            frontsPage.appendChild(cloneCardFace(front, 'front'));
           }
         });
         stage.appendChild(frontsPage);
@@ -816,31 +785,23 @@ document.addEventListener('DOMContentLoaded', () => {
         if (n === 1) {
           const back = batch[0] && batch[0].querySelector('.card-face-back');
           if (back) {
-            const clone = back.cloneNode(true);
-            clone.className = 'card-face print-card-face print-card-face-back';
-            clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-            backsPage.appendChild(clone);
+            backsPage.appendChild(cloneCardFace(back, 'back'));
           }
         } else if (n === 2) {
           batch.forEach(card => {
             const back = card.querySelector('.card-face-back');
             if (back) {
-              const clone = back.cloneNode(true);
-              clone.className = 'card-face print-card-face print-card-face-back';
-              clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-              backsPage.appendChild(clone);
+              backsPage.appendChild(cloneCardFace(back, 'back'));
             }
           });
         } else if (n === 4) {
-          const order = [1, 0, 3, 2];
+          // Imposition matrix: Flip on Short Edge vs Flip on Long Edge
+          const order = flipBinding === 'long' ? [2, 3, 0, 1] : [1, 0, 3, 2];
           order.forEach(idx => {
             if (idx < batch.length) {
               const back = batch[idx].querySelector('.card-face-back');
               if (back) {
-                const clone = back.cloneNode(true);
-                clone.className = 'card-face print-card-face print-card-face-back';
-                clone.querySelectorAll('.card-flip-prompt, .card-flip-btn').forEach(el => el.remove());
-                backsPage.appendChild(clone);
+                backsPage.appendChild(cloneCardFace(back, 'back'));
               }
             } else {
               const empty = document.createElement('div');
@@ -852,6 +813,9 @@ document.addEventListener('DOMContentLoaded', () => {
         stage.appendChild(backsPage);
       }
     }
+
+    // Auto-fit typography inside the staged print cards
+    fitAllCardTexts(stage);
 
     setTimeout(() => {
       window.print();
@@ -873,31 +837,39 @@ document.addEventListener('DOMContentLoaded', () => {
       e.preventDefault();
       const style = printForm.elements['printStyle'].value;
       const perSheet = printForm.elements['perSheet'].value;
+      const paperSize = printForm.elements['paperSize'].value;
+      const flipBinding = printForm.elements['flipBinding'] ? printForm.elements['flipBinding'].value : 'short';
 
       localStorage.setItem('cardPrintStyle', style);
       localStorage.setItem('cardPrintPerSheet', perSheet);
+      localStorage.setItem('cardPrintPaper', paperSize);
+      localStorage.setItem('cardPrintBinding', flipBinding);
 
-      printModal.close();
-      prepareAndPrintCards(style, perSheet);
+      closeAndRestorePrintModal();
+      prepareAndPrintCards(style, perSheet, paperSize, flipBinding);
     });
   }
 
   const btnPrintCards = document.getElementById('btn-print-cards');
   if (btnPrintCards) {
-    btnPrintCards.addEventListener('click', () => {
+    btnPrintCards.addEventListener('click', (e) => {
+      lastFocusedTrigger = e.currentTarget;
       if (printModal && typeof printModal.showModal === 'function') {
         updatePrintSummary();
         printModal.showModal();
+        const firstFocusable = printModal.querySelector('input, button');
+        if (firstFocusable) firstFocusable.focus();
       } else {
         const style = localStorage.getItem('cardPrintStyle') || 'folding';
         const perSheet = localStorage.getItem('cardPrintPerSheet') || '2';
-        prepareAndPrintCards(style, perSheet);
+        const paperSize = localStorage.getItem('cardPrintPaper') || 'a4';
+        const flipBinding = localStorage.getItem('cardPrintBinding') || 'short';
+        prepareAndPrintCards(style, perSheet, paperSize, flipBinding);
       }
     });
   }
-
-
 });
 </script>
 
 {{ end }}
+

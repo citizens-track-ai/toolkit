@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="{{ .Language.Lang | default "en" }}">
+<html lang="{{ .Language.Lang | default "en" }}" dir="{{ if .Language.Params.rtl }}rtl{{ else }}ltr{{ end }}">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>{{ .Title }} | Reveal.js Presenter | Citizens' Track on AI</title>
   
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+  <link rel="stylesheet" href="{{ "css/brand-tokens.css" | relURL }}">
+  <link rel="stylesheet" href="{{ "vendor/reveal/reveal.css" | relURL }}">
   
   <style>
     :root {
@@ -103,11 +100,50 @@
       text-overflow: ellipsis;
     }
 
-    /* Floating Dock at Bottom-Left */
+    /* Accessibility Skip Link */
+    .skip-link {
+      position: absolute;
+      top: -100px;
+      left: 1rem;
+      z-index: 10001;
+      padding: 0.6rem 1.25rem;
+      background: var(--brand-fjord, #00447C);
+      color: #FFFFFF;
+      font-weight: 700;
+      border-radius: 6px;
+      text-decoration: none;
+      transition: top 0.2s ease;
+      font-size: 0.9rem;
+    }
+    .skip-link:focus,
+    .skip-link:focus-visible {
+      top: 1rem;
+      outline: 3px solid var(--brand-cerulean, #40A9FF);
+    }
+    [dir="rtl"] .skip-link {
+      left: auto;
+      right: 1rem;
+    }
+
+    .deck-fallback-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.25rem 0.75rem;
+      background: rgba(255, 196, 64, 0.2);
+      border: 1px solid rgba(255, 196, 64, 0.5);
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--brand-goldenrod, #FFC440);
+      margin-inline-start: 1rem;
+    }
+
+    /* Floating Dock at Bottom-Left with Safe-Area Inset Support */
     .deck-dock-container {
       position: fixed;
-      bottom: 24px;
-      left: 24px;
+      bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+      left: calc(24px + env(safe-area-inset-left, 0px));
       right: auto;
       z-index: 1000;
       display: flex;
@@ -117,9 +153,16 @@
       pointer-events: none;
     }
 
+    [dir="rtl"] .deck-dock-container {
+      left: auto;
+      right: calc(24px + env(safe-area-inset-right, 0px));
+      align-items: flex-end;
+    }
+
     .deck-dock-container * {
       pointer-events: auto;
     }
+
 
     /* Floating Pill Dock Bar */
     .deck-dock-bar {
@@ -939,6 +982,8 @@
   </style>
 </head>
 <body>
+  <!-- Accessibility Skip Link -->
+  <a href="#reveal-slides-root" class="skip-link">{{ i18n "skip_to_main" | default "Skip to main content" }}</a>
 
   <!-- Loading State -->
   <div id="deck-loading-overlay">
@@ -954,6 +999,7 @@
         <img src="{{ "images/logos/logo-wide-negative.svg" | relURL }}" alt="Citizens' Track on AI" class="deck-logo-img">
       </a>
       <div class="deck-title-badge" id="hud-deck-title">Presentation</div>
+      <div id="deck-fallback-badge-container"></div>
     </div>
   </header>
 
@@ -961,7 +1007,7 @@
   <aside class="deck-dock-container" id="deck-dock-container" aria-label="Presentation controls">
     
     <!-- Expanded Options Popover Menu -->
-    <div class="deck-dock-popover" id="deck-dock-popover" role="dialog" aria-label="Presentation options">
+    <div class="deck-dock-popover" id="deck-dock-popover" role="dialog" aria-modal="true" aria-label="Presentation options">
       <div class="popover-header">
         <span class="popover-title">Deck Options</span>
       </div>
@@ -1043,10 +1089,10 @@
   </div>
 
   <!-- Playlist / Deck Combiner Modal -->
-  <div class="playlist-modal-backdrop" id="playlist-modal-backdrop">
+  <div class="playlist-modal-backdrop" id="playlist-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="playlist-modal-title">
     <div class="playlist-modal">
       <div class="modal-header">
-        <div class="modal-title">
+        <div class="modal-title" id="playlist-modal-title">
           <span>🎛️ Combine Slide Decks</span>
         </div>
         <button type="button" class="modal-close-btn" id="btn-close-playlist" aria-label="Close modal">&times;</button>
@@ -1110,9 +1156,9 @@
   <!-- Toast message -->
   <div class="toast-msg" id="toast-msg">Link copied to clipboard!</div>
 
-  <!-- Reveal.js & Notes Plugin -->
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/plugin/notes/notes.js"></script>
+  <!-- Reveal.js & Notes Plugin (Locally Vendored for Offline Resilience) -->
+  <script src="{{ "vendor/reveal/reveal.js" | relURL }}"></script>
+  <script src="{{ "vendor/reveal/plugin/notes/notes.js" | relURL }}"></script>
 
   <script>
   (function() {
@@ -1123,9 +1169,13 @@
     let selectedDeckSlugs = [];
     let presentationMode = '2d'; // '2d' or 'linear'
     let revealDeck = null;
+    let modalTriggerElement = null;
 
     const logoWideNegativeUrl = '{{ "images/logos/logo-wide-negative.svg" | relURL }}';
     const slidesUrl = '{{ "content/slides.json" | relLangURL }}';
+    const defaultSlidesUrl = '{{ "content/slides.json" | relURL }}';
+    const fallbackText = {{ i18n "showing_fallback_deck" | default "⚠️ Showing English (untranslated deck)" }};
+
     const slidesRoot = document.getElementById('reveal-slides-root');
     const loadingOverlay = document.getElementById('deck-loading-overlay');
     const loadingDetail = document.getElementById('loading-detail');
@@ -1135,6 +1185,26 @@
     const hudDeckTitle = document.getElementById('hud-deck-title');
     const hudDeckCount = document.getElementById('hud-deck-count');
     const toastEl = document.getElementById('toast-msg');
+
+    // Security sanitizers to prevent attribute injection & XSS
+    function escapeAttr(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function sanitizeUrl(url) {
+      if (!url) return '';
+      const trimmed = String(url).trim();
+      if (/^(?:https?:|\/|\.\/|\.\.\/)/i.test(trimmed)) {
+        return escapeAttr(trimmed);
+      }
+      return '';
+    }
 
     function showToast(msg) {
       if (!toastEl) return;
@@ -1160,14 +1230,36 @@
       }
     }
 
-    // Fetch master slide manifest
+    // Fetch master slide manifest with untranslated fallback
     async function loadDecks() {
       try {
         loadingDetail.textContent = 'Fetching deck index…';
-        const res = await fetch(slidesUrl);
-        if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${slidesUrl}`);
+        let res;
+        let isFallback = false;
+
+        try {
+          res = await fetch(slidesUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status} fetching ${slidesUrl}`);
+        } catch (fetchErr) {
+          if (slidesUrl !== defaultSlidesUrl) {
+            console.warn(`Deck not found for current language at ${slidesUrl}, falling back to default ${defaultSlidesUrl}`);
+            res = await fetch(defaultSlidesUrl);
+            if (!res.ok) throw new Error(`HTTP ${res.status} fetching default slides`);
+            isFallback = true;
+          } else {
+            throw fetchErr;
+          }
+        }
+
         const data = await res.json();
         allAvailableDecks = data.items || [];
+
+        if (isFallback) {
+          const container = document.getElementById('deck-fallback-badge-container');
+          if (container) {
+            container.innerHTML = `<span class="deck-fallback-badge" role="status">${escapeAttr(fallbackText)}</span>`;
+          }
+        }
 
         parseParams();
 
@@ -1185,11 +1277,11 @@
         buildAndMountPresentation();
       } catch (err) {
         console.error('Failed to load slides:', err);
-        loadingDetail.innerHTML = `<span style="color: #ff5f6f;">Error loading slides: ${err.message}</span>`;
+        loadingDetail.innerHTML = `<span style="color: #ff5f6f;">Error loading slides: ${escapeAttr(err.message)}</span>`;
       }
     }
 
-    // Render an individual card element into HTML
+    // Render an individual card element into HTML (with strict attribute escaping to prevent XSS)
     function renderElementSlide(el, deckTitle) {
       const type = el.type;
       let badgeClass = 'slide-tag';
@@ -1200,6 +1292,11 @@
       else if (type === 'perspective') { badgeClass += ' perspective'; tagText = 'Perspective'; }
       else if (type === 'takeaways') { badgeClass += ' takeaways'; tagText = 'Takeaways'; }
 
+      const safeDeckTitle = escapeAttr(deckTitle);
+      const safeImg = sanitizeUrl(el.image);
+      const safeAlt = escapeAttr(el.image_alt || '');
+      const safeAttribution = escapeAttr(el.image_attribution || '');
+      const safeCitation = escapeAttr(el.citation || '');
       let speakerNotes = el.notes || '';
 
       // QUIZ QUESTION: generates 2 slides (Question slide, then Answer slide)
@@ -1208,19 +1305,19 @@
           <section class="slide-card-container">
             <div class="slide-badge-header">
               <span class="${badgeClass}">${tagText}</span>
-              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
             </div>
-            ${el.image ? `
+            ${safeImg ? `
               <div class="slide-split-grid">
                 <div>
                   <div class="slide-main-title small">${el.question || ''}</div>
                 </div>
                 <div class="slide-media-wrap">
-                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
-                  ${el.image_alt || el.image_attribution ? `
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAlt || safeAttribution ? `
                     <div class="slide-media-caption">
-                      ${el.image_alt ? `<span>${el.image_alt}</span>` : ''}
-                      ${el.image_attribution ? `<span> — Credit: ${el.image_attribution}</span>` : ''}
+                      ${safeAlt ? `<span>${safeAlt}</span>` : ''}
+                      ${safeAttribution ? `<span> — Credit: ${safeAttribution}</span>` : ''}
                     </div>
                   ` : ''}
                 </div>
@@ -1239,7 +1336,7 @@
           <section class="slide-card-container">
             <div class="slide-badge-header">
               <span class="slide-tag answer">Quiz Answer</span>
-              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
             </div>
             <div class="slide-main-title small" style="color: var(--brand-reef-teal);">
               ${el.answer || ''}
@@ -1249,7 +1346,7 @@
                 ${el.explanation}
               </div>
             ` : ''}
-            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
             <aside class="notes">
               <p><strong>Answer & Explanation:</strong></p>
               ${speakerNotes || el.explanation || '<p>Debrief and answer questions.</p>'}
@@ -1262,30 +1359,32 @@
 
       // STATISTIC
       if (type === 'statistic') {
+        const safeFigure = escapeAttr(el.figure || '');
+        const safeDesc = escapeAttr(el.description || '');
         return `
           <section class="slide-card-container">
             <div class="slide-badge-header">
               <span class="${badgeClass}">${tagText}</span>
-              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
             </div>
-            ${el.image ? `
+            ${safeImg ? `
               <div class="slide-split-grid">
                 <div>
-                  <div class="stat-hero-number">${el.figure || ''}</div>
-                  <div class="slide-main-title small">${el.description || ''}</div>
+                  <div class="stat-hero-number">${safeFigure}</div>
+                  <div class="slide-main-title small">${safeDesc}</div>
                   ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.35rem; color: #cbd5e1;">${el.explanation}</div>` : ''}
                 </div>
                 <div class="slide-media-wrap">
-                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
-                  ${el.image_attribution ? `<div class="slide-media-caption">Credit: ${el.image_attribution}</div>` : ''}
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAttribution ? `<div class="slide-media-caption">Credit: ${safeAttribution}</div>` : ''}
                 </div>
               </div>
             ` : `
-              <div class="stat-hero-number">${el.figure || ''}</div>
-              <div class="slide-main-title small">${el.description || ''}</div>
+              <div class="stat-hero-number">${safeFigure}</div>
+              <div class="slide-main-title small">${safeDesc}</div>
               ${el.explanation ? `<div class="slide-body-text" style="font-size: 1.4rem; color: #cbd5e1; margin-top: 1rem;">${el.explanation}</div>` : ''}
             `}
-            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
             <aside class="notes">
               <p><strong>Statistic Insight:</strong></p>
               ${speakerNotes || el.explanation || '<p>Share background context on this data point.</p>'}
@@ -1296,32 +1395,33 @@
 
       // PERSPECTIVE
       if (type === 'perspective') {
+        const safePerspectiveAttr = escapeAttr(el.attribution || '');
         return `
           <section class="slide-card-container">
             <div class="slide-badge-header">
               <span class="${badgeClass}">${tagText}</span>
-              <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+              <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
             </div>
-            ${el.image ? `
+            ${safeImg ? `
               <div class="slide-split-grid">
                 <div>
                   <div class="perspective-quote-wrap">
                     <div class="perspective-quote-text">“${el.quote || ''}”</div>
-                    ${el.attribution ? `<div class="perspective-attribution">— ${el.attribution}</div>` : ''}
+                    ${safePerspectiveAttr ? `<div class="perspective-attribution">— ${safePerspectiveAttr}</div>` : ''}
                   </div>
                 </div>
                 <div class="slide-media-wrap">
-                  <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
-                  ${el.image_attribution ? `<div class="slide-media-caption">Credit: ${el.image_attribution}</div>` : ''}
+                  <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                  ${safeAttribution ? `<div class="slide-media-caption">Credit: ${safeAttribution}</div>` : ''}
                 </div>
               </div>
             ` : `
               <div class="perspective-quote-wrap">
                 <div class="perspective-quote-text">“${el.quote || ''}”</div>
-                ${el.attribution ? `<div class="perspective-attribution">— ${el.attribution}</div>` : ''}
+                ${safePerspectiveAttr ? `<div class="perspective-attribution">— ${safePerspectiveAttr}</div>` : ''}
               </div>
             `}
-            ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+            ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
             <aside class="notes">
               <p><strong>Perspective Discussion:</strong></p>
               ${speakerNotes || '<p>Ask participants how this perspective resonates with their lived experience.</p>'}
@@ -1335,19 +1435,19 @@
         <section class="slide-card-container">
           <div class="slide-badge-header">
             <span class="${badgeClass}">${tagText}</span>
-            <span class="slide-deck-breadcrumb">📁 ${deckTitle}</span>
+            <span class="slide-deck-breadcrumb">📁 ${safeDeckTitle}</span>
           </div>
-          ${el.image ? `
+          ${safeImg ? `
             <div class="slide-split-grid">
               <div class="slide-body-text">
                 ${el.text || ''}
               </div>
               <div class="slide-media-wrap">
-                <img src="${el.image}" alt="${el.image_alt || ''}" class="slide-media-img">
-                ${el.image_alt || el.image_attribution ? `
+                <img src="${safeImg}" alt="${safeAlt}" class="slide-media-img">
+                ${safeAlt || safeAttribution ? `
                   <div class="slide-media-caption">
-                    ${el.image_alt ? `<span>${el.image_alt}</span>` : ''}
-                    ${el.image_attribution ? `<span> — Credit: ${el.image_attribution}</span>` : ''}
+                    ${safeAlt ? `<span>${safeAlt}</span>` : ''}
+                    ${safeAttribution ? `<span> — Credit: ${safeAttribution}</span>` : ''}
                   </div>
                 ` : ''}
               </div>
@@ -1357,7 +1457,7 @@
               ${el.text || ''}
             </div>
           `}
-          ${el.citation ? `<div class="slide-citation">Source: ${el.citation}</div>` : ''}
+          ${safeCitation ? `<div class="slide-citation">Source: ${safeCitation}</div>` : ''}
           <aside class="notes">
             <p><strong>Speaker Notes:</strong></p>
             ${speakerNotes || '<p>Deliver key concept and check for comprehension.</p>'}
@@ -1368,6 +1468,8 @@
 
     // Chapter Title Slide for a deck
     function renderChapterSlide(deck) {
+      const safeTitle = escapeAttr(deck.title || '');
+      const safeDesc = escapeAttr(deck.description || '');
       return `
         <section class="slide-card-container">
           <div class="slide-watermark" style="position: absolute; bottom: 2rem; right: 2.5rem; opacity: 0.22; pointer-events: none; z-index: 10;">
@@ -1375,8 +1477,8 @@
           </div>
           <div class="slide-chapter-card">
             <span class="slide-chapter-tag">Citizens' Track on AI</span>
-            <h1 class="slide-chapter-title">${deck.title}</h1>
-            ${deck.description ? `<p class="slide-chapter-desc">${deck.description}</p>` : ''}
+            <h1 class="slide-chapter-title">${safeTitle}</h1>
+            ${safeDesc ? `<p class="slide-chapter-desc">${safeDesc}</p>` : ''}
             <div class="slide-chapter-meta">
               <span>🃏 ${deck.elements ? deck.elements.length : 0} Cards</span>
               <span>•</span>
@@ -1384,8 +1486,8 @@
             </div>
           </div>
           <aside class="notes">
-            <p><strong>Facilitator Overview (${deck.title}):</strong></p>
-            ${deck.overview || deck.description || '<p>Introduce the session topic and goals.</p>'}
+            <p><strong>Facilitator Overview (${safeTitle}):</strong></p>
+            ${deck.overview || safeDesc || '<p>Introduce the session topic and goals.</p>'}
           </aside>
         </section>
       `;
@@ -1446,7 +1548,11 @@
 
       slidesRoot.innerHTML = html;
 
-      // Initialize Reveal.js
+      // Initialize Reveal.js with responsive viewport, RTL, and motion preferences
+      const isRtl = document.documentElement.dir === 'rtl';
+      const prefersReducedMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const isMobilePortrait = window.innerWidth < 768 && window.innerHeight > window.innerWidth;
+
       revealDeck = new Reveal({
         hash: true,
         history: true,
@@ -1455,15 +1561,16 @@
         controlsTutorial: true,
         progress: true,
         center: false,
-        transition: 'fade',
+        transition: prefersReducedMotion ? 'none' : 'fade',
         transitionSpeed: 'fast',
-        backgroundTransition: 'fade',
+        backgroundTransition: prefersReducedMotion ? 'none' : 'fade',
+        rtl: isRtl,
         overview: true,
-        width: 1920,
-        height: 1080,
-        margin: 0.08,
+        width: isMobilePortrait ? 1080 : 1920,
+        height: isMobilePortrait ? 1920 : 1080,
+        margin: isMobilePortrait ? 0.04 : 0.08,
         minScale: 0.2,
-        maxScale: 2.0,
+        maxScale: 2.5,
         plugins: [ RevealNotes ]
       });
 
@@ -1570,13 +1677,41 @@
     }
 
     function openPlaylistModal() {
+      modalTriggerElement = document.activeElement;
       renderPlaylistModal();
       playlistModal.classList.add('open');
+      const closeBtn = document.getElementById('btn-close-playlist');
+      if (closeBtn) closeBtn.focus();
     }
 
     function closePlaylistModal() {
       playlistModal.classList.remove('open');
+      if (modalTriggerElement && typeof modalTriggerElement.focus === 'function') {
+        modalTriggerElement.focus();
+        modalTriggerElement = null;
+      }
     }
+
+    // Modal Focus Trap
+    playlistModal.addEventListener('keydown', (e) => {
+      if (e.key !== 'Tab') return;
+      const focusable = playlistModal.querySelectorAll('button:not([disabled]), [href], input:not([disabled]), [tabindex]:not([tabindex="-1"])');
+      if (!focusable.length) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          last.focus();
+          e.preventDefault();
+        }
+      } else {
+        if (document.activeElement === last) {
+          first.focus();
+          e.preventDefault();
+        }
+      }
+    });
 
     // Mode cards toggle
     const modeCard2D = document.getElementById('mode-card-2d');
