@@ -7,7 +7,7 @@ creators:
     url: https://betterimagesofai.org/
   - name: Tim Davies
     role: activity author
-    url: https://connectedbydata.org/people/tim-davies
+    url: ''
 license:
   type: standard
   name: CC BY 4.0

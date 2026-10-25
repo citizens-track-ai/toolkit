@@ -1,7 +1,7 @@
 {{ define "main" }}
 
 <div class="page-header" style="margin-bottom: 2.5rem;">
-  <span class="collection-badge" style="background: #e0f2fe; color: #0369a1;">Directory</span>
+  <span class="collection-badge" style="background: rgba(0, 68, 124, 0.1); color: var(--ct-color-fjord); border: 1px solid rgba(0, 68, 124, 0.2);">Directory</span>
   <h1 class="page-title">Activities</h1>
   <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
     Explore interactive workshop exercises, discussions, and educational activities on data, AI, and civic participation.
@@ -16,14 +16,14 @@
       <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
         <div>
           <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
-            <span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Activity</span>
+            <span class="element-pill" style="background: rgba(255, 196, 64, 0.18); color: #7a5000; border: 1px solid rgba(255, 196, 64, 0.35); font-weight: 700;">Activity</span>
             {{ with .Params.duration }}
-              <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+              <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-dark); border: 1px solid var(--color-border);">
                 ⏱️ {{ .min }}-{{ .max }}m
               </span>
             {{ end }}
             {{ with .Params.license }}
-              <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+              <span class="element-pill" style="background: rgba(0, 216, 180, 0.14); color: #005a4b; border: 1px solid rgba(0, 216, 180, 0.3);">
                 ⚖️ {{ .name | default "Open" }}
               </span>
             {{ end }}

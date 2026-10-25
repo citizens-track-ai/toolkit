@@ -1,5 +1,5 @@
 // Sveltia CMS Custom Live Preview Template for Content Items
-// Supports Live Page View, Interactive 3D Two-Sided Cards, and Slide Deck Presentation
+// Supports Live Page View and Interactive 3D Two-Sided Cards
 
 if (typeof CMS !== 'undefined') {
   const { useState } = CMS.React;
@@ -36,7 +36,7 @@ if (typeof CMS !== 'undefined') {
     });
     // Replace {{< content-item "slug" >}} or {{< content_item "slug" >}}
     str = str.replace(/{{<\s*content[-_]item\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/g, (match, slug) => {
-      return `\n\n<div class="toolkit-embed-card content-embed-card"><div class="embed-card-header"><div class="embed-badges"><span class="element-pill" style="background: #ccfbf1; color: #134e4a; font-weight:700;">Content Item</span></div><span style="font-size:0.75rem; color:#64748b; font-weight:600;">📄 Page • 🎴 Cards • 📽️ Slides</span></div><h4 class="embed-card-title"><a href="/content/${slug}">📑 Content Item: ${slug}</a></h4><p class="embed-card-summary" style="font-size:0.85rem;color:#64748b;">(Embedded content item with interactive presentation)</p><div class="embed-card-footer"><span class="action-btn-link primary">Open Presentation &rarr;</span></div></div>\n\n`;
+      return `\n\n<div class="toolkit-embed-card content-embed-card"><div class="embed-card-header"><div class="embed-badges"><span class="element-pill" style="background: #ccfbf1; color: #134e4a; font-weight:700;">Content Item</span></div><span style="font-size:0.75rem; color:#64748b; font-weight:600;">📄 Page • 🎴 Cards</span></div><h4 class="embed-card-title"><a href="/content/${slug}">📑 Content Item: ${slug}</a></h4><p class="embed-card-summary" style="font-size:0.85rem;color:#64748b;">(Embedded content item)</p><div class="embed-card-footer"><span class="action-btn-link primary">Open Item &rarr;</span></div></div>\n\n`;
     });
     // Replace {{< collection "slug" >}} or {{< content-collection "slug" >}}
     str = str.replace(/{{<\s*(?:content[-_]collection|collection)\s+(?:slug=)?["']?([^"'\s>]+)["']?\s*>}}/g, (match, slug) => {
@@ -65,9 +65,8 @@ if (typeof CMS !== 'undefined') {
   }
 
   const ContentItemPreview = ({ entry }) => {
-    const [viewMode, setViewMode] = useState('page'); // 'page' | 'cards' | 'slides'
+    const [viewMode, setViewMode] = useState('page'); // 'page' | 'cards'
     const [flippedCards, setFlippedCards] = useState({});
-    const [currentSlide, setCurrentSlide] = useState(0);
 
     const rawData = entry.get('data');
     const data = normalize(rawData) || {};
@@ -75,67 +74,6 @@ if (typeof CMS !== 'undefined') {
     const overview = data.facilitator_overview || '';
     const elements = Array.isArray(data.elements) ? data.elements : [];
     const guidance = data.adaptation_guidance || '';
-
-    // Prepare slides sequence
-    const slides = [];
-    // Slide 1: Title slide (without facilitator overview)
-    slides.push({
-      type: 'title',
-      title: title
-    });
-
-    // Element slides
-    elements.forEach((el) => {
-      if (!el) return;
-      const elType = el.type || 'information';
-      if (elType === 'quiz_question') {
-        // Separate Slide A: Question
-        slides.push({
-          type: 'quiz_question',
-          question: el.question || '',
-          image: el.image || '',
-          citation: el.citation || ''
-        });
-        // Separate Slide B: Answer & Explanation
-        slides.push({
-          type: 'quiz_answer',
-          answer: el.answer || '',
-          explanation: el.explanation || '',
-          citation: el.citation || ''
-        });
-      } else if (elType === 'statistic') {
-        slides.push({
-          type: 'statistic',
-          figure: el.figure || '',
-          description: el.description || '',
-          explanation: el.explanation || '',
-          citation: el.citation || ''
-        });
-      } else if (elType === 'perspective') {
-        slides.push({
-          type: 'perspective',
-          quote: el.quote || '',
-          attribution: el.attribution || '',
-          citation: el.citation || ''
-        });
-      } else if (elType === 'information') {
-        slides.push({
-          type: 'information',
-          text: el.text || '',
-          citation: el.citation || ''
-        });
-      } else if (elType === 'takeaways') {
-        slides.push({
-          type: 'takeaways',
-          text: el.text || '',
-          citation: el.citation || ''
-        });
-      }
-    });
-
-    const totalSlides = Math.max(1, slides.length);
-    const safeSlideIndex = Math.min(Math.max(0, currentSlide), totalSlides - 1);
-    const activeSlide = slides[safeSlideIndex] || slides[0] || { type: 'title', title: title };
 
     const toggleCard = (idx) => {
       setFlippedCards(prev => ({ ...prev, [idx]: !prev[idx] }));
@@ -168,13 +106,6 @@ if (typeof CMS !== 'undefined') {
               onClick=${() => setViewMode('cards')}
             >
               🎴 Two-Sided Cards
-            </button>
-            <button 
-              type="button" 
-              class="view-tab ${viewMode === 'slides' ? 'active' : ''}" 
-              onClick=${() => setViewMode('slides')}
-            >
-              📽️ Slide Deck
             </button>
           </div>
 
@@ -305,14 +236,15 @@ if (typeof CMS !== 'undefined') {
                   >
                     <div class="card-3d-inner">
                       <!-- FRONT -->
-                      <div class="card-face card-face-front">
+                      <div class="card-face card-face-front ${el.type === 'information' ? 'card-front-info' : ''}">
                         <div class="card-face-header">
-                          <span class="element-pill ${el.type}">
-                            ${el.type === 'quiz_question' ? 'Quiz Question' :
-                              el.type === 'statistic' ? 'Statistic' :
-                              el.type === 'perspective' ? 'Perspective' :
-                              el.type === 'information' ? 'Concept' : 'Takeaways'}
-                          </span>
+                          ${el.type !== 'information' ? html`
+                            <span class="element-pill ${el.type}">
+                              ${el.type === 'quiz_question' ? 'Quiz Question' :
+                                el.type === 'statistic' ? 'Statistic' :
+                                el.type === 'perspective' ? 'Perspective' : 'Takeaways'}
+                            </span>
+                          ` : html`<span class="element-pill-spacer"></span>`}
                           <span class="card-flip-prompt">Click to flip ↺</span>
                         </div>
 
@@ -327,25 +259,36 @@ if (typeof CMS !== 'undefined') {
                           ${el.type === 'perspective' && html`
                             <blockquote class="card-main-quote" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.quote) }} />
                           `}
-                          ${el.type === 'information' && html`
-                            <div class="card-main-title" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
-                          `}
+                          ${el.type === 'information' && (() => {
+                            const cleanText = (el.text || '').replace(/\r\n/g, '\n');
+                            const lines = cleanText.split('\n').map(l => l.trim()).filter(Boolean);
+                            const firstLine = lines.length > 0 ? lines[0] : '';
+                            return html`
+                              <div class="card-info-front-content">
+                                <div class="card-front-title" dangerouslySetInnerHTML=${{ __html: renderMarkdown(firstLine) }} />
+                                ${el.image && html`
+                                  <div class="card-front-image-wrap">
+                                    <img src=${el.image} alt="Card visual" class="card-front-image" />
+                                  </div>
+                                `}
+                              </div>
+                            `;
+                          })()}
                           ${el.type === 'takeaways' && html`
-                            <div class="card-main-title" style="color: #86198f;">Key Takeaways</div>
+                            <div class="card-main-title" style="color: var(--ct-color-deep-redwood);">Key Takeaways</div>
                             <div style="font-size: 0.95rem; color: var(--color-slate);">Flip for summary points</div>
                           `}
                         </div>
 
                         <div class="card-face-footer">
-                          <span class="card-side-tag front">Front Side</span>
-                          <span class="card-flip-btn">Flip to Back →</span>
+                          <span class="card-flip-btn">${el.type === 'quiz_question' ? 'Flip to Answer →' : 'Flip to Details →'}</span>
                         </div>
                       </div>
 
                       <!-- BACK -->
                       <div class="card-face card-face-back">
                         <div class="card-face-header">
-                          <span class="element-pill" style="background: #e0f2fe; color: #0369a1;">
+                          <span class="element-pill" style="background: rgba(0, 68, 124, 0.1); color: var(--ct-color-fjord); border: 1px solid rgba(0, 68, 124, 0.2);">
                             ${el.type === 'quiz_question' ? 'Answer & Explanation' :
                               el.type === 'statistic' ? 'Context & Insight' :
                               el.type === 'perspective' ? 'Attribution' : 'Details'}
@@ -374,10 +317,10 @@ if (typeof CMS !== 'undefined') {
                             `}
                           `}
                           ${el.type === 'information' && html`
-                            <div style="font-size: 0.95rem; line-height: 1.5;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
+                            <div class="card-back-text" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
                           `}
                           ${el.type === 'takeaways' && html`
-                            <div style="font-size: 0.9rem; line-height: 1.5;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
+                            <div class="card-back-text" dangerouslySetInnerHTML=${{ __html: renderMarkdown(el.text) }} />
                           `}
 
                           ${el.citation && html`
@@ -388,7 +331,6 @@ if (typeof CMS !== 'undefined') {
                         </div>
 
                         <div class="card-face-footer">
-                          <span class="card-side-tag back">Back Side</span>
                           <span class="card-flip-btn">← Flip to Front</span>
                         </div>
                       </div>
@@ -396,109 +338,6 @@ if (typeof CMS !== 'undefined') {
                   </div>
                 `;
               })}
-            </div>
-          </div>
-        `}
-
-        <!-- (b) SLIDE DECK VIEW -->
-        ${viewMode === 'slides' && html`
-          <div class="view-section active">
-            <div class="slideshow-container" style="min-height: 480px; position: relative; display: flex; flex-direction: column; justify-content: space-between;">
-              <div class="slide-progress-bar" style="width: ${((safeSlideIndex + 1) / totalSlides) * 100}%;"></div>
-
-              <div class="slides-viewport" style="min-height: 380px; display: flex; align-items: center; justify-content: center; padding: 2.5rem 3rem;">
-                <div class="slide-item" style="display: block; width: 100%; max-width: 760px; margin: 0 auto; text-align: left;">
-                  ${activeSlide.type === 'title' && html`
-                    <div>
-                      <span class="slide-tag">Presentation</span>
-                      <h2 class="slide-title" style="font-size: 2.5rem; margin-top: 0.75rem;">${activeSlide.title}</h2>
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'quiz_question' && html`
-                    <div>
-                      <span class="slide-tag">Quiz Question</span>
-                      <div class="slide-title" style="font-size: 1.85rem; margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.question) }} />
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'quiz_answer' && html`
-                    <div>
-                      <span class="slide-tag" style="background: rgba(20, 184, 166, 0.25); color: #5eead4;">Quiz Answer</span>
-                      <div class="slide-title" style="font-size: 1.75rem; color: #5eead4; margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.answer) }} />
-                      ${activeSlide.explanation && html`
-                        <div class="slide-body" style="font-size: 1.15rem; color: #cbd5e1; margin-top: 1rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.explanation) }} />
-                      `}
-                      ${activeSlide.citation && html`
-                        <div style="margin-top: 1.5rem; font-size: 0.8rem; color: #64748b;">
-                          Source: ${activeSlide.citation}
-                        </div>
-                      `}
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'statistic' && html`
-                    <div>
-                      <span class="slide-tag">Key Statistic</span>
-                      <div class="slide-stat-figure" style="font-size: 4rem; margin-top: 0.5rem;">${activeSlide.figure}</div>
-                      <div class="slide-title" style="font-size: 1.75rem;">${activeSlide.description}</div>
-                      ${activeSlide.explanation && html`
-                        <div class="slide-body" style="margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.explanation) }} />
-                      `}
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'perspective' && html`
-                    <div>
-                      <span class="slide-tag">Perspective</span>
-                      <blockquote class="slide-quote" style="margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.quote) }} />
-                      ${activeSlide.attribution && html`
-                        <div class="slide-attribution" style="margin-top: 0.75rem;">— ${activeSlide.attribution}</div>
-                      `}
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'information' && html`
-                    <div>
-                      <span class="slide-tag">Information</span>
-                      <div class="slide-body" style="font-size: 1.4rem; color: white; margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.text) }} />
-                    </div>
-                  `}
-
-                  ${activeSlide.type === 'takeaways' && html`
-                    <div>
-                      <span class="slide-tag" style="background: rgba(240, 171, 252, 0.2); color: #f0abfc;">Key Takeaways</span>
-                      <div class="slide-title" style="font-size: 1.85rem; color: #f0abfc; margin-top: 0.75rem;">Key Takeaways</div>
-                      <div class="slide-body" style="margin-top: 0.75rem;" dangerouslySetInnerHTML=${{ __html: renderMarkdown(activeSlide.text) }} />
-                    </div>
-                  `}
-                </div>
-              </div>
-
-              <!-- Slides Controls -->
-              <div class="slides-controls">
-                <div class="slides-nav-btns">
-                  <button 
-                    type="button" 
-                    class="slide-btn" 
-                    disabled=${safeSlideIndex === 0} 
-                    onClick=${() => setCurrentSlide(Math.max(0, safeSlideIndex - 1))}
-                    title="Previous Slide"
-                  >
-                    ←
-                  </button>
-                  <button 
-                    type="button" 
-                    class="slide-btn" 
-                    disabled=${safeSlideIndex >= totalSlides - 1} 
-                    onClick=${() => setCurrentSlide(Math.min(totalSlides - 1, safeSlideIndex + 1))}
-                    title="Next Slide"
-                  >
-                    →
-                  </button>
-                  <span class="slide-counter">Slide ${safeSlideIndex + 1} / ${totalSlides}</span>
-                </div>
-              </div>
             </div>
           </div>
         `}

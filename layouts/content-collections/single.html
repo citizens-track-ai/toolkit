@@ -57,12 +57,24 @@
   {{ end }}
 </article>
 
+{{ $matchedSlugs := slice }}
+{{ range $matchedItems }}
+  {{ $matchedSlugs = $matchedSlugs | append .File.TranslationBaseName }}
+{{ end }}
+{{ $combinedQuery := delimit $matchedSlugs "," }}
+
 <section>
-  <div class="section-header">
-    <h2 class="section-title">
+  <div class="section-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+    <h2 class="section-title" style="margin-bottom: 0;">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--color-primary);"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
       Attached Content Items
     </h2>
+    {{ if gt (len $matchedItems) 0 }}
+      <a href="{{ "present/" | relLangURL }}?decks={{ $combinedQuery }}" class="action-btn primary" target="_blank" rel="noopener" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.45rem; padding: 0.5rem 1rem; font-weight: 700; border-radius: var(--radius-sm); box-shadow: var(--shadow-sm);" title="Open all attached content items in a combined Reveal.js presentation">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+        <span>Present Combined Collection ({{ len $matchedItems }} Decks) &rarr;</span>
+      </a>
+    {{ end }}
   </div>
 
   {{ if gt (len $matchedItems) 0 }}

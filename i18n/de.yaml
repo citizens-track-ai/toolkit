@@ -1,0 +1,116 @@
+skip_to_main:
+  other: "Zum Hauptinhalt springen"
+view_page:
+  other: "Seitenansicht"
+view_cards:
+  other: "Zweiseitige Karten"
+view_slides:
+  other: "Folienpräsentation ↗"
+hide_notes:
+  other: "Notizen ausblenden"
+show_notes:
+  other: "Notizen anzeigen"
+print_worksheet:
+  other: "Arbeitsblatt drucken"
+print_facilitator:
+  other: "Moderationsansicht drucken"
+flip_all:
+  other: "Alle Karten umdrehen"
+flip_all_front:
+  other: "Alle zur Vorderseite drehen"
+print_cards:
+  other: "Karten drucken"
+print_options:
+  other: "Karten-Druckoptionen"
+print_style:
+  other: "Druckstil"
+folding_style:
+  other: "Faltstil (einseitig)"
+folding_desc:
+  other: "Druckt Vorder- und Rückseite nebeneinander mit zentraler Faltlinie."
+duplex_style:
+  other: "Doppelseitig (Duplex)"
+duplex_desc:
+  other: "Wechselt Vorder- und Rückseiten für den beidseitigen Druck ab."
+paper_size:
+  other: "Papierformat"
+cards_per_sheet:
+  other: "Karten pro Blatt"
+large_format:
+  other: "Großformat"
+standard_rec:
+  other: "Standard (Empfohlen)"
+compact_deck:
+  other: "Kompaktes Deck"
+flip_binding:
+  other: "Duplex-Wenderichtung"
+flip_short:
+  other: "Über kurze Kante wenden (Standard)"
+flip_long:
+  other: "Über lange Kante wenden"
+cancel:
+  other: "Abbrechen"
+open_print_dialog:
+  other: "Druckdialog öffnen"
+facilitator_overview:
+  other: "Moderationsübersicht"
+facilitator_note:
+  other: "Moderationshinweis"
+adaptation_guidance:
+  other: "Anpassungs- und Lokalisierungshinweise"
+key_takeaways:
+  other: "Wichtigste Erkenntnisse"
+quiz_question:
+  other: "Quizfrage"
+quiz_questions:
+  other: "Quizfragen"
+quiz_answer:
+  other: "Antwort & Erklärung"
+statistic:
+  other: "Statistik"
+statistics:
+  other: "Statistiken"
+perspective:
+  other: "Perspektive"
+perspectives:
+  other: "Perspektiven"
+information:
+  other: "Information"
+source_citation:
+  other: "Quelle / Zitat"
+credit:
+  other: "Bildnachweis"
+flip_to_answer:
+  other: "Zur Antwort umdrehen →"
+flip_to_details:
+  other: "Zu den Details umdrehen →"
+flip_to_front:
+  other: "← Zur Vorderseite umdrehen"
+click_to_flip:
+  other: "Klicken zum Umdrehen ↺"
+cards_intro_hint:
+  other: "Klicken Sie auf eine Karte (oder Leertaste/Eingabe), um zwischen Vorder- und Rückseite zu wechseln."
+cards_intro_ready:
+  other: "Bereit für den Druck auf Kartonpapier für Workshops."
+card_aria_label:
+  other: "Interaktive Karte"
+showing_fallback_deck:
+  other: "⚠️ Anzeige auf Englisch (nicht übersetzt)"
+close_dialog:
+  other: "Dialog schließen"
+collections:
+  other: "Sammlungen"
+content_items:
+  other: "Inhaltselemente"
+activities:
+  other: "Aktivitäten"
+modules:
+  other: "Module"
+home:
+  other: "Startseite"
+collection:
+  other: "Sammlung"
+content_item:
+  other: "Inhaltselement"
+explore_content:
+  other: "Inhalt & Präsentation erkunden →"

@@ -7,5 +7,17 @@
   {{ else with .Site.Params.description }}
   <meta name="description" content="{{ . }}">
   {{ end }}
+
+  <!-- Official Brand Favicons -->
+  <link rel="icon" type="image/svg+xml" href="{{ "images/logos/favicon.svg" | relURL }}">
+  <link rel="alternate icon" type="image/png" href="{{ "images/logos/favicon.png" | relURL }}">
+
+  <!-- Brand Typography: Parkinsans via Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Parkinsans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Brand Design Tokens & Stylesheet -->
+  <link rel="stylesheet" href="{{ "css/brand-tokens.css" | relURL }}">
   <link rel="stylesheet" href="{{ "css/toolkit.css" | relURL }}">
 </head>

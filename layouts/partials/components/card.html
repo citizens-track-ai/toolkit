@@ -1,0 +1,218 @@
+{{- $element := .element -}}
+{{- $idx := .index | default 0 -}}
+{{- $cardNumber := add $idx 1 -}}
+{{- $page := .pageContext -}}
+
+{{/* Resilient title extraction for information cards */}}
+{{- $infoTitle := "" -}}
+{{- if eq $element.type "information" -}}
+  {{- if $element.title -}}
+    {{- $infoTitle = $element.title -}}
+  {{- else -}}
+    {{- $plain := $element.text | markdownify | plainify | trim " \t\r\n" -}}
+    {{- $firstSentence := index (split $plain ". ") 0 -}}
+    {{- $firstLine := index (split $firstSentence "\n") 0 -}}
+    {{- $infoTitle = $firstLine | truncate 110 -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="toolkit-card card-3d-wrapper" data-flipped="false" data-card-idx="{{ $idx }}" id="card-item-{{ $idx }}">
+  <div class="card-3d-inner">
+    
+    <!-- CARD FRONT -->
+    <div class="card-face card-face-front{{ if eq $element.type "information" }} card-front-info{{ end }}" id="card-front-{{ $idx }}">
+      <div class="card-face-header">
+        {{ if ne $element.type "information" }}
+          <span class="element-pill {{ $element.type }}">
+            {{ if eq $element.type "quiz_question" }}{{ i18n "quiz_question" | default "Quiz Question" }}
+            {{ else if eq $element.type "statistic" }}{{ i18n "statistic" | default "Statistic" }}
+            {{ else if eq $element.type "perspective" }}{{ i18n "perspective" | default "Perspective" }}
+            {{ else if eq $element.type "takeaways" }}{{ i18n "key_takeaways" | default "Key Takeaways" }}
+            {{ else }}{{ $element.type }}{{ end }}
+          </span>
+        {{ else }}
+          <span class="element-pill-spacer"></span>
+        {{ end }}
+        <button type="button" class="card-flip-prompt-btn card-flip-trigger" aria-controls="card-back-{{ $idx }}" aria-expanded="false" title="{{ i18n "click_to_flip" | default "Click to flip ↺" }}">
+          <span>{{ i18n "click_to_flip" | default "Click to flip ↺" }}</span>
+        </button>
+      </div>
+
+      <div class="card-face-body">
+        {{ if eq $element.type "quiz_question" }}
+          <div class="card-main-title card-fit-text">
+            {{ $element.question | markdownify }}
+          </div>
+          {{ with $element.image }}
+            {{ $alt := or $element.image_alt $element.alt "" }}
+            {{ $attribution := or $element.image_attribution "" }}
+            <div class="card-front-image-wrap">
+              <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image" loading="lazy">
+            </div>
+            {{ if or $alt $attribution }}
+              <div class="card-image-caption">
+                {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}{{ i18n "credit" | default "Credit" }}: {{ . }}</span>{{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+
+        {{ else if eq $element.type "statistic" }}
+          <div class="card-main-stat">{{ $element.figure }}</div>
+          <div class="card-main-title card-fit-text">{{ $element.description }}</div>
+          {{ with $element.image }}
+            {{ $alt := or $element.image_alt $element.alt "" }}
+            {{ $attribution := or $element.image_attribution "" }}
+            <div class="card-front-image-wrap">
+              <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image" loading="lazy">
+            </div>
+            {{ if or $alt $attribution }}
+              <div class="card-image-caption">
+                {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}{{ i18n "credit" | default "Credit" }}: {{ . }}</span>{{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+
+        {{ else if eq $element.type "perspective" }}
+          <blockquote class="card-main-quote card-fit-text">
+            {{ $element.quote | markdownify }}
+          </blockquote>
+          {{ with $element.image }}
+            {{ $alt := or $element.image_alt $element.alt "" }}
+            {{ $attribution := or $element.image_attribution "" }}
+            <div class="card-front-image-wrap">
+              <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image" loading="lazy">
+            </div>
+            {{ if or $alt $attribution }}
+              <div class="card-image-caption">
+                {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}{{ i18n "credit" | default "Credit" }}: {{ . }}</span>{{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+
+        {{ else if eq $element.type "information" }}
+          <div class="card-info-front-content">
+            <div class="card-front-title card-fit-text">
+              <h3>{{ $infoTitle }}</h3>
+            </div>
+            {{ with $element.image }}
+              {{ $alt := or $element.image_alt $element.alt "" }}
+              {{ $attribution := or $element.image_attribution "" }}
+              <div class="card-front-image-wrap">
+                <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image" loading="lazy">
+              </div>
+              {{ if or $alt $attribution }}
+                <div class="card-image-caption">
+                  {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                  {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}{{ i18n "credit" | default "Credit" }}: {{ . }}</span>{{ end }}
+                </div>
+              {{ end }}
+            {{ end }}
+          </div>
+
+        {{ else if eq $element.type "takeaways" }}
+          <div class="card-main-title card-fit-text" style="color: var(--ct-color-deep-redwood);">
+            {{ i18n "key_takeaways" | default "Key Takeaways" }}
+          </div>
+          <div style="font-size: 0.95rem; color: var(--color-slate);">
+            {{ i18n "cards_intro_hint" | default "Flip to reveal key reflection points" }}
+          </div>
+          {{ with $element.image }}
+            {{ $alt := or $element.image_alt $element.alt "" }}
+            {{ $attribution := or $element.image_attribution "" }}
+            <div class="card-front-image-wrap">
+              <img src="{{ . | relURL }}" alt="{{ $alt }}" class="card-front-image" loading="lazy">
+            </div>
+            {{ if or $alt $attribution }}
+              <div class="card-image-caption">
+                {{ with $alt }}<span class="card-image-alt">{{ . }}</span>{{ end }}
+                {{ with $attribution }}<span class="card-image-attribution">{{ if $alt }} — {{ end }}{{ i18n "credit" | default "Credit" }}: {{ . }}</span>{{ end }}
+              </div>
+            {{ end }}
+          {{ end }}
+        {{ end }}
+      </div>
+
+      <div class="card-face-footer">
+        <button type="button" class="card-flip-btn card-flip-trigger" aria-controls="card-back-{{ $idx }}" aria-expanded="false">
+          {{ if eq $element.type "quiz_question" }}
+            {{ i18n "flip_to_answer" | default "Flip to Answer →" }}
+          {{ else }}
+            {{ i18n "flip_to_details" | default "Flip to Details →" }}
+          {{ end }}
+        </button>
+      </div>
+    </div>
+
+    <!-- CARD BACK (Initially inert and aria-hidden for screen reader protection) -->
+    <div class="card-face card-face-back" id="card-back-{{ $idx }}" aria-hidden="true" inert>
+      <div class="card-face-header">
+        <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: var(--ct-color-fjord); border: 1px solid rgba(64, 169, 255, 0.3);">
+          {{ if eq $element.type "quiz_question" }}{{ i18n "quiz_answer" | default "Answer & Explanation" }}
+          {{ else if eq $element.type "statistic" }}{{ i18n "statistic" | default "Context & Insight" }}
+          {{ else if eq $element.type "perspective" }}{{ i18n "perspective" | default "Attribution & Context" }}
+          {{ else if eq $element.type "information" }}{{ i18n "information" | default "Details & Notes" }}
+          {{ else if eq $element.type "takeaways" }}{{ i18n "key_takeaways" | default "Key Takeaways" }}
+          {{ else }}Details{{ end }}
+        </span>
+        <button type="button" class="card-flip-prompt-btn card-flip-trigger" aria-controls="card-front-{{ $idx }}" aria-expanded="true" title="{{ i18n "click_to_flip" | default "Click to flip ↺" }}">
+          <span>{{ i18n "click_to_flip" | default "Click to flip ↺" }}</span>
+        </button>
+      </div>
+
+      <div class="card-face-body">
+        {{ if eq $element.type "quiz_question" }}
+          <div class="card-back-answer card-fit-text" style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
+            {{ $element.answer | markdownify }}
+          </div>
+          {{ with $element.explanation }}
+            <div class="card-back-text card-fit-text" style="font-size: 0.9rem; color: var(--color-slate); line-height: 1.5; margin-top: 0.5rem;">
+              {{ . | markdownify }}
+            </div>
+          {{ end }}
+        {{ else if eq $element.type "statistic" }}
+          <div class="card-back-stat-desc card-fit-text" style="font-size: 0.95rem; font-weight: 700; margin-bottom: 0.5rem;">
+            {{ $element.description }}
+          </div>
+          {{ with $element.explanation }}
+            <div class="card-back-text card-fit-text" style="font-size: 0.875rem; color: var(--color-slate); line-height: 1.5;">
+              {{ . | markdownify }}
+            </div>
+          {{ end }}
+        {{ else if eq $element.type "perspective" }}
+          {{ with $element.attribution }}
+            <div class="card-back-author card-fit-text" style="font-size: 1.05rem; font-weight: 700; color: var(--ct-color-fjord); margin-bottom: 0.5rem;">
+              — {{ . }}
+            </div>
+          {{ end }}
+          <div style="font-size: 0.85rem; color: var(--color-muted); font-style: italic;">
+            Speaker / Source Perspective
+          </div>
+        {{ else if eq $element.type "information" }}
+          <div class="card-back-text card-fit-text">
+            {{ $element.text | markdownify }}
+          </div>
+        {{ else if eq $element.type "takeaways" }}
+          <div class="card-back-text card-fit-text">
+            {{ $element.text | markdownify }}
+          </div>
+        {{ end }}
+
+        {{ with $element.citation }}
+          <div class="citation-line" style="margin-top: 0.5rem; font-size: 0.725rem;">
+            {{ i18n "source_citation" | default "Source" }}: <a href="{{ . }}" target="_blank" rel="noopener">{{ . }}</a>
+          </div>
+        {{ end }}
+      </div>
+
+      <div class="card-face-footer">
+        <button type="button" class="card-flip-btn card-flip-trigger" aria-controls="card-front-{{ $idx }}" aria-expanded="true">
+          {{ i18n "flip_to_front" | default "← Flip to Front" }}
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>

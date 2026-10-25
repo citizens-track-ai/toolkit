@@ -1,0 +1,29 @@
+{{- $elements := slice -}}
+{{- with .Params.elements -}}
+  {{- range . -}}
+    {{- $el := dict "type" .type "notes" (markdownify (or .notes "")) "image" (or .image "") "image_alt" (or .image_alt .alt "") "image_attribution" (or .image_attribution "") "citation" (or .citation "") -}}
+    {{- if eq .type "quiz_question" -}}
+      {{- $el = merge $el (dict "question" (markdownify .question) "answer" (markdownify .answer) "explanation" (markdownify (or .explanation ""))) -}}
+    {{- else if eq .type "statistic" -}}
+      {{- $el = merge $el (dict "figure" (or .figure "") "description" (or .description "") "explanation" (markdownify (or .explanation ""))) -}}
+    {{- else if eq .type "perspective" -}}
+      {{- $el = merge $el (dict "quote" (markdownify (or .quote "")) "attribution" (or .attribution "")) -}}
+    {{- else if eq .type "information" -}}
+      {{- $el = merge $el (dict "text" (markdownify (or .text ""))) -}}
+    {{- else if eq .type "takeaways" -}}
+      {{- $el = merge $el (dict "text" (markdownify (or .text ""))) -}}
+    {{- end -}}
+    {{- $elements = $elements | append $el -}}
+  {{- end -}}
+{{- end -}}
+
+{{- $data := dict
+  "slug" .File.TranslationBaseName
+  "title" .Title
+  "description" (or .Params.description "")
+  "overview" (markdownify (or .Params.facilitator_overview ""))
+  "permalink" .RelPermalink
+  "lang" .Language.Lang
+  "elements" $elements
+-}}
+{{- $data | jsonify (dict "indent" "  ") -}}

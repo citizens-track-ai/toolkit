@@ -22,9 +22,11 @@ Thumbs.db
 *~
 *.tmp
 *.swp
+scratch/
 
 # IDE specific files
 .idea/
 .vscode/
 *.sublime-workspace
 *.sublime-project
+*.agents/

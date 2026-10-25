@@ -17,14 +17,14 @@
 <div class="toolkit-embed-card activity-embed-card{{ if $isFallback }} is-fallback{{ end }}">
   <div class="embed-card-header">
     <div class="embed-badges">
-      <span class="element-pill" style="background: #e0f2fe; color: #0369a1; font-weight: 700;">Activity</span>
+      <span class="element-pill" style="background: rgba(255, 196, 64, 0.18); color: #7a5000; border: 1px solid rgba(255, 196, 64, 0.35); font-weight: 700;">Activity</span>
       {{ with $item.Params.duration }}
-        <span class="element-pill" style="background: #f1f5f9; color: var(--color-dark);">
+        <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-dark); border: 1px solid var(--color-border);">
           ⏱️ {{ .min }}-{{ .max }} mins
         </span>
       {{ end }}
       {{ with $item.Params.license }}
-        <span class="element-pill" style="background: #ecfdf5; color: #047857;">
+        <span class="element-pill" style="background: rgba(0, 216, 180, 0.14); color: #005a4b; border: 1px solid rgba(0, 216, 180, 0.3);">
           ⚖️ {{ .name | default "Open" }}
         </span>
       {{ end }}

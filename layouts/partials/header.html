@@ -1,20 +1,15 @@
 <header class="site-header">
   <div class="header-container">
-    <a href="{{ .Site.Home.RelPermalink }}" class="brand-wrapper">
-      <div class="brand-icon">CT</div>
-      <span class="brand-title">{{ .Site.Title }}</span>
+    <a href="{{ .Site.Home.RelPermalink }}" class="brand-wrapper" aria-label="Citizens' Track on AI Toolkit Home">
+      <img src="{{ "images/logos/logo-wide-positive.svg" | relURL }}" alt="Citizens' Track on AI" height="38" class="brand-logo-img">
       <span class="brand-badge">Toolkit</span>
     </a>
 
     <nav class="site-nav">
-      <a href="{{"content-collections/" | relLangURL }}" class="nav-link{{ if eq .Section "content-collections" }}
-        active{{ end }}">Collections</a>
-      <a href="{{"content/" | relLangURL }}" class="nav-link{{ if eq .Section "content" }} active{{ end }}">Content
-        Items</a>
-      <a href="{{"activities/" | relLangURL }}" class="nav-link{{ if eq .Section "activities" }} active{{ end
-        }}">Activities</a>
-      <a href="{{"modules/" | relLangURL }}" class="nav-link{{ if eq .Section "modules" }} active{{ end
-        }}">Modules</a>
+      <a href="{{ "content-collections/" | relLangURL }}" class="nav-link{{ if eq .Section "content-collections" }} active{{ end }}">Collections</a>
+      <a href="{{ "content/" | relLangURL }}" class="nav-link{{ if eq .Section "content" }} active{{ end }}">Content Items</a>
+      <a href="{{ "activities/" | relLangURL }}" class="nav-link{{ if eq .Section "activities" }} active{{ end }}">Activities</a>
+      <a href="{{ "modules/" | relLangURL }}" class="nav-link{{ if eq .Section "modules" }} active{{ end }}">Modules</a>
 
       {{ if hugo.IsMultilingual }}
       <div class="lang-switcher">

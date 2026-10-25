@@ -1,11 +1,13 @@
 <!DOCTYPE html>
-<html lang="{{ .Language.Lang | default "en" }}">
+<html lang="{{ .Language.Lang | default "en" }}" dir="{{ if .Language.Params.rtl }}rtl{{ else }}ltr{{ end }}">
   {{ partial "head.html" . }}
   <body>
+    <a href="#main-content" class="skip-link">{{ i18n "skip_to_main" | default "Skip to main content" }}</a>
     {{ partial "header.html" . }}
-    <main class="main-wrapper">
+    <main id="main-content" class="main-wrapper" tabindex="-1">
       {{ block "main" . }}{{ end }}
     </main>
     {{ partial "footer.html" . }}
   </body>
 </html>
+

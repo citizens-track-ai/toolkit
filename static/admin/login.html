@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="noindex, nofollow" />
+  <title>Editor Sign-In | Citizens Track Toolkit</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --color-primary: #0f766e;
+      --color-primary-hover: #115e59;
+      --color-primary-light: #ccfbf1;
+      --color-dark: #0f172a;
+      --color-slate: #334155;
+      --color-muted: #64748b;
+      --color-border: #e2e8f0;
+      --color-bg-alt: #f8fafc;
+      --color-bg: #ffffff;
+      --color-error: #dc2626;
+      --color-error-bg: #fef2f2;
+      --color-success: #059669;
+      --color-success-bg: #ecfdf5;
+      --radius: 12px;
+      --shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.08), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg-alt);
+      color: var(--color-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      line-height: 1.5;
+    }
+
+    .card {
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      width: 100%;
+      max-width: 440px;
+      padding: 2.25rem 2rem;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+      padding: 0.35rem 0.75rem;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 {
+      font-size: 1.625rem;
+      font-weight: 700;
+      color: var(--color-dark);
+      letter-spacing: -0.025em;
+      margin-bottom: 0.5rem;
+    }
+
+    p.subtitle {
+      color: var(--color-muted);
+      font-size: 0.9375rem;
+      margin-bottom: 1.75rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.25rem;
+    }
+
+    label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--color-slate);
+      margin-bottom: 0.5rem;
+    }
+
+    input[type="email"] {
+      width: 100%;
+      padding: 0.8125rem 1rem;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      color: var(--color-dark);
+      background: var(--color-bg);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      outline: none;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    input[type="email"]:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.15);
+    }
+
+    button.btn-primary {
+      width: 100%;
+      padding: 0.8125rem 1.25rem;
+      background: var(--color-primary);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: background-color 0.15s ease;
+    }
+
+    button.btn-primary:hover:not(:disabled) {
+      background: var(--color-primary-hover);
+    }
+
+    button.btn-primary:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .alert {
+      border-radius: 8px;
+      padding: 0.875rem 1rem;
+      font-size: 0.875rem;
+      margin-bottom: 1.25rem;
+      display: none;
+    }
+
+    .alert-error {
+      background-color: var(--color-error-bg);
+      border: 1px solid rgba(220, 38, 38, 0.2);
+      color: var(--color-error);
+    }
+
+    .alert-success {
+      background-color: var(--color-success-bg);
+      border: 1px solid rgba(5, 150, 105, 0.2);
+      color: var(--color-success);
+    }
+
+    .active-session-box {
+      display: none;
+      background: var(--color-bg-alt);
+      border: 1px solid var(--color-border);
+      border-radius: 8px;
+      padding: 1.25rem;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .active-session-box p {
+      font-size: 0.875rem;
+      color: var(--color-slate);
+      margin-bottom: 1rem;
+    }
+
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid var(--color-border);
+      color: var(--color-slate);
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      cursor: pointer;
+      margin-left: 0.5rem;
+    }
+
+    .btn-secondary:hover {
+      background: #f1f5f9;
+    }
+
+    .footer-links {
+      margin-top: 1.75rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--color-border);
+      text-align: center;
+      font-size: 0.8125rem;
+      color: var(--color-muted);
+    }
+
+    .footer-links a {
+      color: var(--color-primary);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+
+    .spinner {
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-top-color: #ffffff;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="brand">Citizens Track Toolkit</div>
+    <h1>Editor Sign-In</h1>
+    <p class="subtitle">Access the Content Management System using your authorized email address.</p>
+
+    <!-- Active session indicator if already logged in -->
+    <div id="active-session" class="active-session-box">
+      <p>Signed in as <strong id="session-email"></strong></p>
+      <div>
+        <button id="btn-go-cms" class="btn-primary" style="width: auto; padding: 0.5rem 1rem; font-size: 0.875rem;">Go to CMS Dashboard</button>
+        <button id="btn-logout" class="btn-secondary">Sign Out</button>
+      </div>
+    </div>
+
+    <!-- Feedback alerts -->
+    <div id="alert-error" class="alert alert-error"></div>
+    <div id="alert-success" class="alert alert-success"></div>
+
+    <!-- Login form -->
+    <form id="login-form">
+      <div class="form-group">
+        <label for="email">Authorized Email Address</label>
+        <input 
+          id="email" 
+          name="email" 
+          type="email" 
+          placeholder="editor@organization.org" 
+          autocomplete="email" 
+          required 
+          autofocus 
+        />
+      </div>
+
+      <button id="btn-submit" type="submit" class="btn-primary">
+        <span id="btn-text">Send Magic Link</span>
+      </button>
+    </form>
+
+    <div class="footer-links">
+      <p style="margin-bottom: 0.5rem;">
+        Need to use a Personal Access Token? 
+        <a href="/admin/?direct=true">Developer Sign-In</a>
+      </p>
+      <p>
+        <a href="/">← Return to Citizens Track Toolkit</a>
+      </p>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const PROXY_ORIGIN = "https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev";
+      const LOGIN_ENDPOINT = PROXY_ORIGIN + "/auth/login";
+
+      const form = document.getElementById("login-form");
+      const emailInput = document.getElementById("email");
+      const submitBtn = document.getElementById("btn-submit");
+      const submitText = document.getElementById("btn-text");
+      const alertError = document.getElementById("alert-error");
+      const alertSuccess = document.getElementById("alert-success");
+      const activeSessionBox = document.getElementById("active-session");
+      const sessionEmailEl = document.getElementById("session-email");
+      const btnGoCms = document.getElementById("btn-go-cms");
+      const btnLogout = document.getElementById("btn-logout");
+
+      // Check if redirected here with token in hash or search
+      const hash = window.location.hash.substring(1);
+      const search = window.location.search.substring(1);
+      const params = new URLSearchParams(hash || search);
+      const incomingToken = params.get("token");
+      const incomingEmail = params.get("email");
+
+      if (incomingToken) {
+        localStorage.setItem("sveltia-cms.user", JSON.stringify({
+          token: incomingToken,
+          email: incomingEmail || "",
+          backendName: "github"
+        }));
+        window.location.replace("/admin/");
+        return;
+      }
+
+      // Check existing session
+      function checkSession() {
+        const raw = localStorage.getItem("sveltia-cms.user");
+        if (raw) {
+          try {
+            const data = JSON.parse(raw);
+            if (data && data.token) {
+              sessionEmailEl.textContent = data.email || "active session";
+              activeSessionBox.style.display = "block";
+              return;
+            }
+          } catch (e) {}
+        }
+        activeSessionBox.style.display = "none";
+      }
+
+      checkSession();
+
+      btnGoCms.addEventListener("click", function () {
+        window.location.href = "/admin/";
+      });
+
+      btnLogout.addEventListener("click", function () {
+        localStorage.removeItem("sveltia-cms.user");
+        checkSession();
+        hideAlerts();
+      });
+
+      function hideAlerts() {
+        alertError.style.display = "none";
+        alertError.textContent = "";
+        alertSuccess.style.display = "none";
+        alertSuccess.textContent = "";
+      }
+
+      function escapeHtml(str) {
+        const div = document.createElement("div");
+        div.textContent = str;
+        return div.innerHTML;
+      }
+
+      form.addEventListener("submit", async function (e) {
+        e.preventDefault();
+        hideAlerts();
+
+        const email = emailInput.value.trim().toLowerCase();
+        if (!email) return;
+
+        submitBtn.disabled = true;
+        submitText.innerHTML = '<span class="spinner"></span> Dispatching link...';
+
+        try {
+          const resp = await fetch(LOGIN_ENDPOINT, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email: email })
+          });
+
+          const data = await resp.json().catch(() => ({}));
+
+          if (!resp.ok) {
+            throw new Error(data.error || "Failed to send sign-in link. Please try again.");
+          }
+
+          alertSuccess.innerHTML = 
+            '<strong>Check your inbox!</strong><br />' +
+            'A secure magic link has been sent to <strong>' + escapeHtml(email) + '</strong>.<br />' +
+            'Click the link in the email to open the CMS.';
+          alertSuccess.style.display = "block";
+          form.reset();
+        } catch (err) {
+          alertError.textContent = err.message || "An unexpected error occurred.";
+          alertError.style.display = "block";
+        } finally {
+          submitBtn.disabled = false;
+          submitText.textContent = "Send Magic Link";
+        }
+      });
+    })();
+  </script>
+</body>
+</html>

@@ -1,0 +1,116 @@
+skip_to_main:
+  other: "Saltar al contenido principal"
+view_page:
+  other: "Vista de página"
+view_cards:
+  other: "Tarjetas de dos caras"
+view_slides:
+  other: "Presentación de diapositivas ↗"
+hide_notes:
+  other: "Ocultar notas"
+show_notes:
+  other: "Mostrar notas"
+print_worksheet:
+  other: "Imprimir hoja de trabajo"
+print_facilitator:
+  other: "Imprimir vista de facilitador"
+flip_all:
+  other: "Voltear todas las tarjetas"
+flip_all_front:
+  other: "Voltear todas al frente"
+print_cards:
+  other: "Imprimir tarjetas"
+print_options:
+  other: "Opciones de impresión de tarjetas"
+print_style:
+  other: "Estilo de impresión"
+folding_style:
+  other: "Estilo plegable (una cara)"
+folding_desc:
+  other: "Imprime frente y dorso lado a lado con una línea de pliegue central."
+duplex_style:
+  other: "Doble cara (dúplex)"
+duplex_desc:
+  other: "Alterna páginas de frente y dorso para impresión a doble cara."
+paper_size:
+  other: "Tamaño de papel"
+cards_per_sheet:
+  other: "Tarjetas por hoja"
+large_format:
+  other: "Formato grande"
+standard_rec:
+  other: "Estándar (Recomendado)"
+compact_deck:
+  other: "Baraja compacta"
+flip_binding:
+  other: "Borde de giro a doble cara"
+flip_short:
+  other: "Voltear por el borde corto (Predeterminado)"
+flip_long:
+  other: "Voltear por el borde largo"
+cancel:
+  other: "Cancelar"
+open_print_dialog:
+  other: "Abrir cuadro de diálogo de impresión"
+facilitator_overview:
+  other: "Resumen para el facilitador"
+facilitator_note:
+  other: "Nota del facilitador"
+adaptation_guidance:
+  other: "Guía de adaptación y localización"
+key_takeaways:
+  other: "Puntos clave"
+quiz_question:
+  other: "Pregunta del cuestionario"
+quiz_questions:
+  other: "Preguntas del cuestionario"
+quiz_answer:
+  other: "Respuesta y explicación"
+statistic:
+  other: "Estadística"
+statistics:
+  other: "Estadísticas"
+perspective:
+  other: "Perspectiva"
+perspectives:
+  other: "Perspectivas"
+information:
+  other: "Información"
+source_citation:
+  other: "Fuente / Cita"
+credit:
+  other: "Crédito"
+flip_to_answer:
+  other: "Voltear a la respuesta →"
+flip_to_details:
+  other: "Voltear a los detalles →"
+flip_to_front:
+  other: "← Voltear al frente"
+click_to_flip:
+  other: "Haga clic para voltear ↺"
+cards_intro_hint:
+  other: "Haga clic en cualquier tarjeta (o pulse Espacio/Enter) para voltear entre frente y dorso."
+cards_intro_ready:
+  other: "Lista para imprimir en cartulina para talleres presenciales."
+card_aria_label:
+  other: "Tarjeta interactiva"
+showing_fallback_deck:
+  other: "⚠️ Mostrando inglés (presentación no traducida)"
+close_dialog:
+  other: "Cerrar diálogo"
+collections:
+  other: "Colecciones"
+content_items:
+  other: "Elementos de contenido"
+activities:
+  other: "Actividades"
+modules:
+  other: "Módulos"
+home:
+  other: "Inicio"
+collection:
+  other: "Colección"
+content_item:
+  other: "Elemento de contenido"
+explore_content:
+  other: "Explorar contenido y presentación →"
