@@ -34,9 +34,8 @@ Scanarix AI Agora is a serious game on AI, media and information literacy and de
 
 \- No prior knowledge of AI is needed: the first part of the game builds a shared vocabulary. - Time: about 75 minutes (short version) or 2–2.5 hours (full game).
 
- - A facilitator is optional. Without one, a player acts as host: they keep time, read out the steps, reveal the answer key and look after the Group Record.
-
- - Room: a table large enough for the 50 × 50 cm board (an A4 board is also included), and space for groups of 4–6 to sit together in Part 3.
+- A facilitator is optional. Without one, a player acts as host: they keep time, read out the steps, reveal the answer key and look after the Group Record.
+- Room: a table large enough for the 50 × 50 cm board (an A4 board is also included), and space for groups of 4–6 to sit together in Part 3.
 
 ## Preparation
 
@@ -56,7 +55,7 @@ Scanarix AI Agora is a serious game on AI, media and information literacy and de
 
 1\. Players take turns rolling the die and moving around the board. Each player starts with one Activity Card and takes another each time they land on an Activity space.
 
- 2. Each Activity Card shows a post, chat, advert, notice or image on the front and a question on the back. The player chooses one of the two Key Cards with the same number (blue or green). Only one is correct.
+2. Each Activity Card shows a post, chat, advert, notice or image on the front and a question on the back. The player chooses one of the two Key Cards with the same number (blue or green). Only one is correct.
 
 3\. Hint Cards, based on research and EU law, help players decide. After getting a Hint Card, a player may change their answer once. On a Lens space, a player takes a Lens Card, answers its question about one of their Activity Cards and keeps it to ask the group in the Agora.
 
@@ -64,7 +63,7 @@ Scanarix AI Agora is a serious game on AI, media and information literacy and de
 
 **Part 2. The Verdicts (about 15 min)**
 
- 5. Players present their answers, explain their reasons and say what they would do in real life: check it, report it, talk to someone or ignore it.
+5. Players present their answers, explain their reasons and say what they would do in real life: check it, report it, talk to someone or ignore it.
 
 6\. Reveal the answer key and count points.
 
@@ -95,11 +94,11 @@ Scanarix AI Agora is a serious game on AI, media and information literacy and de
 ## Localisation & Adaptation Notes
 
 Audiences and experience levels: the game is designed for players aged 16+ and adults, in schools, universities, libraries, community centres and civic education. Groups new to AI can start straight away: Part 1 builds a shared vocabulary, and Hint Cards 16–19 (what AI is, its risks and benefits) are useful for every case. For shorter sessions, use the short version.
- 
+
 Jurisdictions: the Hint Cards reflect EU law (AI Act, DSA, GDPR), the Council of Europe Framework Convention on AI and AI research as of 2026. Outside the EU, use the question on Hint Cards 37–38, "Is there a rule like this where you live?", to discuss local rules. The game is not legal advice; laws change quickly, so check the latest official sources.
- 
+
 Cultural contexts: all cases, people and brands are fictional and designed to work across different cultural and linguistic contexts. Some images and texts were created with AI and reviewed by the authors.
- 
+
 **Licence and translations:** Scanarix AI Agora © 2026 Larysa Nazarenko. Published by CSO Segalor.
 
 *Scanarix AI Agora is licensed under CC BY-NC-SA 4.0 (*[_https://creativecommons.org/licenses/by-nc-sa/4.0/_](https://creativecommons.org/licenses/by-nc-sa/4.0/)_). You may print, share, translate and adapt this game for non-commercial purposes, if you credit Larysa Nazarenko and CSO Segalor as shown below and share your version under the same licence._
@@ -117,3 +116,5 @@ _For adapted versions:_
 _Based on Scanarix AI Agora by Larysa Nazarenko (2026), published by CSO Segalor, licensed under CC BY-NC-SA 4.0. Changes: [describe what you changed]._
 
 **Not sure what is allowed? Write at scanarixmediagame@proton.me. We are happy to help and will find a solution together.**
+
+**Download the Scanarix AI Agora game here** [https://scanarixmediagame.com/knowledge](https://scanarixmediagame.com/knowledge)
