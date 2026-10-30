@@ -22,9 +22,7 @@ files: []
 This icebreaker activity aims to:
 
 * **Introduce a range of positive and negative impacts of AI.** 
-
 * **Encourage participants to share their initial reactions to AI.**
-
 * **Introduce critical thinking skills and explore different narratives around AI.** 
 
 The first part of this activity can be run as a group are arriving for a session, or when the group are returning from a break. 
@@ -78,4 +76,13 @@ Invite groups to feedback from their discussions. Then the lead facilitator carr
 ## Localisation & Adaptation Notes
 
 * We have prepared an example set of news stories - TODO TODO TODO 
-* Your set of stories may need to be regularly updated.
+* News stories or the images they contain may be protected by copyright: whilst you are likely to be able to use clippings from newspapers you have purchased in a workshop, you may not be able to re-publish your resource without additional permissions. 
+* Your set of stories will need to be regularly updated.
+
+A version of the following prompt may support use of an LLM to identify possible sources:
+
+> List and link to 10 newspaper stories from the last three months that present a range of perspectives on artificial intelligence and reflect current issues and controversies. 
+>
+> Focus on newspaper stories from mainstream national publications. Show stories from publications at different points on the political spectrum. Include at least two stories from foreign/international sources. 
+>
+> Provide a summary table of the stories and the dimensions on which they have been selected.
