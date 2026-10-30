@@ -8,7 +8,9 @@ creators:
   - name: Citizens Track on AI
     role: author
     url: ''
-license: null
+license:
+  type: standard
+  name: CC BY 4.0
 duration:
   min: 15
   max: 45
