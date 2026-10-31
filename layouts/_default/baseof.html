@@ -1,10 +1,11 @@
+{{ $isHandbook := or (eq .Section "handbook") (eq .Section "pages") (eq .Params.group "guidance") }}
 <!DOCTYPE html>
 <html lang="{{ .Language.Lang | default "en" }}" dir="{{ if .Language.Params.rtl }}rtl{{ else }}ltr{{ end }}">
   {{ partial "head.html" . }}
-  <body>
+  <body class="{{ if $isHandbook }}handbook-layout{{ end }}">
     <a href="#main-content" class="skip-link">{{ i18n "skip_to_main" | default "Skip to main content" }}</a>
     {{ partial "header.html" . }}
-    <main id="main-content" class="main-wrapper" tabindex="-1">
+    <main id="main-content" class="main-wrapper{{ if $isHandbook }} handbook-main-wrapper{{ end }}" tabindex="-1">
       {{ block "main" . }}{{ end }}
     </main>
     {{ partial "footer.html" . }}

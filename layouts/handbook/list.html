@@ -1,0 +1,103 @@
+{{ define "main" }}
+
+{{ $guidancePages := where (where .Site.RegularPages "Section" "handbook") ".Params.group" "guidance" }}
+{{ $sortedGuidance := sort $guidancePages "Weight" "asc" }}
+
+<!-- Mobile Floating Bar -->
+<div class="book-mobile-bar" aria-label="Mobile Handbook Bar">
+  <button class="book-drawer-toggle" id="book-drawer-toggle" aria-expanded="false" aria-controls="book-sidebar-container">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <line x1="3" y1="12" x2="21" y2="12"></line>
+      <line x1="3" y1="6" x2="21" y2="6"></line>
+      <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+    <span>Handbook Contents</span>
+  </button>
+  <div class="book-mobile-current">
+    <span class="mobile-stage-dot stage-{{ .Params.stage | default "overview" }}"></span>
+    <span class="mobile-page-title">{{ .Title }}</span>
+  </div>
+</div>
+
+<!-- Drawer Backdrop Overlay (Mobile only) -->
+<div class="book-drawer-backdrop" id="book-drawer-backdrop" aria-hidden="true"></div>
+
+<div class="book-shell-container">
+  
+  <!-- Left Sticky Sidebar Column -->
+  <aside class="book-sidebar-container" id="book-sidebar-container" aria-label="Handbook Sidebar">
+    <div class="book-sidebar-inner">
+      <div class="book-drawer-header">
+        <span class="drawer-title">Assembly Handbook</span>
+        <button class="book-drawer-close" id="book-drawer-close" aria-label="Close Handbook Menu">&times;</button>
+      </div>
+      {{ partial "guidance-sidebar.html" . }}
+    </div>
+  </aside>
+
+  <!-- Main Reading Column -->
+  <div class="book-main-col">
+    <!-- Breadcrumbs -->
+    <nav class="reader-breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-current">{{ .Title }}</span>
+    </nav>
+
+    <article class="content-white-box book-white-box">
+      <header class="box-header">
+        {{ with .Params.stage }}
+          <div class="stage-pill-row">
+            <span class="stage-badge stage-{{ . }}">{{ . | upper }}</span>
+          </div>
+        {{ end }}
+        <h1 class="page-title">{{ .Title }}</h1>
+        {{ with .Params.description }}
+          <p class="page-lead">{{ . }}</p>
+        {{ end }}
+      </header>
+
+      <div class="page-body markdown-body">
+        {{ .Content }}
+      </div>
+    </article>
+  </div>
+</div>
+
+<!-- Drawer JS Script -->
+<script>
+  (function() {
+    const toggleBtn = document.getElementById('book-drawer-toggle');
+    const closeBtn = document.getElementById('book-drawer-close');
+    const sidebar = document.getElementById('book-sidebar-container');
+    const backdrop = document.getElementById('book-drawer-backdrop');
+
+    function openDrawer() {
+      if (!sidebar) return;
+      sidebar.classList.add('drawer-open');
+      if (backdrop) backdrop.classList.add('visible');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeDrawer() {
+      if (!sidebar) return;
+      sidebar.classList.remove('drawer-open');
+      if (backdrop) backdrop.classList.remove('visible');
+      if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+      document.body.style.overflow = '';
+    }
+
+    if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+    if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+    if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+    window.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && sidebar && sidebar.classList.contains('drawer-open')) {
+        closeDrawer();
+      }
+    });
+  })();
+</script>
+
+{{ end }}

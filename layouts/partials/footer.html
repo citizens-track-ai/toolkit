@@ -17,6 +17,7 @@
       <h3 class="footer-col-title">Toolkit Hub</h3>
       <ul class="footer-links-list">
         <li><a href="{{ .Site.Home.RelPermalink }}" class="footer-link">Home</a></li>
+        <li><a href="{{ `about/` | relLangURL }}" class="footer-link">About</a></li>
         <li><a href="{{ `content-collections/` | relLangURL }}" class="footer-link">Collections</a></li>
         <li><a href="{{ `content/` | relLangURL }}" class="footer-link">Content Items</a></li>
         <li><a href="{{ `activities/` | relLangURL }}" class="footer-link">Activities</a></li>
@@ -38,16 +39,6 @@
             </svg>
           </a>
         </li>
-        <li>
-          <a href="/admin/" target="_blank" rel="noopener" class="footer-link">
-            <span>CMS Admin</span>
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-              stroke-linecap="round" stroke-linejoin="round">
-              <path d="M12 20h9"></path>
-              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-            </svg>
-          </a>
-        </li>
         {{ if hugo.IsMultilingual }}
         <li class="footer-languages-item">
           <span class="footer-lang-label">Languages:</span>
@@ -62,6 +53,16 @@
           </div>
         </li>
         {{ end }}
+        <li class="footer-admin-btn-item">
+          <a href="/admin/login.html" class="footer-cms-btn" target="_blank" rel="noopener">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 20h9"></path>
+              <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
+            </svg>
+            <span>CMS Admin</span>
+          </a>
+        </li>
       </ul>
     </div>
   </div>

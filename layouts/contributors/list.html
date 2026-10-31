@@ -1,0 +1,150 @@
+{{ define "main" }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ "about/" | relLangURL }}">About</a>
+  <span>/</span>
+  <strong>Contributors</strong>
+</nav>
+
+<article class="page-header" style="margin-bottom: 2.5rem;">
+  <span class="collection-badge" style="background: rgba(255, 95, 111, 0.15); color: #9c0018; border: 1px solid rgba(255, 95, 111, 0.3); font-weight: 700;">Co-Design Community</span>
+  <h1 class="page-title">Contributors</h1>
+  <p style="font-size: 1.15rem; color: var(--color-slate); margin: 0; line-height: 1.6;">
+    The Citizens' Track on AI Toolkit is co-designed with practitioners, researchers, and community leaders around the world.
+  </p>
+</article>
+
+{{ $contributors := where .Site.RegularPages "Section" "contributors" }}
+{{ $sortedContributors := sort $contributors "Params.order_weight" "asc" }}
+
+{{ if gt (len $sortedContributors) 0 }}
+  <div class="contributors-grid">
+    {{ range $sortedContributors }}
+      {{ $name := .Title }}
+      {{ $slug := .File.ContentBaseName }}
+      {{ $initials := "" }}
+      {{ range (findRE `\b[A-Za-z]` $name) }}
+        {{ if lt (len $initials) 2 }}
+          {{ $initials = printf "%s%s" $initials (upper .) }}
+        {{ end }}
+      {{ end }}
+
+      <!-- Contributor List Card: Name, Photo, Organisation -->
+      <button type="button" class="contributor-card" onclick="document.getElementById('modal-{{ $slug }}').showModal()" aria-haspopup="dialog" aria-controls="modal-{{ $slug }}">
+        <div class="contributor-avatar-wrap">
+          {{ if .Params.headshot }}
+            <img src="{{ .Params.headshot }}" alt="{{ $name }}" class="contributor-headshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+            <div class="contributor-initials-avatar" style="display: none;" aria-hidden="true">{{ $initials }}</div>
+          {{ else }}
+            <div class="contributor-initials-avatar" aria-hidden="true">{{ $initials }}</div>
+          {{ end }}
+        </div>
+
+        <div class="contributor-card-text">
+          <h2 class="contributor-name">{{ $name }}</h2>
+          {{ with .Params.organisation }}
+            <p class="contributor-org">{{ . }}</p>
+          {{ end }}
+        </div>
+
+        <span class="contributor-view-hint" aria-hidden="true">
+          <span>View profile</span> &rarr;
+        </span>
+      </button>
+
+      <!-- Contributor Details Modal -->
+      <dialog id="modal-{{ $slug }}" class="contributor-modal">
+        <div class="modal-dialog-inner">
+          <button type="button" class="modal-close-btn" aria-label="Close profile" onclick="this.closest('dialog').close()">&times;</button>
+          
+          <div class="modal-header-row">
+            <div class="modal-avatar-wrap">
+              {{ if .Params.headshot }}
+                <img src="{{ .Params.headshot }}" alt="{{ $name }}" class="contributor-headshot" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" loading="lazy">
+                <div class="contributor-initials-avatar large" style="display: none;" aria-hidden="true">{{ $initials }}</div>
+              {{ else }}
+                <div class="contributor-initials-avatar large" aria-hidden="true">{{ $initials }}</div>
+              {{ end }}
+            </div>
+
+            <div class="modal-header-meta">
+              <span class="collection-badge" style="background: rgba(255, 95, 111, 0.15); color: #9c0018; border: 1px solid rgba(255, 95, 111, 0.3); font-weight: 700; align-self: flex-start; margin-bottom: 0.25rem;">Contributor</span>
+              <h2 class="modal-contributor-name">{{ $name }}</h2>
+              {{ if or .Params.role .Params.organisation }}
+                <p class="modal-role-org">
+                  {{ with .Params.role }}<span class="modal-role">{{ . }}</span>{{ end }}
+                  {{ if and .Params.role .Params.organisation }} <span class="contributor-sep">&middot;</span> {{ end }}
+                  {{ with .Params.organisation }}<span class="modal-org"><strong>{{ . }}</strong></span>{{ end }}
+                </p>
+              {{ end }}
+            </div>
+          </div>
+
+          {{ with .Params.bio }}
+            <div class="modal-bio">
+              <p style="margin: 0;">{{ . }}</p>
+            </div>
+          {{ end }}
+
+          <!-- Social & Profile Links -->
+          <div class="modal-links-row">
+            {{ with or .Params.profile_url .Params.url }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="contributor-link-btn" title="Website / Profile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="2" y1="12" x2="22" y2="12"></line>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                </svg>
+                <span>Website</span>
+              </a>
+            {{ end }}
+
+            {{ with .Params.linkedin_url }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="contributor-link-btn" title="LinkedIn Profile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path>
+                  <rect x="2" y="9" width="4" height="12"></rect>
+                  <circle cx="4" cy="4" r="2"></circle>
+                </svg>
+                <span>LinkedIn</span>
+              </a>
+            {{ end }}
+
+            {{ with .Params.microblog_url }}
+              <a href="{{ . }}" target="_blank" rel="noopener" class="contributor-link-btn" title="Microblog Profile">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path>
+                </svg>
+                <span>Social</span>
+              </a>
+            {{ end }}
+          </div>
+        </div>
+      </dialog>
+    {{ end }}
+  </div>
+
+  <!-- Backdrop Click Close Script for Modals -->
+  <script>
+    document.querySelectorAll('dialog.contributor-modal').forEach(function(dialog) {
+      dialog.addEventListener('click', function(e) {
+        var rect = dialog.getBoundingClientRect();
+        var inDialog = (
+          rect.top <= e.clientY &&
+          e.clientY <= rect.top + rect.height &&
+          rect.left <= e.clientX &&
+          e.clientX <= rect.left + rect.width
+        );
+        if (!inDialog) {
+          dialog.close();
+        }
+      });
+    });
+  </script>
+{{ else }}
+  <p style="color: var(--ct-text-secondary); font-style: italic;">No contributors published yet.</p>
+{{ end }}
+
+{{ end }}

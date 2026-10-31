@@ -1,0 +1,205 @@
+{{ $currentPage := . }}
+{{ $currentRelPermalink := .RelPermalink }}
+{{ $guidancePages := where (where .Site.RegularPages "Section" "handbook") ".Params.group" "guidance" }}
+{{ $sortedGuidance := sort $guidancePages "Weight" "asc" }}
+
+{{ $currentChapter := .Params.chapter | default .Params.parent | default .Params.stage | default "overview" }}
+
+<nav class="book-sidebar-nav" aria-label="Handbook Navigation">
+  
+  <!-- Sidebar Header -->
+  <div class="book-sidebar-header">
+    <div class="book-sidebar-brand">
+      <span class="book-icon" aria-hidden="true">📖</span>
+      <div>
+        <h2 class="book-title">Assembly Handbook</h2>
+        <span class="book-subtitle">Deliberation Guide</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chapters Tree -->
+  <div class="book-nav-tree">
+    
+    <!-- 1. OVERVIEW -->
+    {{ $overviewPages := where (where $sortedGuidance ".Params.chapter" "overview") ".Params.is_parent" true }}
+    {{ $overviewPage := false }}
+    {{ if gt (len $overviewPages) 0 }}
+      {{ $overviewPage = index $overviewPages 0 }}
+    {{ end }}
+    {{ $isOverviewActive := or (eq $currentChapter "overview") (and $overviewPage (eq $currentRelPermalink $overviewPage.RelPermalink)) }}
+
+    <div class="book-chapter-group group-overview{{ if $isOverviewActive }} expanded active-chapter{{ end }}">
+      <div class="book-chapter-header">
+        <a href="{{ if $overviewPage }}{{ $overviewPage.RelPermalink }}{{ else }}{{ "handbook/overview/" | relLangURL }}{{ end }}" 
+           class="book-chapter-link{{ if and $overviewPage (eq $currentRelPermalink $overviewPage.RelPermalink) }} current-page{{ end }}">
+          <span class="chapter-dot dot-overview" aria-hidden="true"></span>
+          <span class="chapter-label">Overview &amp; Foundations</span>
+        </a>
+      </div>
+
+      {{ if and $overviewPage (eq $currentRelPermalink $overviewPage.RelPermalink) }}
+        <div class="book-toc-wrap">
+          <span class="book-toc-heading">On this page</span>
+          {{ $currentPage.TableOfContents }}
+        </div>
+      {{ end }}
+    </div>
+
+    <!-- 2. STAGE 1: PREPARE -->
+    {{ $prepareParents := where (where $sortedGuidance ".Params.chapter" "prepare") ".Params.is_parent" true }}
+    {{ $preparePage := false }}
+    {{ if gt (len $prepareParents) 0 }}
+      {{ $preparePage = index $prepareParents 0 }}
+    {{ end }}
+    {{ $prepareSubpages := where $sortedGuidance ".Params.parent" "prepare" }}
+    {{ $isPrepareActive := or (eq $currentChapter "prepare") (eq $currentPage.Params.parent "prepare") }}
+
+    <div class="book-chapter-group group-prepare{{ if $isPrepareActive }} expanded active-chapter{{ end }}">
+      <div class="book-chapter-header">
+        <a href="{{ if $preparePage }}{{ $preparePage.RelPermalink }}{{ else }}{{ "handbook/prepare/" | relLangURL }}{{ end }}" 
+           class="book-chapter-link{{ if and $preparePage (eq $currentRelPermalink $preparePage.RelPermalink) }} current-page{{ end }}">
+          <span class="chapter-dot dot-prepare" aria-hidden="true"></span>
+          <span class="chapter-label">Stage 1: Prepare</span>
+        </a>
+      </div>
+
+      <!-- If on Prepare main page: show on-page TOC -->
+      {{ if and $preparePage (eq $currentRelPermalink $preparePage.RelPermalink) }}
+        <div class="book-toc-wrap">
+          <span class="book-toc-heading">On this page</span>
+          {{ $currentPage.TableOfContents }}
+        </div>
+      {{ end }}
+
+      <!-- Subpages List -->
+      {{ if gt (len $prepareSubpages) 0 }}
+        <div class="book-subpages-wrap">
+          <span class="book-subpages-header">Deep-Dive Guides</span>
+          <ul class="book-subpages-list">
+            {{ range $prepareSubpages }}
+              {{ $isSubCurrent := eq $currentRelPermalink .RelPermalink }}
+              <li class="book-subpage-item{{ if $isSubCurrent }} current-page{{ end }}">
+                <a href="{{ .RelPermalink }}" class="book-subpage-link{{ if $isSubCurrent }} active{{ end }}">
+                  <span class="subpage-bullet" aria-hidden="true">&bull;</span>
+                  <span>{{ .Title }}</span>
+                </a>
+                {{ if $isSubCurrent }}
+                  <div class="book-toc-wrap sub-toc">
+                    {{ .TableOfContents }}
+                  </div>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+
+    <!-- 3. STAGE 2: FACILITATE -->
+    {{ $facilitateParents := where (where $sortedGuidance ".Params.chapter" "facilitate") ".Params.is_parent" true }}
+    {{ $facilitatePage := false }}
+    {{ if gt (len $facilitateParents) 0 }}
+      {{ $facilitatePage = index $facilitateParents 0 }}
+    {{ end }}
+    {{ $facilitateSubpages := where $sortedGuidance ".Params.parent" "facilitate" }}
+    {{ $isFacilitateActive := or (eq $currentChapter "facilitate") (eq $currentPage.Params.parent "facilitate") }}
+
+    <div class="book-chapter-group group-facilitate{{ if $isFacilitateActive }} expanded active-chapter{{ end }}">
+      <div class="book-chapter-header">
+        <a href="{{ if $facilitatePage }}{{ $facilitatePage.RelPermalink }}{{ else }}{{ "handbook/facilitate/" | relLangURL }}{{ end }}" 
+           class="book-chapter-link{{ if and $facilitatePage (eq $currentRelPermalink $facilitatePage.RelPermalink) }} current-page{{ end }}">
+          <span class="chapter-dot dot-facilitate" aria-hidden="true"></span>
+          <span class="chapter-label">Stage 2: Facilitate</span>
+        </a>
+      </div>
+
+      <!-- If on Facilitate main page: show on-page TOC -->
+      {{ if and $facilitatePage (eq $currentRelPermalink $facilitatePage.RelPermalink) }}
+        <div class="book-toc-wrap">
+          <span class="book-toc-heading">On this page</span>
+          {{ $currentPage.TableOfContents }}
+        </div>
+      {{ end }}
+
+      <!-- Subpages List -->
+      {{ if gt (len $facilitateSubpages) 0 }}
+        <div class="book-subpages-wrap">
+          <span class="book-subpages-header">Deep-Dive Guides</span>
+          <ul class="book-subpages-list">
+            {{ range $facilitateSubpages }}
+              {{ $isSubCurrent := eq $currentRelPermalink .RelPermalink }}
+              <li class="book-subpage-item{{ if $isSubCurrent }} current-page{{ end }}">
+                <a href="{{ .RelPermalink }}" class="book-subpage-link{{ if $isSubCurrent }} active{{ end }}">
+                  <span class="subpage-bullet" aria-hidden="true">&bull;</span>
+                  <span>{{ .Title }}</span>
+                </a>
+                {{ if $isSubCurrent }}
+                  <div class="book-toc-wrap sub-toc">
+                    {{ .TableOfContents }}
+                  </div>
+                {{ end }}
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+
+    <!-- 4. STAGE 3: FOLLOW-UP -->
+    {{ $followupParents := where (where $sortedGuidance ".Params.chapter" "follow-up") ".Params.is_parent" true }}
+    {{ $followupPage := false }}
+    {{ if gt (len $followupParents) 0 }}
+      {{ $followupPage = index $followupParents 0 }}
+    {{ end }}
+    {{ $followupSubpages := where $sortedGuidance ".Params.parent" "follow-up" }}
+    {{ $isFollowupActive := or (eq $currentChapter "follow-up") (eq $currentPage.Params.parent "follow-up") }}
+
+    <div class="book-chapter-group group-followup{{ if $isFollowupActive }} expanded active-chapter{{ end }}">
+      <div class="book-chapter-header">
+        <a href="{{ if $followupPage }}{{ $followupPage.RelPermalink }}{{ else }}{{ "handbook/follow-up/" | relLangURL }}{{ end }}" 
+           class="book-chapter-link{{ if and $followupPage (eq $currentRelPermalink $followupPage.RelPermalink) }} current-page{{ end }}">
+          <span class="chapter-dot dot-followup" aria-hidden="true"></span>
+          <span class="chapter-label">Stage 3: Follow-up &amp; Impact</span>
+        </a>
+      </div>
+
+      {{ if and $followupPage (eq $currentRelPermalink $followupPage.RelPermalink) }}
+        <div class="book-toc-wrap">
+          <span class="book-toc-heading">On this page</span>
+          {{ $currentPage.TableOfContents }}
+        </div>
+      {{ end }}
+
+      {{ if gt (len $followupSubpages) 0 }}
+        <div class="book-subpages-wrap">
+          <span class="book-subpages-header">Deep-Dive Guides</span>
+          <ul class="book-subpages-list">
+            {{ range $followupSubpages }}
+              {{ $isSubCurrent := eq $currentRelPermalink .RelPermalink }}
+              <li class="book-subpage-item{{ if $isSubCurrent }} current-page{{ end }}">
+                <a href="{{ .RelPermalink }}" class="book-subpage-link{{ if $isSubCurrent }} active{{ end }}">
+                  <span class="subpage-bullet" aria-hidden="true">&bull;</span>
+                  <span>{{ .Title }}</span>
+                </a>
+              </li>
+            {{ end }}
+          </ul>
+        </div>
+      {{ end }}
+    </div>
+
+  </div>
+
+  <!-- Sidebar Quick Actions -->
+  <div class="book-sidebar-footer">
+    <a href="{{ "handbook/register/" | relLangURL }}" class="book-sidebar-btn btn-register">
+      <span class="btn-dot" aria-hidden="true"></span>
+      <span>Register Assembly</span>
+    </a>
+    <a href="{{ "modules/" | relLangURL }}" class="book-sidebar-btn btn-resources">
+      <span>Workshop Modules &rarr;</span>
+    </a>
+  </div>
+
+</nav>

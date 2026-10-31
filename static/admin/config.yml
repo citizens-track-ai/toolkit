@@ -3,7 +3,7 @@
 backend:
   name: github
   repo: citizens-track-ai/toolkit
-  branch: handbook
+  branch: alt-handbook
   api_root: https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev
   auth_methods: [oauth, token]
   open_authoring: false
@@ -24,19 +24,24 @@ i18n:
   initial_locales: default
 
 collections:
-  - name: pages
-    label: Guidance & Pages
-    label_singular: Page
-    folder: content/{{locale}}/pages
+  - name: handbook
+    label: Handbook
+    label_singular: Handbook Page
+    folder: content/{{locale}}/handbook
     summary: '{{title}} [{{locales}}]'
     i18n: true
     create: true
     fields:
       - { name: title, label: Page Title, widget: string, i18n: true }
       - { name: draft, label: Draft, widget: boolean, default: false, i18n: duplicate }
-      - { name: weight, label: Chapter Order / Weight, widget: number, value_type: int, default: 10, i18n: duplicate, hint: "Order in the handbook reading sequence: 10 (Intro), 20 (Prepare), 30 (Facilitate), 40 (Follow-up), etc." }
+      - { name: weight, label: Section Order / Weight, widget: number, value_type: int, default: 10, i18n: duplicate, hint: "Order in handbook reading sequence: 10 (Overview), 20 (Prepare), 21 (Invitations), 22 (Fundraising), 30 (Facilitate), 31 (Principles), 32 (Translation), 40 (Follow-up)" }
       - { name: group, label: Navigation Group, widget: select, options: [{label: "Guidance", value: "guidance"}, {label: "Register", value: "register"}, {label: "General", value: "general"}], default: "guidance", i18n: duplicate }
-      - { name: stage, label: Stage (for Guidance), widget: select, options: [{label: "None", value: ""}, {label: "1. Prepare", value: "prepare"}, {label: "2. Facilitate", value: "facilitate"}, {label: "3. Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: stage, label: Stage (for Guidance), widget: select, options: [{label: "Foundations / Overview", value: "overview"}, {label: "1. Prepare", value: "prepare"}, {label: "2. Facilitate", value: "facilitate"}, {label: "3. Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: chapter, label: Section / Stage Key, widget: select, options: [{label: "Overview", value: "overview"}, {label: "Stage 1: Prepare", value: "prepare"}, {label: "Stage 2: Facilitate", value: "facilitate"}, {label: "Stage 3: Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: parent, label: Parent Section (for Sub-Pages), widget: select, options: [{label: "None (Main Section)", value: ""}, {label: "Stage 1: Prepare", value: "prepare"}, {label: "Stage 2: Facilitate", value: "facilitate"}, {label: "Stage 3: Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
+      - { name: is_subpage, label: Is Sub-page?, widget: boolean, default: false, required: false, i18n: duplicate }
+      - { name: is_parent, label: Is Main Section Page?, widget: boolean, default: false, required: false, i18n: duplicate }
+      - { name: url, label: Custom URL Path, widget: string, required: false, i18n: duplicate, hint: "e.g. /handbook/prepare/invitations/" }
       - { name: aliases, label: URL Aliases, widget: list, required: false, i18n: duplicate }
       - { name: description, label: Description / Lead Text, widget: text, required: false, i18n: true }
       - { name: body, label: Page Content, widget: richtext, required: false, i18n: true }
@@ -50,6 +55,9 @@ collections:
     create: true
     fields:
       - { name: title, label: Module Title, widget: string, i18n: true }
+      - { name: status, label: Status, widget: select, options: ["Planned", "Draft", "Pilot", "Complete", "Updated"], default: "Planned", required: false, i18n: duplicate }
+      - { name: status_notes, label: Status Notes, widget: string, required: false, i18n: true, hint: "E.g. 'Coming March 2027'" }
+      - { name: order_weight, label: Order Weight, widget: number, value_type: int, default: 10, required: false, i18n: duplicate, hint: "Ordering within status group (lower numbers appear first)" }
       - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
       - { name: description, label: Module Overview / Target Audience, widget: text, required: false, i18n: true }
 
@@ -317,3 +325,23 @@ collections:
       - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
       - { name: description, label: Description, widget: text, required: false, i18n: true }
       - { name: body, label: Body, widget: richtext, required: false, i18n: true }
+
+  - name: contributors
+    label: Contributors
+    label_singular: Contributor
+    folder: content/en/contributors
+    summary: '{{title}} ({{organisation}})'
+    i18n: false
+    create: true
+    fields:
+      - { name: title, label: Name, widget: string }
+      - { name: organisation, label: Organisation, widget: string, required: false }
+      - { name: role, label: Role, widget: string, required: false }
+      - { name: bio, label: Bio (One Line Biography), widget: string, required: false }
+      - { name: profile_url, label: URL, widget: string, required: false }
+      - { name: linkedin_url, label: LinkedIn URL, widget: string, required: false }
+      - { name: microblog_url, label: Microblog URL, widget: string, required: false, hint: "Bluesky / Mastodon / Other microblogging profile" }
+      - { name: headshot, label: Headshot Photo, widget: image, required: false }
+      - { name: order_weight, label: Order Weight, widget: number, value_type: int, default: 50, required: false }
+      - { name: draft, label: Draft, widget: boolean, default: false }
+

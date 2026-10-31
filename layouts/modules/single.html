@@ -8,12 +8,28 @@
   <strong>{{ .Title }}</strong>
 </nav>
 
+{{ $isPlanned := eq .Params.status "Planned" }}
+
 <article class="page-header" style="margin-bottom: 2rem;">
   <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
     <span class="collection-badge" style="background: rgba(255, 95, 111, 0.15); color: #9c0018; border: 1px solid rgba(255, 95, 111, 0.3); font-weight: 700;">Workshop Module</span>
-    <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-slate); border: 1px solid var(--color-border); font-weight: 600;">
-      4 Sections
-    </span>
+    {{ with .Params.status }}
+      <span class="module-status-badge status-{{ . | urlize }}">{{ . }}</span>
+    {{ end }}
+    {{ with .Params.status_notes }}
+      <span class="module-status-notes">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;">
+          <circle cx="12" cy="12" r="10"></circle>
+          <polyline points="12 6 12 12 16 14"></polyline>
+        </svg>
+        <span>{{ . }}</span>
+      </span>
+    {{ end }}
+    {{ if not $isPlanned }}
+      <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-slate); border: 1px solid var(--color-border); font-weight: 600;">
+        4 Sections
+      </span>
+    {{ end }}
   </div>
 
   <h1 class="page-title">{{ .Title }}</h1>
@@ -25,112 +41,148 @@
   {{ end }}
 </article>
 
-<!-- Section Navigation Bar -->
-<div class="module-nav-bar">
-  <span class="module-nav-label">Module Structure:</span>
-  <div class="module-nav-links">
-    <a href="#section-welcome" class="module-nav-btn">
-      <span class="step-num">1</span> 👋 Welcome
-    </a>
-    <a href="#section-learning" class="module-nav-btn">
-      <span class="step-num">2</span> 💡 Learning
-    </a>
-    <a href="#section-discussion" class="module-nav-btn">
-      <span class="step-num">3</span> 💬 Discussion
-    </a>
-    <a href="#section-action" class="module-nav-btn">
-      <span class="step-num">4</span> ⚡ Action
-    </a>
+{{ if $isPlanned }}
+  <!-- Planned Module: Single Coming Soon Box -->
+  <div class="module-coming-soon-card">
+    <div class="coming-soon-icon-wrap" aria-hidden="true">
+      <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+        <line x1="16" y1="2" x2="16" y2="6"></line>
+        <line x1="8" y1="2" x2="8" y2="6"></line>
+        <line x1="3" y1="10" x2="21" y2="10"></line>
+      </svg>
+    </div>
+    
+    <div class="coming-soon-content">
+      <span class="coming-soon-pill">Module In Development</span>
+      <h2 class="coming-soon-title">Coming Soon</h2>
+      
+      {{ with .Params.status_notes }}
+        <p class="coming-soon-target">Expected availability: <strong>{{ . }}</strong></p>
+      {{ end }}
+
+      <p class="coming-soon-desc">
+        This workshop module is currently being authored and prepared for community assembly trials. The complete session agenda, facilitation guidance, and interactive activity materials will be available here soon.
+      </p>
+
+      <div class="coming-soon-actions">
+        <a href="{{ "modules/" | relLangURL }}" class="action-btn">
+          &larr; Back to All Modules
+        </a>
+        <a href="{{ "handbook/overview/" | relLangURL }}" class="action-btn" style="background: transparent; color: var(--ct-color-fjord); border: 1px solid var(--ct-color-fjord);">
+          Explore Guidance Handbook
+        </a>
+      </div>
+    </div>
   </div>
-</div>
+{{ else }}
+  <!-- Active / Draft Module: 4 Process Sections -->
+  <div class="module-nav-bar">
+    <span class="module-nav-label">Module Structure:</span>
+    <div class="module-nav-links">
+      <a href="#section-welcome" class="module-nav-btn">
+        <span class="step-num">1</span> 👋 Welcome
+      </a>
+      <a href="#section-learning" class="module-nav-btn">
+        <span class="step-num">2</span> 💡 Learning
+      </a>
+      <a href="#section-discussion" class="module-nav-btn">
+        <span class="step-num">3</span> 💬 Discussion
+      </a>
+      <a href="#section-action" class="module-nav-btn">
+        <span class="step-num">4</span> ⚡ Action
+      </a>
+    </div>
+  </div>
 
-<div class="module-sections-stream">
-  <!-- SECTION 1: WELCOME -->
-  <section id="section-welcome" class="module-section-card">
-    <div class="module-section-header">
-      <div class="module-section-badge-group">
-        <span class="section-step-pill">Section 1</span>
-        <h2 class="module-section-title">👋 Welcome</h2>
-      </div>
-    </div>
-    <div class="module-section-content">
-      {{ if .Params.welcome }}
-        {{ .RenderString (dict "display" "block") .Params.welcome }}
-      {{ else }}
-        <p class="section-placeholder"><em>No welcome notes provided for this module.</em></p>
-      {{ end }}
-    </div>
-  </section>
-
-  <!-- SECTION 2: LEARNING -->
-  <section id="section-learning" class="module-section-card">
-    <div class="module-section-header">
-      <div class="module-section-badge-group">
-        <span class="section-step-pill learning">Section 2</span>
-        <h2 class="module-section-title">💡 Learning</h2>
-      </div>
-    </div>
-    <div class="module-section-content">
-      {{ if .Params.learning }}
-        {{ .RenderString (dict "display" "block") .Params.learning }}
-      {{ else }}
-        <p class="section-placeholder"><em>No learning notes provided for this module.</em></p>
-      {{ end }}
-    </div>
-  </section>
-
-  <!-- SECTION 3: DISCUSSION -->
-  <section id="section-discussion" class="module-section-card">
-    <div class="module-section-header">
-      <div class="module-section-badge-group">
-        <span class="section-step-pill discussion">Section 3</span>
-        <h2 class="module-section-title">💬 Discussion</h2>
-      </div>
-    </div>
-    <div class="module-section-content">
-      {{ if .Params.discussion }}
-        {{ .RenderString (dict "display" "block") .Params.discussion }}
-      {{ else }}
-        <p class="section-placeholder"><em>No discussion notes provided for this module.</em></p>
-      {{ end }}
-    </div>
-  </section>
-
-  <!-- SECTION 4: ACTION -->
-  <section id="section-action" class="module-section-card">
-    <div class="module-section-header">
-      <div class="module-section-badge-group">
-        <span class="section-step-pill action">Section 4</span>
-        <h2 class="module-section-title">⚡ Action</h2>
-      </div>
-    </div>
-    <div class="module-section-content">
-      {{ if .Params.action }}
-        {{ .RenderString (dict "display" "block") .Params.action }}
-      {{ else }}
-        <p class="section-placeholder"><em>No action notes provided for this module.</em></p>
-      {{ end }}
-    </div>
-  </section>
-
-  <!-- OPTIONAL EXTRA BODY / FACILITATOR NOTES -->
-  {{ if or .Params.body .Content }}
-    {{ $extra := .Params.body | default .Content }}
-    {{ if gt (len (strings.TrimSpace $extra)) 0 }}
-      <section class="module-section-card extra-notes">
-        <div class="module-section-header">
-          <h2 class="module-section-title" style="font-size: 1.25rem;">📝 Additional Facilitator Notes</h2>
+  <div class="module-sections-stream">
+    <!-- SECTION 1: WELCOME -->
+    <section id="section-welcome" class="module-section-card">
+      <div class="module-section-header">
+        <div class="module-section-badge-group">
+          <span class="section-step-pill">Section 1</span>
+          <h2 class="module-section-title">👋 Welcome</h2>
         </div>
-        <div class="module-section-content">
-          {{ if .Params.body }}
-            {{ .RenderString (dict "display" "block") .Params.body }}
-          {{ else }}
-            {{ .Content }}
-          {{ end }}
+      </div>
+      <div class="module-section-content">
+        {{ if .Params.welcome }}
+          {{ .RenderString (dict "display" "block") .Params.welcome }}
+        {{ else }}
+          <p class="section-placeholder"><em>No welcome notes provided for this module.</em></p>
+        {{ end }}
+      </div>
+    </section>
+
+    <!-- SECTION 2: LEARNING -->
+    <section id="section-learning" class="module-section-card">
+      <div class="module-section-header">
+        <div class="module-section-badge-group">
+          <span class="section-step-pill learning">Section 2</span>
+          <h2 class="module-section-title">💡 Learning</h2>
         </div>
-      </section>
+      </div>
+      <div class="module-section-content">
+        {{ if .Params.learning }}
+          {{ .RenderString (dict "display" "block") .Params.learning }}
+        {{ else }}
+          <p class="section-placeholder"><em>No learning notes provided for this module.</em></p>
+        {{ end }}
+      </div>
+    </section>
+
+    <!-- SECTION 3: DISCUSSION -->
+    <section id="section-discussion" class="module-section-card">
+      <div class="module-section-header">
+        <div class="module-section-badge-group">
+          <span class="section-step-pill discussion">Section 3</span>
+          <h2 class="module-section-title">💬 Discussion</h2>
+        </div>
+      </div>
+      <div class="module-section-content">
+        {{ if .Params.discussion }}
+          {{ .RenderString (dict "display" "block") .Params.discussion }}
+        {{ else }}
+          <p class="section-placeholder"><em>No discussion notes provided for this module.</em></p>
+        {{ end }}
+      </div>
+    </section>
+
+    <!-- SECTION 4: ACTION -->
+    <section id="section-action" class="module-section-card">
+      <div class="module-section-header">
+        <div class="module-section-badge-group">
+          <span class="section-step-pill action">Section 4</span>
+          <h2 class="module-section-title">⚡ Action</h2>
+        </div>
+      </div>
+      <div class="module-section-content">
+        {{ if .Params.action }}
+          {{ .RenderString (dict "display" "block") .Params.action }}
+        {{ else }}
+          <p class="section-placeholder"><em>No action notes provided for this module.</em></p>
+        {{ end }}
+      </div>
+    </section>
+
+    <!-- OPTIONAL EXTRA BODY / FACILITATOR NOTES -->
+    {{ if or .Params.body .Content }}
+      {{ $extra := .Params.body | default .Content }}
+      {{ if gt (len (strings.TrimSpace $extra)) 0 }}
+        <section class="module-section-card extra-notes">
+          <div class="module-section-header">
+            <h2 class="module-section-title" style="font-size: 1.25rem;">📝 Additional Facilitator Notes</h2>
+          </div>
+          <div class="module-section-content">
+            {{ if .Params.body }}
+              {{ .RenderString (dict "display" "block") .Params.body }}
+            {{ else }}
+              {{ .Content }}
+            {{ end }}
+          </div>
+        </section>
+      {{ end }}
     {{ end }}
-  {{ end }}
-</div>
+  </div>
+{{ end }}
 
 {{ end }}

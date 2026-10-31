@@ -1,7 +1,10 @@
 ---
-title: Introduction to Artificial Intelligence
+title: Perspectives on Artificial Intelligence
+status: Draft
+status_notes: Pilot draft available
+order_weight: 10
 draft: false
-description: An introductory workshop session that provides an overview of artificial intelligence, establishes shared understanding, and explores group perspectives and attitudes towards AI.
+description: An introductory session that provides an overview of artificial intelligence, establishes shared understanding, and explores group perspectives and attitudes towards AI.
 welcome: |-
   Start the session by creating a welcoming, low-pressure space. Welcome participants and explain that no prior technical background in computer science or mathematics is required. Everyone's lived experience with technology and digital systems is valid and valuable.
 

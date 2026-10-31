@@ -11,41 +11,203 @@
 {{ $allModules := where .Site.RegularPages "Section" "modules" }}
 
 {{ if gt (len $allModules) 0 }}
-  <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
-    {{ range $allModules }}
-      <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
-        <div>
-          <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
-            <span class="element-pill" style="background: rgba(255, 95, 111, 0.15); color: #9c0018; border: 1px solid rgba(255, 95, 111, 0.3); font-weight: 700;">Module</span>
-            <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-slate); border: 1px solid var(--color-border);">
-              4 Sections
-            </span>
+  {{/* Sort modules: Updated/Complete (rank 1), Pilot (rank 2), Draft (rank 3), Planned (rank 4), then by order_weight */}}
+  {{ $modulesWithSort := slice }}
+  {{ range $allModules }}
+    {{ $st := .Params.status | default "Planned" }}
+    {{ $statusRank := 5 }}
+    {{ if or (eq $st "Updated") (eq $st "Complete") }}
+      {{ $statusRank = 1 }}
+    {{ else if eq $st "Pilot" }}
+      {{ $statusRank = 2 }}
+    {{ else if eq $st "Draft" }}
+      {{ $statusRank = 3 }}
+    {{ else if eq $st "Planned" }}
+      {{ $statusRank = 4 }}
+    {{ end }}
+
+    {{ $weight := int (.Params.order_weight | default 50) }}
+    {{ $sortKey := printf "%d-%06d-%s" $statusRank $weight .Title }}
+    {{ $modulesWithSort = $modulesWithSort | append (dict "page" . "sort_key" $sortKey) }}
+  {{ end }}
+
+  {{ $sortedModules := sort $modulesWithSort "sort_key" "asc" }}
+
+  <div class="module-cards-list">
+    {{ range $sortedModules }}
+      {{ $p := .page }}
+
+      {{ $welcomeRaw := $p.Params.welcome | default "" }}
+      {{ $welcomeActs := findRE `(?i)\{\{<\s*activity\b` $welcomeRaw }}
+      {{ $welcomeCount := len $welcomeActs }}
+
+      {{ $learningRaw := $p.Params.learning | default "" }}
+      {{ $learningActs := findRE `(?i)\{\{<\s*activity\b` $learningRaw }}
+      {{ $learningCount := len $learningActs }}
+
+      {{ $discussionRaw := $p.Params.discussion | default "" }}
+      {{ $discussionActs := findRE `(?i)\{\{<\s*activity\b` $discussionRaw }}
+      {{ $discussionCount := len $discussionActs }}
+
+      {{ $actionRaw := $p.Params.action | default "" }}
+      {{ $actionActs := findRE `(?i)\{\{<\s*activity\b` $actionRaw }}
+      {{ $actionCount := len $actionActs }}
+
+      {{ $totalActs := add (add $welcomeCount $learningCount) (add $discussionCount $actionCount) }}
+      {{ $isPlanned := eq $p.Params.status "Planned" }}
+
+      <article class="module-card-full{{ if $isPlanned }} module-card-planned{{ end }}">
+        <!-- Top Metadata Row -->
+        <div class="module-card-topbar">
+          <div class="module-card-badges">
+            <span class="element-pill module-pill">Module</span>
+            
+            {{ with $p.Params.status }}
+              <span class="module-status-badge status-{{ . | urlize }}">
+                {{ . }}
+              </span>
+            {{ end }}
+
+            {{ with $p.Params.status_notes }}
+              <span class="module-status-notes">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex-shrink:0;">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <polyline points="12 6 12 12 16 14"></polyline>
+                </svg>
+                <span>{{ . }}</span>
+              </span>
+            {{ end }}
           </div>
 
-          <h2 class="item-card-title" style="font-size: 1.25rem;">
-            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          {{ if not $isPlanned }}
+            <div class="module-card-quick-meta">
+              <span class="module-section-count">4 Process Stages</span>
+            </div>
+          {{ end }}
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="module-card-body">
+          <h2 class="module-card-title">
+            <a href="{{ $p.RelPermalink }}">{{ $p.Title }}</a>
           </h2>
 
-          {{ with .Params.description }}
-            <p class="item-card-overview" style="font-size: 0.9rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1.25rem;">
-              {{ . | plainify | truncate 160 }}
+          {{ with $p.Params.description }}
+            <p class="module-card-description">
+              {{ . | plainify }}
             </p>
           {{ end }}
-
-          <div style="display: flex; flex-wrap: wrap; gap: 0.35rem; margin-bottom: 1.25rem;">
-            <span class="element-pill" style="font-size: 0.75rem; background: var(--color-surface-subtle); border: 1px solid var(--color-border);">👋 Welcome</span>
-            <span class="element-pill" style="font-size: 0.75rem; background: var(--color-surface-subtle); border: 1px solid var(--color-border);">💡 Learning</span>
-            <span class="element-pill" style="font-size: 0.75rem; background: var(--color-surface-subtle); border: 1px solid var(--color-border);">💬 Discussion</span>
-            <span class="element-pill" style="font-size: 0.75rem; background: var(--color-surface-subtle); border: 1px solid var(--color-border);">⚡ Action</span>
-          </div>
         </div>
 
-        <div>
-          <a href="{{ .RelPermalink }}" class="action-btn" style="width: 100%; text-align: center; justify-content: center;">
-            Open Module &rarr;
+        <!-- Stages & Activities Hint Strip (Hidden for Planned modules) -->
+        {{ if not $isPlanned }}
+          <div class="module-stages-container">
+            <div class="module-stages-header">
+              <span>Process Stages &amp; Activity Availability</span>
+              <span class="module-stages-total">
+                {{ if gt $totalActs 0 }}
+                  <strong>{{ $totalActs }}</strong> {{ if eq $totalActs 1 }}activity{{ else }}activities{{ end }} ready
+                {{ else }}
+                  <span class="text-muted">Activities in development</span>
+                {{ end }}
+              </span>
+            </div>
+
+            <div class="module-stages-grid">
+              <!-- Stage 1: Welcome -->
+              <div class="stage-box {{ if gt $welcomeCount 0 }}has-activities{{ else }}empty-activities{{ end }}">
+                <div class="stage-box-title">
+                  <span class="stage-icon">👋</span>
+                  <span class="stage-name">1. Welcome</span>
+                </div>
+                <div class="stage-box-count">
+                  {{ if gt $welcomeCount 0 }}
+                    <span class="count-num">{{ $welcomeCount }}</span> {{ if eq $welcomeCount 1 }}activity{{ else }}activities{{ end }}
+                  {{ else }}
+                    <span class="count-num">0</span> activities
+                  {{ end }}
+                </div>
+              </div>
+
+              <!-- Stage 2: Learning -->
+              <div class="stage-box {{ if gt $learningCount 0 }}has-activities{{ else }}empty-activities{{ end }}">
+                <div class="stage-box-title">
+                  <span class="stage-icon">💡</span>
+                  <span class="stage-name">2. Learning</span>
+                </div>
+                <div class="stage-box-count">
+                  {{ if gt $learningCount 0 }}
+                    <span class="count-num">{{ $learningCount }}</span> {{ if eq $learningCount 1 }}activity{{ else }}activities{{ end }}
+                  {{ else }}
+                    <span class="count-num">0</span> activities
+                  {{ end }}
+                </div>
+              </div>
+
+              <!-- Stage 3: Discussion -->
+              <div class="stage-box {{ if gt $discussionCount 0 }}has-activities{{ else }}empty-activities{{ end }}">
+                <div class="stage-box-title">
+                  <span class="stage-icon">💬</span>
+                  <span class="stage-name">3. Discussion</span>
+                </div>
+                <div class="stage-box-count">
+                  {{ if gt $discussionCount 0 }}
+                    <span class="count-num">{{ $discussionCount }}</span> {{ if eq $discussionCount 1 }}activity{{ else }}activities{{ end }}
+                  {{ else }}
+                    <span class="count-num">0</span> activities
+                  {{ end }}
+                </div>
+              </div>
+
+              <!-- Stage 4: Action -->
+              <div class="stage-box {{ if gt $actionCount 0 }}has-activities{{ else }}empty-activities{{ end }}">
+                <div class="stage-box-title">
+                  <span class="stage-icon">⚡</span>
+                  <span class="stage-name">4. Action</span>
+                </div>
+                <div class="stage-box-count">
+                  {{ if gt $actionCount 0 }}
+                    <span class="count-num">{{ $actionCount }}</span> {{ if eq $actionCount 1 }}activity{{ else }}activities{{ end }}
+                  {{ else }}
+                    <span class="count-num">0</span> activities
+                  {{ end }}
+                </div>
+              </div>
+            </div>
+          </div>
+        {{ end }}
+
+        <!-- Footer / Action Row -->
+        <div class="module-card-footer">
+          <div class="module-card-footer-meta">
+            {{ if eq $p.Params.status "Planned" }}
+              <span class="module-readiness-hint hint-planned">
+                📌 Module syllabus planned — activities and materials being authored
+              </span>
+            {{ else if eq $p.Params.status "Draft" }}
+              <span class="module-readiness-hint hint-draft">
+                📝 Draft module — ready for review and community testing
+              </span>
+            {{ else if eq $p.Params.status "Pilot" }}
+              <span class="module-readiness-hint hint-pilot">
+                🧪 Active pilot module — in live classroom and assembly trials
+              </span>
+            {{ else if eq $p.Params.status "Complete" }}
+              <span class="module-readiness-hint hint-complete">
+                ✅ Complete module — fully facilitated with activities and guides
+              </span>
+            {{ else if eq $p.Params.status "Updated" }}
+              <span class="module-readiness-hint hint-updated">
+                🔄 Recently updated with new activities and guidance
+              </span>
+            {{ end }}
+          </div>
+
+          <a href="{{ $p.RelPermalink }}" class="action-btn module-card-btn">
+            Explore Module &rarr;
           </a>
         </div>
-      </div>
+      </article>
     {{ end }}
   </div>
 {{ else }}

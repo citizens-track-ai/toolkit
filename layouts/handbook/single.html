@@ -1,0 +1,281 @@
+{{ define "main" }}
+
+{{ if eq .Params.group "register" }}
+
+  <!-- Register Form Layout (Clean, Centered Single Box) -->
+  <div class="handbook-page-wrap">
+    <nav class="reader-breadcrumbs" aria-label="Breadcrumb">
+      <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+      <span class="crumb-sep">/</span>
+      <span class="crumb-current">Register</span>
+    </nav>
+
+    <article class="content-white-box">
+      <header class="box-header">
+        <h1 class="page-title">{{ .Title }}</h1>
+        {{ with .Params.description }}
+          <p class="page-lead">{{ . }}</p>
+        {{ end }}
+      </header>
+
+      <div class="page-body markdown-body">
+        {{ .Content }}
+      </div>
+
+      <div style="margin-top: 2.5rem; padding-top: 1.5rem; border-top: 1px solid var(--ct-border-subtle); display: flex; justify-content: space-between; align-items: center;">
+        <a href="{{ .Site.Home.RelPermalink }}" class="view-item-link">&larr; Back to Toolkit Home</a>
+        <a href="{{ "handbook/overview/" | relLangURL }}" class="view-item-link" style="font-weight: 700;">Explore Guidance &rarr;</a>
+      </div>
+    </article>
+  </div>
+
+{{ else }}
+
+  <!-- Guidance Book-Like Architecture with Left Navigation -->
+  {{ $guidancePages := where (where .Site.RegularPages "Section" "handbook") ".Params.group" "guidance" }}
+  {{ $sortedGuidance := sort $guidancePages "Weight" "asc" }}
+
+  {{ $currentIndex := -1 }}
+  {{ range $idx, $elem := $sortedGuidance }}
+    {{ if eq $elem.RelPermalink $.RelPermalink }}
+      {{ $currentIndex = $idx }}
+    {{ end }}
+  {{ end }}
+
+  {{ $prevPage := false }}
+  {{ $nextPage := false }}
+  {{ if gt $currentIndex 0 }}
+    {{ $prevPage = index $sortedGuidance (sub $currentIndex 1) }}
+  {{ end }}
+  {{ if and (ge $currentIndex 0) (lt $currentIndex (sub (len $sortedGuidance) 1)) }}
+    {{ $nextPage = index $sortedGuidance (add $currentIndex 1) }}
+  {{ end }}
+
+  <!-- Mobile Floating / Sticky Navigation Bar -->
+  <div class="book-mobile-bar" aria-label="Mobile Handbook Bar">
+    <button class="book-drawer-toggle" id="book-drawer-toggle" aria-expanded="false" aria-controls="book-sidebar-container">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="3" y1="12" x2="21" y2="12"></line>
+        <line x1="3" y1="6" x2="21" y2="6"></line>
+        <line x1="3" y1="18" x2="21" y2="18"></line>
+      </svg>
+      <span>Handbook Contents</span>
+    </button>
+    <div class="book-mobile-current">
+      <span class="mobile-stage-dot stage-{{ .Params.stage | default "overview" }}"></span>
+      <span class="mobile-page-title">{{ .Title }}</span>
+    </div>
+    <div class="book-mobile-arrows">
+      {{ if $prevPage }}
+        <a href="{{ $prevPage.RelPermalink }}" class="mobile-arrow-btn" aria-label="Previous Page: {{ $prevPage.Title }}">&larr;</a>
+      {{ end }}
+      {{ if $nextPage }}
+        <a href="{{ $nextPage.RelPermalink }}" class="mobile-arrow-btn" aria-label="Next Page: {{ $nextPage.Title }}">&rarr;</a>
+      {{ end }}
+    </div>
+  </div>
+
+  <!-- Drawer Backdrop Overlay (Mobile only) -->
+  <div class="book-drawer-backdrop" id="book-drawer-backdrop" aria-hidden="true"></div>
+
+  <div class="book-shell-container">
+    
+    <!-- Left Sticky Sidebar Column -->
+    <aside class="book-sidebar-container" id="book-sidebar-container" aria-label="Handbook Sidebar">
+      <div class="book-sidebar-inner">
+        <div class="book-drawer-header">
+          <span class="drawer-title">Assembly Handbook</span>
+          <button class="book-drawer-close" id="book-drawer-close" aria-label="Close Handbook Menu">&times;</button>
+        </div>
+        {{ partial "guidance-sidebar.html" . }}
+      </div>
+    </aside>
+
+    <!-- Main Reading Content Column -->
+    <div class="book-main-col">
+      
+      <!-- Breadcrumbs -->
+      <nav class="reader-breadcrumbs" aria-label="Breadcrumb">
+        <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+        <span class="crumb-sep">/</span>
+        <a href="{{ "handbook/" | relLangURL }}">Handbook</a>
+        {{ if .Params.is_subpage }}
+          <span class="crumb-sep">/</span>
+          {{ $parentKey := .Params.parent }}
+          {{ $parentPage := index (where (where $sortedGuidance ".Params.chapter" $parentKey) ".Params.is_parent" true) 0 }}
+          <a href="{{ if $parentPage }}{{ $parentPage.RelPermalink }}{{ else }}{{ printf "handbook/%s/" $parentKey | relLangURL }}{{ end }}">
+            {{ if eq $parentKey "prepare" }}Stage 1: Prepare{{ else if eq $parentKey "facilitate" }}Stage 2: Facilitate{{ else if eq $parentKey "follow-up" }}Stage 3: Follow-up{{ else }}{{ humanize $parentKey | title }}{{ end }}
+          </a>
+          <span class="crumb-sep">/</span>
+          <span class="crumb-current">{{ .Title }}</span>
+        {{ else }}
+          <span class="crumb-sep">/</span>
+          <span class="crumb-current">{{ .Title }}</span>
+        {{ end }}
+      </nav>
+
+      <!-- Content Box -->
+      <article class="content-white-box book-white-box">
+        <header class="box-header">
+          <div class="stage-pill-row">
+            <span class="stage-badge stage-{{ .Params.stage | default "overview" }}">
+              {{ if eq .Params.stage "prepare" }}STAGE 1 &middot; PREPARE{{ else if eq .Params.stage "facilitate" }}STAGE 2 &middot; FACILITATE{{ else if eq .Params.stage "follow-up" }}STAGE 3 &middot; FOLLOW-UP{{ else }}FOUNDATIONS &middot; OVERVIEW{{ end }}
+            </span>
+            {{ if .Params.is_subpage }}
+              <span class="subpage-indicator-pill">Deep-Dive Sub-Guide</span>
+            {{ end }}
+          </div>
+
+          <h1 class="page-title">{{ .Title }}</h1>
+          {{ with .Params.description }}
+            <p class="page-lead">{{ . }}</p>
+          {{ end }}
+        </header>
+
+        <div class="page-body markdown-body">
+          {{ .Content }}
+        </div>
+
+        <!-- If parent chapter with sub-pages: display sub-guide cards deck -->
+        {{ if and .Params.is_parent (not .Params.is_subpage) }}
+          {{ $subpages := where $sortedGuidance ".Params.parent" (.Params.chapter | default .Params.stage) }}
+          {{ if gt (len $subpages) 0 }}
+            <div class="subguides-section">
+              <h3 class="subguides-header">Deep-Dive Sub-Guides in this Stage</h3>
+              <p class="subguides-lead">Explore specialized templates, toolkits, and principles for this stage:</p>
+              <div class="subguides-grid">
+                {{ range $subpages }}
+                  <a href="{{ .RelPermalink }}" class="subguide-card">
+                    <div class="subguide-card-top">
+                      <span class="subguide-badge">Sub-Guide</span>
+                    </div>
+                    <h4 class="subguide-card-title">{{ .Title }}</h4>
+                    {{ with .Params.description }}
+                      <p class="subguide-card-desc">{{ . }}</p>
+                    {{ end }}
+                    <span class="subguide-card-cta">Read Guide &rarr;</span>
+                  </a>
+                {{ end }}
+              </div>
+            </div>
+          {{ end }}
+        {{ end }}
+
+        <!-- If Facilitate stage: Bridge to Workshop Modules & Learning Decks -->
+        {{ if or (eq .Params.stage "facilitate") (eq .Params.parent "facilitate") }}
+          <div class="facilitate-resources-bridge">
+            <h3 class="bridge-title">Ready to run an assembly session?</h3>
+            <p class="bridge-desc">
+              Explore the participatory workshop roadmaps, deliberative activities, and card decks developed for facilitation:
+            </p>
+            <div class="bridge-links-row">
+              <a href="{{ "modules/" | relLangURL }}" class="bridge-btn">
+                <span>📋 Workshop Modules &rarr;</span>
+              </a>
+              <a href="{{ "content-collections/" | relLangURL }}" class="bridge-btn">
+                <span>🎴 Cards &amp; Slide Decks &rarr;</span>
+              </a>
+              <a href="{{ "activities/" | relLangURL }}" class="bridge-btn">
+                <span>⚡ Workshop Activities &rarr;</span>
+              </a>
+            </div>
+          </div>
+        {{ end }}
+
+        <!-- Bottom Sequential Navigation Pagination -->
+        <nav class="book-nav-pagination" aria-label="Handbook Navigation">
+          {{ if $prevPage }}
+            <a href="{{ $prevPage.RelPermalink }}" class="book-pag-card prev-card">
+              <span class="pag-dir">&larr; Previous</span>
+              <span class="pag-title">{{ $prevPage.Title }}</span>
+            </a>
+          {{ else }}
+            <div class="pag-placeholder"></div>
+          {{ end }}
+
+          {{ if $nextPage }}
+            <a href="{{ $nextPage.RelPermalink }}" class="book-pag-card next-card">
+              <span class="pag-dir">Next &rarr;</span>
+              <span class="pag-title">{{ $nextPage.Title }}</span>
+            </a>
+          {{ else }}
+            <div class="pag-placeholder"></div>
+          {{ end }}
+        </nav>
+
+        <div class="book-back-to-top">
+          <a href="#main-content" class="back-top-link">&uarr; Back to Top</a>
+        </div>
+
+      </article>
+
+    </div>
+
+  </div>
+
+  <!-- Interactive JavaScript for Book Navigation: Mobile Drawer & Smooth Scroll -->
+  <script>
+    (function() {
+      const toggleBtn = document.getElementById('book-drawer-toggle');
+      const closeBtn = document.getElementById('book-drawer-close');
+      const sidebar = document.getElementById('book-sidebar-container');
+      const backdrop = document.getElementById('book-drawer-backdrop');
+
+      function openDrawer() {
+        if (!sidebar) return;
+        sidebar.classList.add('drawer-open');
+        if (backdrop) backdrop.classList.add('visible');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'true');
+        document.body.style.overflow = 'hidden';
+      }
+
+      function closeDrawer() {
+        if (!sidebar) return;
+        sidebar.classList.remove('drawer-open');
+        if (backdrop) backdrop.classList.remove('visible');
+        if (toggleBtn) toggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
+      }
+
+      if (toggleBtn) toggleBtn.addEventListener('click', openDrawer);
+      if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+      if (backdrop) backdrop.addEventListener('click', closeDrawer);
+
+      window.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && sidebar && sidebar.classList.contains('drawer-open')) {
+          closeDrawer();
+        }
+      });
+
+      // Active TOC anchor highlighting on scroll (ScrollSpy)
+      const tocLinks = document.querySelectorAll('.book-toc-wrap a');
+      if (tocLinks.length > 0) {
+        const headings = [];
+        tocLinks.forEach(link => {
+          const href = link.getAttribute('href');
+          if (href && href.startsWith('#')) {
+            const el = document.getElementById(href.substring(1));
+            if (el) headings.push({ link, el });
+          }
+        });
+
+        if (headings.length > 0) {
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                tocLinks.forEach(l => l.classList.remove('active-heading'));
+                const match = headings.find(h => h.el === entry.target);
+                if (match) match.link.classList.add('active-heading');
+              }
+            });
+          }, { rootMargin: '0px 0px -70% 0px', threshold: 0 });
+
+          headings.forEach(h => observer.observe(h.el));
+        }
+      }
+    })();
+  </script>
+
+{{ end }}
+
+{{ end }}

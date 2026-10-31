@@ -1,6 +1,7 @@
-{{ $isRegister := or (eq .RelPermalink ("/pages/register/" | relLangURL)) (eq .Params.group "register") }}
-{{ $isGuidance := and (not $isRegister) (or (eq .Section "pages") (eq .Params.group "guidance")) }}
+{{ $isRegister := or (eq .RelPermalink ("/register/" | relLangURL)) (eq .RelPermalink ("/handbook/register/" | relLangURL)) (eq .RelPermalink ("/pages/register/" | relLangURL)) (eq .Params.group "register") }}
+{{ $isGuidance := and (not $isRegister) (or (eq .Section "handbook") (eq .Section "pages") (eq .Params.group "guidance")) }}
 {{ $isResources := or (eq .Section "modules") (eq .Section "activities") (eq .Section "content-collections") (eq .Section "content") }}
+{{ $isAbout := or (eq .Section "about") (eq .Section "contributors") (eq .RelPermalink ("/about/" | relLangURL)) (eq .RelPermalink "/about/") (and .File (eq .File.BaseFileName "about")) }}
 
 <header class="site-header">
   <!-- Level 1: Primary Header Bar -->
@@ -15,14 +16,14 @@
     <div class="header-nav-center">
       <nav class="site-nav-sections" aria-label="Primary Navigation">
         <!-- 1. Register (Coral) -->
-        <a href="{{ "pages/register/" | relLangURL }}" 
+        <a href="{{ "handbook/register/" | relLangURL }}" 
            class="nav-link nav-link-register{{ if $isRegister }} active{{ end }}">
           <span class="nav-color-indicator indicator-register" aria-hidden="true"></span>
           <span>Register</span>
         </a>
 
         <!-- 2. Guidance (Fjord Navy) -->
-        <a href="{{ "pages/" | relLangURL }}" 
+        <a href="{{ "handbook/" | relLangURL }}" 
            class="nav-link nav-link-guidance{{ if $isGuidance }} active{{ end }}">
           <span class="nav-color-indicator indicator-guidance" aria-hidden="true"></span>
           <span>Guidance</span>
@@ -33,6 +34,13 @@
            class="nav-link nav-link-resources{{ if $isResources }} active{{ end }}">
           <span class="nav-color-indicator indicator-resources" aria-hidden="true"></span>
           <span>Resources</span>
+        </a>
+
+        <!-- 4. About (Cerulean) -->
+        <a href="{{ "about/" | relLangURL }}" 
+           class="nav-link nav-link-about{{ if $isAbout }} active{{ end }}">
+          <span class="nav-color-indicator indicator-about" aria-hidden="true"></span>
+          <span>About</span>
         </a>
       </nav>
     </div>
@@ -50,15 +58,6 @@
         {{ end }}
       </div>
       {{ end }}
-
-      <a href="/admin/login.html" class="nav-cta" target="_blank" rel="noopener">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-          stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M12 20h9"></path>
-          <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path>
-        </svg>
-        CMS Admin
-      </a>
     </div>
   </div>
 
@@ -78,23 +77,23 @@
     <div class="sub-nav-container">
       <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
       <div class="sub-nav-content">
-        <a href="{{ "pages/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/" | relLangURL) }} active{{ end }}">
+        <a href="{{ "handbook/overview/" | relLangURL }}" 
+           class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/" | relLangURL)) (eq .RelPermalink ("/handbook/overview/" | relLangURL)) (eq .RelPermalink ("/en/handbook/overview/" | relLangURL)) (eq .RelPermalink ("/en/handbook/" | relLangURL)) (eq .RelPermalink ("/pages/" | relLangURL)) (eq .RelPermalink ("/pages/overview/" | relLangURL)) }} active{{ end }}">
           Overview
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "pages/prepare/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/prepare/" | relLangURL) }} active{{ end }}">
+        <a href="{{ "handbook/prepare/" | relLangURL }}" 
+           class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/prepare/" | relLangURL)) (eq .RelPermalink ("/en/handbook/prepare/" | relLangURL)) (eq .RelPermalink ("/pages/prepare/" | relLangURL)) (eq .Params.chapter "prepare") (eq .Params.parent "prepare") }} active{{ end }}">
           Prepare
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "pages/facilitate/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/facilitate/" | relLangURL) }} active{{ end }}">
+        <a href="{{ "handbook/facilitate/" | relLangURL }}" 
+           class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/facilitate/" | relLangURL)) (eq .RelPermalink ("/en/handbook/facilitate/" | relLangURL)) (eq .RelPermalink ("/pages/facilitate/" | relLangURL)) (eq .Params.chapter "facilitate") (eq .Params.parent "facilitate") }} active{{ end }}">
           Facilitate
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "pages/follow-up/" | relLangURL }}" 
-           class="sub-nav-link{{ if eq .RelPermalink ("/pages/follow-up/" | relLangURL) }} active{{ end }}">
+        <a href="{{ "handbook/follow-up/" | relLangURL }}" 
+           class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/follow-up/" | relLangURL)) (eq .RelPermalink ("/en/handbook/follow-up/" | relLangURL)) (eq .RelPermalink ("/pages/follow-up/" | relLangURL)) (eq .Params.chapter "follow-up") (eq .Params.parent "follow-up") }} active{{ end }}">
           Follow-up
         </a>
       </div>
@@ -119,6 +118,19 @@
         <a href="{{ "content-collections/" | relLangURL }}" 
            class="sub-nav-link{{ if or (eq .Section "content-collections") (eq .Section "content") }} active{{ end }}">
           Learning
+        </a>
+      </div>
+      <div class="sub-nav-tools-spacer" aria-hidden="true"></div>
+    </div>
+  </nav>
+  {{ else if $isAbout }}
+  <nav class="sub-nav-bar sub-bar-about" aria-label="About Navigation">
+    <div class="sub-nav-container">
+      <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
+      <div class="sub-nav-content">
+        <a href="{{ "about/" | relLangURL }}" 
+           class="sub-nav-link active">
+          About &amp; Contributors
         </a>
       </div>
       <div class="sub-nav-tools-spacer" aria-hidden="true"></div>

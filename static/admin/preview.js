@@ -468,12 +468,16 @@ if (typeof CMS !== 'undefined') {
     const rawData = entry.get('data');
     const data = normalize(rawData) || {};
     const title = data.title || 'Untitled Module';
+    const status = data.status || '';
+    const status_notes = data.status_notes || '';
     const description = data.description || '';
     const welcome = data.welcome || '';
     const learning = data.learning || '';
     const discussion = data.discussion || '';
     const action = data.action || '';
     const body = data.body || '';
+
+    const isPlanned = status === 'Planned';
 
     return html`
       <div class="main-wrapper" style="padding: 1.5rem 1.75rem 3rem;">
@@ -486,71 +490,94 @@ if (typeof CMS !== 'undefined') {
         </nav>
 
         <article class="page-header" style="margin-bottom: 2rem;">
-          <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem;">
-            <span class="collection-badge" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Workshop Module</span>
-            <span class="element-pill" style="background: #f1f5f9; color: var(--color-slate); font-weight: 600;">4 Sections</span>
+          <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.5rem; flex-wrap: wrap;">
+            <span class="collection-badge" style="background: rgba(255, 95, 111, 0.15); color: #9c0018; font-weight: 700;">Workshop Module</span>
+            ${status && html`<span class="module-status-badge status-${status.toLowerCase()}">${status}</span>`}
+            ${status_notes && html`<span class="module-status-notes">⏰ ${status_notes}</span>`}
+            ${!isPlanned ? html`<span class="element-pill" style="background: #f1f5f9; color: var(--color-slate); font-weight: 600;">4 Sections</span>` : ''}
           </div>
           <h1 class="page-title">${title}</h1>
           ${description && html`<p style="font-size: 1.1rem; color: var(--color-slate); margin: 0; line-height: 1.6;">${description}</p>`}
         </article>
 
-        <!-- Section Navigation Pills in Preview -->
-        <div class="module-nav-bar" style="margin-bottom: 1.5rem;">
-          <span class="module-nav-label">Module Structure:</span>
-          <div class="module-nav-links">
-            <span class="module-nav-btn"><span class="step-num">1</span> 👋 Welcome</span>
-            <span class="module-nav-btn"><span class="step-num">2</span> 💡 Learning</span>
-            <span class="module-nav-btn"><span class="step-num">3</span> 💬 Discussion</span>
-            <span class="module-nav-btn"><span class="step-num">4</span> ⚡ Action</span>
+        ${isPlanned ? html`
+          <div class="module-coming-soon-card">
+            <div class="coming-soon-icon-wrap" aria-hidden="true">
+              <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+              </svg>
+            </div>
+            <div class="coming-soon-content">
+              <span class="coming-soon-pill">Module In Development</span>
+              <h2 class="coming-soon-title">Coming Soon</h2>
+              ${status_notes && html`<p class="coming-soon-target">Expected availability: <strong>${status_notes}</strong></p>`}
+              <p class="coming-soon-desc">
+                This workshop module is currently being authored and prepared for community assembly trials. The complete session agenda, facilitation guidance, and interactive activity materials will be available here soon.
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div class="module-sections-stream">
-          <!-- 1. WELCOME -->
-          <section class="module-section-card">
-            <div class="module-section-header">
-              <span class="section-step-pill">Section 1</span>
-              <h2 class="module-section-title">👋 Welcome</h2>
+        ` : html`
+          <!-- Section Navigation Pills in Preview -->
+          <div class="module-nav-bar" style="margin-bottom: 1.5rem;">
+            <span class="module-nav-label">Module Structure:</span>
+            <div class="module-nav-links">
+              <span class="module-nav-btn"><span class="step-num">1</span> 👋 Welcome</span>
+              <span class="module-nav-btn"><span class="step-num">2</span> 💡 Learning</span>
+              <span class="module-nav-btn"><span class="step-num">3</span> 💬 Discussion</span>
+              <span class="module-nav-btn"><span class="step-num">4</span> ⚡ Action</span>
             </div>
-            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(welcome) || '<p style="color: #94a3b8; font-style: italic;">No welcome notes added yet.</p>' }} />
-          </section>
+          </div>
 
-          <!-- 2. LEARNING -->
-          <section class="module-section-card">
-            <div class="module-section-header">
-              <span class="section-step-pill learning">Section 2</span>
-              <h2 class="module-section-title">💡 Learning</h2>
-            </div>
-            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(learning) || '<p style="color: #94a3b8; font-style: italic;">No learning notes added yet.</p>' }} />
-          </section>
-
-          <!-- 3. DISCUSSION -->
-          <section class="module-section-card">
-            <div class="module-section-header">
-              <span class="section-step-pill discussion">Section 3</span>
-              <h2 class="module-section-title">💬 Discussion</h2>
-            </div>
-            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(discussion) || '<p style="color: #94a3b8; font-style: italic;">No discussion notes added yet.</p>' }} />
-          </section>
-
-          <!-- 4. ACTION -->
-          <section class="module-section-card">
-            <div class="module-section-header">
-              <span class="section-step-pill action">Section 4</span>
-              <h2 class="module-section-title">⚡ Action</h2>
-            </div>
-            <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(action) || '<p style="color: #94a3b8; font-style: italic;">No action notes added yet.</p>' }} />
-          </section>
-
-          ${body && html`
-            <section class="module-section-card extra-notes">
+          <div class="module-sections-stream">
+            <!-- 1. WELCOME -->
+            <section class="module-section-card">
               <div class="module-section-header">
-                <h2 class="module-section-title" style="font-size: 1.25rem;">📝 Additional Facilitator Notes</h2>
+                <span class="section-step-pill">Section 1</span>
+                <h2 class="module-section-title">👋 Welcome</h2>
               </div>
-              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(body) }} />
+              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(welcome) || '<p style="color: #94a3b8; font-style: italic;">No welcome notes added yet.</p>' }} />
             </section>
-          `}
-        </div>
+
+            <!-- 2. LEARNING -->
+            <section class="module-section-card">
+              <div class="module-section-header">
+                <span class="section-step-pill learning">Section 2</span>
+                <h2 class="module-section-title">💡 Learning</h2>
+              </div>
+              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(learning) || '<p style="color: #94a3b8; font-style: italic;">No learning notes added yet.</p>' }} />
+            </section>
+
+            <!-- 3. DISCUSSION -->
+            <section class="module-section-card">
+              <div class="module-section-header">
+                <span class="section-step-pill discussion">Section 3</span>
+                <h2 class="module-section-title">💬 Discussion</h2>
+              </div>
+              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(discussion) || '<p style="color: #94a3b8; font-style: italic;">No discussion notes added yet.</p>' }} />
+            </section>
+
+            <!-- 4. ACTION -->
+            <section class="module-section-card">
+              <div class="module-section-header">
+                <span class="section-step-pill action">Section 4</span>
+                <h2 class="module-section-title">⚡ Action</h2>
+              </div>
+              <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(action) || '<p style="color: #94a3b8; font-style: italic;">No action notes added yet.</p>' }} />
+            </section>
+
+            ${body && html`
+              <section class="module-section-card extra-notes">
+                <div class="module-section-header">
+                  <h2 class="module-section-title" style="font-size: 1.25rem;">📝 Additional Facilitator Notes</h2>
+                </div>
+                <div class="module-section-content" dangerouslySetInnerHTML=${{ __html: renderMarkdown(body) }} />
+              </section>
+            `}
+          </div>
+        `}
       </div>
     `;
   };
