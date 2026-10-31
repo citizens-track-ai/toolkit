@@ -3,7 +3,7 @@
 backend:
   name: github
   repo: citizens-track-ai/toolkit
-  branch: alt-handbook
+  branch: staging
   api_root: https://sveltia-cms-proxy.citizens-track-toolkit.workers.dev
   auth_methods: [oauth, token]
   open_authoring: false
