@@ -1,0 +1,40 @@
+# Single Source of Truth for Toolkit Locales and Localisations
+# Defines display labels, native names, base language inheritance, and context metadata.
+# Note: In accordance with project policy, NO country flags are used.
+
+en:
+  label: "English"
+  native_name: "English"
+  base_lang: "en"
+  is_context_locale: false
+
+es:
+  label: "Spanish"
+  native_name: "Español"
+  base_lang: "es"
+  is_context_locale: false
+
+fr:
+  label: "French"
+  native_name: "Français"
+  base_lang: "fr"
+  is_context_locale: false
+
+de:
+  label: "German"
+  native_name: "Deutsch"
+  base_lang: "de"
+  is_context_locale: false
+
+es-uy:
+  label: "Spanish (Uruguay)"
+  native_name: "Español (Uruguay)"
+  base_lang: "es"
+  is_context_locale: true
+
+es-gb:
+  label: "Spanish (UK Context)"
+  native_name: "Español (Reino Unido)"
+  base_lang: "es"
+  context: "United Kingdom Localisation"
+  is_context_locale: true

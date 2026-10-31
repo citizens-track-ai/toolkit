@@ -52,3 +52,15 @@ languages:
     contentDir: content/de
     weight: 4
     title: "Citizens' Track on AI Toolkit (DE)"
+  es-uy:
+    locale: es-UY
+    label: "Español (Uruguay)"
+    contentDir: content/es-uy
+    weight: 11
+    title: "Citizens' Track on AI Toolkit (UY)"
+  es-gb:
+    locale: es-GB
+    label: "Español (Reino Unido)"
+    contentDir: content/es-gb
+    weight: 12
+    title: "Citizens' Track on AI Toolkit (UK)"

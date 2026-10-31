@@ -1,0 +1,83 @@
+{{ define "main" }}
+
+<div class="page-header" style="margin-bottom: 2.5rem;">
+  <h1 class="page-title">Voice to Impact Opportunities</h1>
+  <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
+    Active multilateral, regional, and national consultations where community assembly outcomes and grassroots voices can feed into AI policy.
+  </p>
+</div>
+
+{{ $allOpps := where .Site.RegularPages "Section" "opportunities" }}
+
+{{ if gt (len $allOpps) 0 }}
+  <div class="items-grid" style="grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));">
+    {{ range $allOpps }}
+      <div class="content-item-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+        <div>
+          <div style="display: flex; gap: 0.4rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+            {{ with .Params.scope }}
+              <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: #00447c; border: 1px solid rgba(64, 169, 255, 0.35); font-weight: 700;">
+                🌐 {{ . }}
+              </span>
+            {{ end }}
+            {{ if or .Params.start_date .Params.end_date }}
+              <span class="element-pill" style="background: var(--color-surface-subtle); color: var(--color-dark); border: 1px solid var(--color-border); font-size: 0.78rem;">
+                📅 {{ with .Params.start_date }}{{ . }}{{ end }}{{ if and .Params.start_date .Params.end_date }} – {{ end }}{{ with .Params.end_date }}{{ . }}{{ end }}
+              </span>
+            {{ end }}
+          </div>
+
+          <h2 class="item-card-title" style="font-size: 1.25rem;">
+            <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+          </h2>
+
+          {{ with .Params.description }}
+            <p class="item-card-overview" style="font-size: 0.9rem; color: var(--color-slate); line-height: 1.5; margin-bottom: 1rem;">
+              {{ . | plainify | truncate 160 }}
+            </p>
+          {{ end }}
+
+          {{ with .Params.geographic_coverage }}
+            <div style="display: flex; flex-wrap: wrap; gap: 0.3rem; margin-bottom: 1rem;">
+              {{ range first 4 . }}
+                <span style="font-size: 0.75rem; background: var(--ct-bg-surface-subtle, #f8f7f2); border: 1px solid var(--ct-border-default, #dcd9cd); border-radius: 4px; padding: 0.15rem 0.45rem; color: var(--color-slate);">
+                  {{ . }}
+                </span>
+              {{ end }}
+              {{ if gt (len .) 4 }}
+                <span style="font-size: 0.75rem; color: var(--color-muted); padding: 0.15rem 0.3rem;">
+                  +{{ sub (len .) 4 }} more
+                </span>
+              {{ end }}
+            </div>
+          {{ end }}
+        </div>
+
+        <div style="border-top: 1px solid var(--color-border); padding-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+          {{ with .Params.feedback_format }}
+            <span style="font-size: 0.8rem; color: var(--color-muted);">
+              📝 {{ . }}
+            </span>
+          {{ else }}
+            <span></span>
+          {{ end }}
+          <a href="{{ .RelPermalink }}" style="font-size: 0.85rem; font-weight: 700; color: var(--color-primary); text-decoration: none;">
+            View Details →
+          </a>
+        </div>
+      </div>
+    {{ end }}
+  </div>
+{{ else }}
+  <div style="background: var(--ct-bg-surface-subtle, #F8F7F2); border: 1px solid var(--ct-border-default, #DCD9CD); border-radius: var(--radius-md, 12px); padding: 2.5rem; text-align: center;">
+    <h3 style="margin: 0 0 0.5rem; color: var(--ct-color-fjord, #00447C);">No Opportunities Listed Yet</h3>
+    <p style="margin: 0 0 1.5rem; color: var(--color-slate, #4a5565);">
+      Target consultation processes can be added directly via the Sveltia CMS admin interface.
+    </p>
+    <a href="{{ "admin/" | relURL }}" class="hero-button" style="display: inline-block; padding: 0.5rem 1.25rem; font-size: 0.9rem; text-decoration: none;">
+      Open Sveltia CMS
+    </a>
+  </div>
+{{ end }}
+
+{{ end }}

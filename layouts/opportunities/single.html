@@ -1,0 +1,72 @@
+{{ define "main" }}
+
+<nav class="breadcrumbs">
+  <a href="{{ .Site.Home.RelPermalink }}">Home</a>
+  <span>/</span>
+  <a href="{{ "opportunities/" | relLangURL }}">Opportunities</a>
+  <span>/</span>
+  <strong>{{ .Title }}</strong>
+</nav>
+
+<article class="page-header" style="margin-bottom: 2rem;">
+  <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap;">
+    <span class="collection-badge" style="background: rgba(0, 68, 124, 0.1); color: var(--ct-color-fjord); border: 1px solid rgba(0, 68, 124, 0.2);">Opportunity</span>
+    {{ with .Params.scope }}
+      <span class="element-pill" style="background: rgba(64, 169, 255, 0.15); color: #00447c; border: 1px solid rgba(64, 169, 255, 0.35); font-weight: 700;">
+        🌐 {{ . }}
+      </span>
+    {{ end }}
+    {{ if or .Params.start_date .Params.end_date }}
+      <span class="element-pill" style="background: var(--ct-bg-surface-subtle, #f8f7f2); color: var(--ct-color-ebony-clay); border: 1px solid var(--ct-border-default, #dcd9cd);">
+        📅 {{ with .Params.start_date }}{{ . }}{{ end }}{{ if and .Params.start_date .Params.end_date }} – {{ end }}{{ with .Params.end_date }}{{ . }}{{ end }}
+      </span>
+    {{ end }}
+    {{ with .Params.feedback_format }}
+      <span class="element-pill" style="background: rgba(0, 216, 180, 0.14); color: #005a4b; border: 1px solid rgba(0, 216, 180, 0.3);">
+        📝 {{ . }}
+      </span>
+    {{ end }}
+  </div>
+
+  <h1 class="page-title">{{ .Title }}</h1>
+
+  {{ with .Params.description }}
+    <p style="font-size: 1.15rem; color: var(--color-slate); margin: 0.75rem 0 0; line-height: 1.6;">
+      {{ . }}
+    </p>
+  {{ end }}
+
+  {{ with or .Params.link .Params.url }}
+    <div style="margin-top: 1.25rem;">
+      <a href="{{ . }}" target="_blank" rel="noopener noreferrer" class="hero-button" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.6rem 1.2rem; font-size: 0.95rem; text-decoration: none;">
+        <span>Visit Official Consultation</span>
+        <span>↗</span>
+      </a>
+    </div>
+  {{ end }}
+</article>
+
+{{ with .Params.geographic_coverage }}
+  <div style="margin-bottom: 2rem; background: var(--ct-bg-surface-subtle, #F8F7F2); border: 1px solid var(--ct-border-default, #DCD9CD); border-radius: var(--radius-md, 12px); padding: 1.25rem 1.5rem;">
+    <h3 style="margin: 0 0 0.6rem; font-size: 0.95rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ct-color-fjord, #00447C);">
+      Geographic Coverage
+    </h3>
+    <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+      {{ range . }}
+        <span class="element-pill" style="background: #ffffff; color: var(--ct-color-ebony-clay, #242C36); border: 1px solid var(--ct-border-default, #DCD9CD); font-size: 0.85rem; padding: 0.25rem 0.65rem;">
+          {{ . }}
+        </span>
+      {{ end }}
+    </div>
+  </div>
+{{ end }}
+
+{{ with .Content }}
+  <div class="element-block">
+    <div class="element-block-content" style="font-size: 1.05rem; line-height: 1.7;">
+      {{ . }}
+    </div>
+  </div>
+{{ end }}
+
+{{ end }}

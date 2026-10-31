@@ -17,11 +17,11 @@
       <h3 class="footer-col-title">Toolkit Hub</h3>
       <ul class="footer-links-list">
         <li><a href="{{ .Site.Home.RelPermalink }}" class="footer-link">Home</a></li>
-        <li><a href="{{ `about/` | relLangURL }}" class="footer-link">About</a></li>
-        <li><a href="{{ `content-collections/` | relLangURL }}" class="footer-link">Collections</a></li>
-        <li><a href="{{ `content/` | relLangURL }}" class="footer-link">Content Items</a></li>
-        <li><a href="{{ `activities/` | relLangURL }}" class="footer-link">Activities</a></li>
-        <li><a href="{{ `modules/` | relLangURL }}" class="footer-link">Modules</a></li>
+        <li><a href="{{ partial "nav-url.html" (dict "path" "about" "page" .) }}" class="footer-link">About</a></li>
+        <li><a href="{{ partial "nav-url.html" (dict "path" "content-collections" "page" .) }}" class="footer-link">Collections</a></li>
+        <li><a href="{{ partial "nav-url.html" (dict "path" "content" "page" .) }}" class="footer-link">Content Items</a></li>
+        <li><a href="{{ partial "nav-url.html" (dict "path" "activities" "page" .) }}" class="footer-link">Activities</a></li>
+        <li><a href="{{ partial "nav-url.html" (dict "path" "modules" "page" .) }}" class="footer-link">Modules</a></li>
       </ul>
     </div>
 
@@ -41,14 +41,20 @@
         </li>
         {{ if hugo.IsMultilingual }}
         <li class="footer-languages-item">
-          <span class="footer-lang-label">Languages:</span>
+          <span class="footer-lang-label">Localisations:</span>
           <div class="footer-lang-list">
             {{ $currentLang := .Language.Lang }}
+            {{ $localesData := site.Data.locales }}
             {{ range hugo.Sites }}
-            <a href="{{ if eq .Language.Lang $currentLang }}#{{ else }}{{ .Home.RelPermalink }}{{ end }}"
-              class="footer-lang-btn{{ if eq .Language.Lang $currentLang }} active{{ end }}">
-              {{ .Language.Lang }}
-            </a>
+              {{ $code := .Language.Lang }}
+              {{ $meta := index $localesData $code }}
+              {{ $label := cond (ne $meta nil) (index $meta "native_name" | default (index $meta "label")) (.Language.LanguageName | default $code) }}
+              <a href="{{ if eq $code $currentLang }}#{{ else }}{{ .Home.RelPermalink }}{{ end }}"
+                class="footer-lang-btn{{ if eq $code $currentLang }} active{{ end }}"
+                lang="{{ $code }}"
+                title="{{ $label }}">
+                {{ $label }}
+              </a>
             {{ end }}
           </div>
         </li>

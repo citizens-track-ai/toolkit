@@ -1,0 +1,30 @@
+# Apache Server Configuration for Citizens Track Toolkit
+# Implements hierarchical localization fallback for unlocalised URLs:
+#   1. Check if the requested file/directory exists on disk
+#   2. 4-character context code -> 2-character base language (e.g. /es-uy/page/ -> /es/page/ if exists)
+#   3. Fallback to default English site (e.g. /es-uy/page/ or /es/page/ -> /page/)
+#
+# Note: Uses HTTP 302 (Temporary Redirect) so search engines do not permanently
+# de-index regional URLs that will have localized translations published later.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # 1. Do not rewrite if the exact file or directory physically exists
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # 2. Regional fallback: /{2-letter}-{context}/{path} -> /{2-letter}/{path}
+  # Triggered only if the target exists in the base language
+  RewriteCond %{DOCUMENT_ROOT}/$1/$2 -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}/$1/$2/index.html -f
+  RewriteRule ^([a-z]{2})-[a-z0-9_-]+/(.*)$ /$1/$2 [R=302,L]
+
+  # 3. Default language fallback: /{lang-code}/{path} -> /{path}
+  # Triggered if target exists in English / default root
+  RewriteCond %{DOCUMENT_ROOT}/$1 -f [OR]
+  RewriteCond %{DOCUMENT_ROOT}/$1/index.html -f
+  RewriteRule ^[a-z]{2}(?:-[a-z0-9_-]+)?/(.*)$ /$1 [R=302,L]
+</IfModule>

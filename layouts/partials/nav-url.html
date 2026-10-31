@@ -1,0 +1,65 @@
+{{/* layouts/partials/nav-url.html
+   Resolves navigation URL with hierarchical fallback:
+   1. Current locale site (.page.Site)
+   2. Base language site (e.g. es for es-uy)
+   3. Default English site (en)
+   
+   Usage: {{ partial "nav-url.html" (dict "path" "handbook/overview" "page" .) }}
+*/}}
+{{- $path := .path | default "" -}}
+{{- $page := .page -}}
+{{- $path = strings.TrimPrefix "/" $path -}}
+{{- $path = strings.TrimSuffix "/" $path -}}
+
+{{- if or (eq $path "") (eq $path "/") -}}
+  {{- return $page.Site.Home.RelPermalink -}}
+{{- end -}}
+
+{{- $currentLang := $page.Language.Lang -}}
+{{- $localesData := site.Data.locales -}}
+{{- $meta := index $localesData $currentLang -}}
+{{- $baseLang := cond (ne $meta nil) (index $meta "base_lang" | default "en") "en" -}}
+
+{{- $resolvedPage := false -}}
+
+{{/* 1. Try current language */}}
+{{- $p := $page.Site.GetPage $path -}}
+{{- if $p -}}
+  {{- if or (not $p.IsSection) (gt (len $p.Pages) 0) (ne $p.File nil) -}}
+    {{- $resolvedPage = $p -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 2. Try base language site (e.g. es for es-uy) */}}
+{{- if and (not $resolvedPage) (ne $baseLang $currentLang) -}}
+  {{- range hugo.Sites -}}
+    {{- if and (not $resolvedPage) (eq .Language.Lang $baseLang) -}}
+      {{- $bp := .GetPage $path -}}
+      {{- if $bp -}}
+        {{- if or (not $bp.IsSection) (gt (len $bp.Pages) 0) (ne $bp.File nil) -}}
+          {{- $resolvedPage = $bp -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{/* 3. Try English default site */}}
+{{- if and (not $resolvedPage) (ne $currentLang "en") -}}
+  {{- range hugo.Sites -}}
+    {{- if and (not $resolvedPage) (eq .Language.Lang "en") -}}
+      {{- $ep := .GetPage $path -}}
+      {{- if $ep -}}
+        {{- if or (not $ep.IsSection) (gt (len $ep.Pages) 0) (ne $ep.File nil) -}}
+          {{- $resolvedPage = $ep -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if $resolvedPage -}}
+  {{- return $resolvedPage.RelPermalink -}}
+{{- else -}}
+  {{- return (printf "/%s/" $path) -}}
+{{- end -}}

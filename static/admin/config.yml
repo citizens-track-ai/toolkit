@@ -20,10 +20,93 @@ i18n:
     - es
     - fr
     - de
+    - es-uy
+    - es-gb
   default_locale: en
   initial_locales: default
 
 collections:
+  - name: pages
+    label: Site Pages
+    i18n: true
+    files:
+      - name: home
+        label: "Home Page (_index.md)"
+        file: content/{{locale}}/_index.md
+        i18n: true
+        fields:
+          - { name: title, label: Page Title, widget: string, i18n: true }
+          - { name: translation_notice, label: "Translation Notice (Warning Banner)", widget: string, required: false, i18n: true, hint: "Notice displayed at top of test translations (e.g. machine translated warning)" }
+          - { name: description, label: "Description / Lead Text", widget: text, required: false, i18n: true }
+          - { name: hero_tag, label: "Hero Tagline", widget: string, required: false, i18n: true }
+          - name: framing_box
+            label: Framing Box Quote
+            widget: object
+            required: false
+            i18n: true
+            fields:
+              - { name: quote, label: Quote Text, widget: text, i18n: true }
+              - { name: source, label: Source Attribution, widget: string, i18n: true }
+          - name: hero_pills
+            label: Hero Highlight Pills
+            label_singular: Hero Pill
+            widget: list
+            required: false
+            i18n: true
+            fields:
+              - { name: title, label: Pill Title, widget: string, i18n: true }
+              - { name: color, label: Color Accent, widget: select, options: ["cerulean", "teal", "gold", "coral"], default: "cerulean", i18n: duplicate }
+              - { name: description, label: Description, widget: string, i18n: true }
+          - name: pillars
+            label: Toolkit 3 Main Pillars
+            widget: object
+            required: false
+            i18n: true
+            fields:
+              - name: register
+                label: "Pillar 1: Register"
+                widget: object
+                i18n: true
+                fields:
+                  - { name: badge, label: Badge, widget: string, i18n: true }
+                  - { name: title, label: Title, widget: string, i18n: true }
+                  - { name: description, label: Description, widget: text, i18n: true }
+                  - { name: button_text, label: Button Text, widget: string, i18n: true }
+                  - { name: button_url, label: Button URL Path, widget: string, i18n: duplicate }
+              - name: guidance
+                label: "Pillar 2: Guidance"
+                widget: object
+                i18n: true
+                fields:
+                  - { name: badge, label: Badge, widget: string, i18n: true }
+                  - { name: title, label: Title, widget: string, i18n: true }
+                  - { name: description, label: Description, widget: text, i18n: true }
+                  - { name: button_text, label: Button Text, widget: string, i18n: true }
+                  - { name: button_url, label: Button URL Path, widget: string, i18n: duplicate }
+              - name: resources
+                label: "Pillar 3: Resources"
+                widget: object
+                i18n: true
+                fields:
+                  - { name: badge, label: Badge, widget: string, i18n: true }
+                  - { name: title, label: Title, widget: string, i18n: true }
+                  - { name: description, label: Description, widget: text, i18n: true }
+                  - { name: button_text, label: Button Text, widget: string, i18n: true }
+                  - { name: button_url, label: Button URL Path, widget: string, i18n: duplicate }
+          - { name: body, label: "Optional Markdown Body", widget: richtext, required: false, i18n: true }
+
+      - name: about
+        label: "About Page (about.md)"
+        file: content/{{locale}}/about.md
+        i18n: true
+        fields:
+          - { name: title, label: Title, widget: string, i18n: true }
+          - { name: description, label: "Description / Lead Text", widget: text, required: false, i18n: true }
+          - { name: translation_notice, label: "Translation Notice (Warning Banner)", widget: string, required: false, i18n: true }
+          - { name: layout, label: Layout Template, widget: hidden, default: "about" }
+          - { name: draft, label: Draft, widget: boolean, default: false, i18n: duplicate }
+          - { name: body, label: Page Content, widget: richtext, required: false, i18n: true }
+
   - name: handbook
     label: Handbook
     label_singular: Handbook Page
@@ -39,8 +122,8 @@ collections:
       - { name: stage, label: Stage (for Guidance), widget: select, options: [{label: "Foundations / Overview", value: "overview"}, {label: "1. Prepare", value: "prepare"}, {label: "2. Facilitate", value: "facilitate"}, {label: "3. Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
       - { name: chapter, label: Section / Stage Key, widget: select, options: [{label: "Overview", value: "overview"}, {label: "Stage 1: Prepare", value: "prepare"}, {label: "Stage 2: Facilitate", value: "facilitate"}, {label: "Stage 3: Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
       - { name: parent, label: Parent Section (for Sub-Pages), widget: select, options: [{label: "None (Main Section)", value: ""}, {label: "Stage 1: Prepare", value: "prepare"}, {label: "Stage 2: Facilitate", value: "facilitate"}, {label: "Stage 3: Follow-up", value: "follow-up"}], required: false, i18n: duplicate }
-      - { name: is_subpage, label: Is Sub-page?, widget: boolean, default: false, required: false, i18n: duplicate }
-      - { name: is_parent, label: Is Main Section Page?, widget: boolean, default: false, required: false, i18n: duplicate }
+      - { name: is_subpage, label: "Is Sub-page?", widget: boolean, default: false, required: false, i18n: duplicate }
+      - { name: is_parent, label: "Is Main Section Page?", widget: boolean, default: false, required: false, i18n: duplicate }
       - { name: url, label: Custom URL Path, widget: string, required: false, i18n: duplicate, hint: "e.g. /handbook/prepare/invitations/" }
       - { name: aliases, label: URL Aliases, widget: list, required: false, i18n: duplicate }
       - { name: description, label: Description / Lead Text, widget: text, required: false, i18n: true }
@@ -314,18 +397,256 @@ collections:
         hint: "Guidance on adapting or localising this content for different audiences, experience levels, or jurisdictions."
 
   - name: opportunities
-    label: Opportunity
+    label: Opportunities
     label_singular: Opportunity
     folder: content/{{locale}}/opportunities
-    summary: '{{title}} [{{locales}}]'
+    summary: '{{title}} ({{scope}}) [{{locales}}]'
     i18n: true
     create: true
     fields:
       - { name: title, label: Title, widget: string, i18n: true }
-      - { name: draft, label: Draft, widget: boolean, default: true, i18n: duplicate }
+      - { name: draft, label: Draft, widget: boolean, default: false, i18n: duplicate }
+      - name: scope
+        label: Scope
+        widget: select
+        options: ["Global", "Regional", "National", "Local"]
+        default: "Global"
+        required: true
+        i18n: duplicate
+      - name: geographic_coverage
+        label: Geographic Coverage
+        widget: select
+        multiple: true
+        required: false
+        i18n: duplicate
+        hint: "Select regional organisations and/or countries"
+        options:
+          - "European Union (EU)"
+          - "OECD"
+          - "Council of Europe"
+          - "United Nations (UN) / Global"
+          - "African Union (AU)"
+          - "Organization of American States (OAS)"
+          - "ASEAN"
+          - "Commonwealth of Nations"
+          - "G7"
+          - "G20"
+          - "Afghanistan"
+          - "Albania"
+          - "Algeria"
+          - "Andorra"
+          - "Angola"
+          - "Antigua and Barbuda"
+          - "Argentina"
+          - "Armenia"
+          - "Australia"
+          - "Austria"
+          - "Azerbaijan"
+          - "Bahamas"
+          - "Bahrain"
+          - "Bangladesh"
+          - "Barbados"
+          - "Belarus"
+          - "Belgium"
+          - "Belize"
+          - "Benin"
+          - "Bhutan"
+          - "Bolivia"
+          - "Bosnia and Herzegovina"
+          - "Botswana"
+          - "Brazil"
+          - "Brunei"
+          - "Bulgaria"
+          - "Burkina Faso"
+          - "Burundi"
+          - "Cabo Verde"
+          - "Cambodia"
+          - "Cameroon"
+          - "Canada"
+          - "Central African Republic"
+          - "Chad"
+          - "Chile"
+          - "China"
+          - "Colombia"
+          - "Comoros"
+          - "Congo (Democratic Republic)"
+          - "Congo (Republic)"
+          - "Costa Rica"
+          - "Croatia"
+          - "Cuba"
+          - "Cyprus"
+          - "Czech Republic"
+          - "Denmark"
+          - "Djibouti"
+          - "Dominica"
+          - "Dominican Republic"
+          - "Ecuador"
+          - "Egypt"
+          - "El Salvador"
+          - "Equatorial Guinea"
+          - "Eritrea"
+          - "Estonia"
+          - "Eswatini"
+          - "Ethiopia"
+          - "Fiji"
+          - "Finland"
+          - "France"
+          - "Gabon"
+          - "Gambia"
+          - "Georgia"
+          - "Germany"
+          - "Ghana"
+          - "Greece"
+          - "Grenada"
+          - "Guatemala"
+          - "Guinea"
+          - "Guinea-Bissau"
+          - "Guyana"
+          - "Haiti"
+          - "Honduras"
+          - "Hungary"
+          - "Iceland"
+          - "India"
+          - "Indonesia"
+          - "Iran"
+          - "Iraq"
+          - "Ireland"
+          - "Israel"
+          - "Italy"
+          - "Jamaica"
+          - "Japan"
+          - "Jordan"
+          - "Kazakhstan"
+          - "Kenya"
+          - "Kiribati"
+          - "Kosovo"
+          - "Kuwait"
+          - "Kyrgyzstan"
+          - "Laos"
+          - "Latvia"
+          - "Lebanon"
+          - "Lesotho"
+          - "Liberia"
+          - "Libya"
+          - "Liechtenstein"
+          - "Lithuania"
+          - "Luxembourg"
+          - "Madagascar"
+          - "Malawi"
+          - "Malaysia"
+          - "Maldives"
+          - "Mali"
+          - "Malta"
+          - "Marshall Islands"
+          - "Mauritania"
+          - "Mauritius"
+          - "Mexico"
+          - "Micronesia"
+          - "Moldova"
+          - "Monaco"
+          - "Mongolia"
+          - "Montenegro"
+          - "Morocco"
+          - "Mozambique"
+          - "Myanmar"
+          - "Namibia"
+          - "Nauru"
+          - "Nepal"
+          - "Netherlands"
+          - "New Zealand"
+          - "Nicaragua"
+          - "Niger"
+          - "Nigeria"
+          - "North Korea"
+          - "North Macedonia"
+          - "Norway"
+          - "Oman"
+          - "Pakistan"
+          - "Palau"
+          - "Palestine"
+          - "Panama"
+          - "Papua New Guinea"
+          - "Paraguay"
+          - "Peru"
+          - "Philippines"
+          - "Poland"
+          - "Portugal"
+          - "Qatar"
+          - "Romania"
+          - "Russia"
+          - "Rwanda"
+          - "Saint Kitts and Nevis"
+          - "Saint Lucia"
+          - "Saint Vincent and the Grenadines"
+          - "Samoa"
+          - "San Marino"
+          - "Sao Tome and Principe"
+          - "Saudi Arabia"
+          - "Senegal"
+          - "Serbia"
+          - "Seychelles"
+          - "Sierra Leone"
+          - "Singapore"
+          - "Slovakia"
+          - "Slovenia"
+          - "Solomon Islands"
+          - "Somalia"
+          - "South Africa"
+          - "South Korea"
+          - "South Sudan"
+          - "Spain"
+          - "Sri Lanka"
+          - "Sudan"
+          - "Suriname"
+          - "Sweden"
+          - "Switzerland"
+          - "Syria"
+          - "Taiwan"
+          - "Tajikistan"
+          - "Tanzania"
+          - "Thailand"
+          - "Timor-Leste"
+          - "Togo"
+          - "Tonga"
+          - "Trinidad and Tobago"
+          - "Tunisia"
+          - "Turkey"
+          - "Turkmenistan"
+          - "Tuvalu"
+          - "Uganda"
+          - "Ukraine"
+          - "United Arab Emirates"
+          - "United Kingdom"
+          - "United States"
+          - "Uruguay"
+          - "Uzbekistan"
+          - "Vanuatu"
+          - "Vatican City"
+          - "Venezuela"
+          - "Vietnam"
+          - "Yemen"
+          - "Zambia"
+          - "Zimbabwe"
+      - name: start_date
+        label: Start Date
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        required: false
+        i18n: duplicate
+      - name: end_date
+        label: End Date
+        widget: datetime
+        format: "YYYY-MM-DD"
+        date_format: "YYYY-MM-DD"
+        time_format: false
+        required: false
+        i18n: duplicate
+      - { name: link, label: URL, widget: string, required: false, i18n: duplicate, hint: "External URL to official consultation or initiative" }
       - { name: description, label: Description, widget: text, required: false, i18n: true }
-      - { name: body, label: Body, widget: richtext, required: false, i18n: true }
-
+      - { name: feedback_format, label: Feedback Format, widget: string, required: false, i18n: true, hint: "e.g. Online consultation / survey, Written submission, Policy brief, Assembly declaration" }
+      - { name: body, label: "Detailed Information & Background", widget: richtext, required: false, i18n: true }
   - name: contributors
     label: Contributors
     label_singular: Contributor

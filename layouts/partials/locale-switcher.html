@@ -1,0 +1,203 @@
+{{ $currentPage := . }}
+{{ $currentLang := .Language.Lang }}
+{{ $localesData := site.Data.locales }}
+
+{{/* Valid translations for current page: only locales defined in data/locales.yaml with actual content */}}
+{{ $allPageTranslations := slice }}
+{{ range .AllTranslations }}
+  {{ $lCode := .Language.Lang }}
+  {{ $meta := index $localesData $lCode }}
+  {{ if ne $meta nil }}
+    {{ $include := false }}
+    {{ if $currentPage.IsHome }}
+      {{/* On the home page: only include if the locale has content AND is a primary language OR has explicit home file */}}
+      {{ if ne .File nil }}
+        {{ $include = true }}
+      {{ else if and (not (index $meta "is_context_locale")) (gt (len .Site.RegularPages) 0) }}
+        {{ $include = true }}
+      {{ end }}
+    {{ else }}
+      {{/* On a sub-page: only include if this language has an actual content file on disk */}}
+      {{ if ne .File nil }}
+        {{ $include = true }}
+      {{ end }}
+    {{ end }}
+    {{ if $include }}
+      {{ $allPageTranslations = $allPageTranslations | append . }}
+    {{ end }}
+  {{ end }}
+{{ end }}
+{{ $numTranslations := len $allPageTranslations }}
+
+{{/* Current locale metadata */}}
+{{ $currentMeta := index $localesData $currentLang }}
+{{ $currentLabel := cond (ne $currentMeta nil) (index $currentMeta "native_name" | default (index $currentMeta "label")) (.Language.LanguageName | default $currentLang) }}
+
+<div class="locale-switcher" id="locale-switcher">
+  <button type="button" 
+          class="locale-switcher-btn" 
+          id="locale-switcher-trigger" 
+          aria-expanded="false" 
+          aria-haspopup="true" 
+          aria-controls="locale-dropdown-panel"
+          title="Switch language or regional localisation">
+    <svg class="locale-globe-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <circle cx="12" cy="12" r="10"></circle>
+      <line x1="2" y1="12" x2="22" y2="12"></line>
+      <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z"></path>
+    </svg>
+    <span class="locale-count-label">
+      {{ $numTranslations }} {{ if eq $numTranslations 1 }}localisation{{ else }}localisations{{ end }}
+    </span>
+    <svg class="locale-chevron-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <polyline points="6 9 12 15 18 9"></polyline>
+    </svg>
+  </button>
+
+  <!-- Dropdown Popover Panel -->
+  <div class="locale-dropdown-panel" id="locale-dropdown-panel" role="region" aria-label="Available Localisations" hidden>
+    <div class="locale-panel-header">
+      <div class="locale-panel-title-wrap">
+        <span class="locale-panel-heading">Localisations</span>
+        <span class="locale-panel-subheading">{{ $numTranslations }} available for this page</span>
+      </div>
+      <button type="button" class="locale-panel-close-btn" id="locale-panel-close" aria-label="Close localisation menu">&times;</button>
+    </div>
+
+    <!-- Available for this page -->
+    <div class="locale-section">
+      <div class="locale-section-label">Available on this page</div>
+      <ul class="locale-list" role="list">
+        {{ range $allPageTranslations }}
+          {{ $lCode := .Language.Lang }}
+          {{ $meta := index $localesData $lCode }}
+          {{ $isCurrent := eq $lCode $currentLang }}
+          {{ $native := cond (ne $meta nil) (index $meta "native_name" | default (index $meta "label")) (.Language.LanguageName | default $lCode) }}
+          {{ $context := cond (ne $meta nil) (index $meta "context") "" }}
+
+          <li class="locale-item{{ if $isCurrent }} is-current{{ end }}">
+            <a href="{{ if $isCurrent }}#{{ else }}{{ .RelPermalink }}{{ end }}" 
+               class="locale-item-link{{ if $isCurrent }} active{{ end }}"
+               lang="{{ $lCode }}"
+               data-locale-code="{{ $lCode }}">
+              <div class="locale-item-info">
+                <span class="locale-item-name">{{ $native }}</span>
+                {{ with $context }}
+                  <span class="locale-context-tag">{{ . }}</span>
+                {{ end }}
+              </div>
+              {{ if $isCurrent }}
+                <span class="locale-current-badge">Current</span>
+              {{ else }}
+                <span class="locale-switch-arrow" aria-hidden="true">&rarr;</span>
+              {{ end }}
+            </a>
+          </li>
+        {{ end }}
+      </ul>
+    </div>
+
+    <!-- Other supported site locales with content not yet available for this specific page -->
+    {{ $availableLangs := slice }}
+    {{ range $allPageTranslations }}
+      {{ $availableLangs = $availableLangs | append .Language.Lang }}
+    {{ end }}
+
+    {{ $missingLocales := slice }}
+    {{ range hugo.Sites }}
+      {{ $mCode := .Language.Lang }}
+      {{ $mMeta := index $localesData $mCode }}
+      {{/* Only show under Other Localisations if defined in locales.yaml and has actual published content */}}
+      {{ if and (ne $mMeta nil) (gt (len .RegularPages) 0) (not (in $availableLangs $mCode)) }}
+        {{ $missingLocales = $missingLocales | append . }}
+      {{ end }}
+    {{ end }}
+
+    {{ if gt (len $missingLocales) 0 }}
+      <div class="locale-section other-locales-section">
+        <div class="locale-section-label">Other Toolkit Localisations</div>
+        <p class="locale-missing-hint">This page is not yet translated for:</p>
+        <ul class="locale-missing-list">
+          {{ range $missingLocales }}
+            {{ $mCode := .Language.Lang }}
+            {{ $mMeta := index $localesData $mCode }}
+            {{ $mNative := cond (ne $mMeta nil) (index $mMeta "native_name" | default (index $mMeta "label")) (.Language.LanguageName | default $mCode) }}
+            {{ $mContext := cond (ne $mMeta nil) (index $mMeta "context") "" }}
+            <li class="locale-missing-item">
+              <a href="{{ .Home.RelPermalink }}" class="locale-missing-link" title="Visit {{ $mNative }} section">
+                <span>{{ $mNative }}</span>
+                {{ with $mContext }}<span class="locale-context-tag subtle">{{ . }}</span>{{ end }}
+                <span class="missing-home-hint">(Home &rarr;)</span>
+              </a>
+            </li>
+          {{ end }}
+        </ul>
+      </div>
+    {{ end }}
+  </div>
+</div>
+
+<script>
+  (function() {
+    var trigger = document.getElementById('locale-switcher-trigger');
+    var panel = document.getElementById('locale-dropdown-panel');
+    var closeBtn = document.getElementById('locale-panel-close');
+    var container = document.getElementById('locale-switcher');
+
+    if (!trigger || !panel) return;
+
+    function openPanel() {
+      panel.hidden = false;
+      panel.classList.add('is-open');
+      trigger.setAttribute('aria-expanded', 'true');
+    }
+
+    function closePanel() {
+      panel.hidden = true;
+      panel.classList.remove('is-open');
+      trigger.setAttribute('aria-expanded', 'false');
+    }
+
+    trigger.addEventListener('click', function(e) {
+      e.stopPropagation();
+      if (panel.hidden) {
+        openPanel();
+      } else {
+        closePanel();
+      }
+    });
+
+    if (closeBtn) {
+      closeBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        closePanel();
+        trigger.focus();
+      });
+    }
+
+    document.addEventListener('click', function(e) {
+      if (container && !container.contains(e.target)) {
+        closePanel();
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Escape' && !panel.hidden) {
+        closePanel();
+        trigger.focus();
+      }
+    });
+
+    // Save preferred locale to localStorage when user clicks a locale
+    panel.querySelectorAll('.locale-item-link').forEach(function(link) {
+      link.addEventListener('click', function() {
+        var code = link.getAttribute('data-locale-code');
+        if (code) {
+          try {
+            localStorage.setItem('ct_preferred_locale', code);
+          } catch(err) {}
+        }
+      });
+    });
+  })();
+</script>

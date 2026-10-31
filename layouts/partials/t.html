@@ -1,0 +1,31 @@
+{{/* layouts/partials/t.html
+   Context-aware translation helper with base-language fallback.
+   If current locale is e.g. "es-uy" and key is missing, falls back to "es", then default "en".
+*/}}
+{{- $key := "" -}}
+{{- if reflect.IsMap . -}}
+  {{- $key = .key -}}
+{{- else -}}
+  {{- $key = . -}}
+{{- end -}}
+
+{{- $currentLang := site.Language.Lang -}}
+{{- $localesData := site.Data.locales -}}
+{{- $meta := index $localesData $currentLang -}}
+{{- $baseLang := cond (ne $meta nil) (index $meta "base_lang" | default $currentLang) $currentLang -}}
+
+{{- $val := T $key -}}
+
+{{/* If T returned nothing or untranslated key, and base_lang differs from current locale */}}
+{{- if and (or (not $val) (eq $val $key)) (ne $baseLang $currentLang) -}}
+  {{- range hugo.Sites -}}
+    {{- if eq .Language.Lang $baseLang -}}
+      {{- $baseVal := T $key -}}
+      {{- if and $baseVal (ne $baseVal $key) -}}
+        {{- $val = $baseVal -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+
+{{- return ($val | default $key) -}}

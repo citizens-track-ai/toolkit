@@ -1,20 +1,53 @@
 {{- $slug := .Get 0 | default (.Get "slug") -}}
 {{- $item := .Site.GetPage (printf "content/%s" $slug) -}}
 {{- $isFallback := false -}}
+{{- $fallbackLang := "" -}}
 
 {{- if not $item -}}
-  {{- range hugo.Sites -}}
-    {{- if and (not $item) (eq .Language.Lang "en") -}}
-      {{- $item = .GetPage (printf "content/%s" $slug) -}}
-      {{- if $item -}}
-        {{- $isFallback = true -}}
+  {{- $currentLang := site.Language.Lang -}}
+  {{- $localesData := site.Data.locales -}}
+  {{- $meta := index $localesData $currentLang -}}
+  {{- $baseLang := cond (ne $meta nil) (index $meta "base_lang" | default "en") "en" -}}
+
+  {{/* 1. Try base language first (e.g. es for es-uy) */}}
+  {{- if ne $baseLang $currentLang -}}
+    {{- range hugo.Sites -}}
+      {{- if and (not $item) (eq .Language.Lang $baseLang) -}}
+        {{- $item = .GetPage (printf "content/%s" $slug) -}}
+        {{- if $item -}}
+          {{- $isFallback = true -}}
+          {{- $fallbackLang = $baseLang -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{/* 2. Fall back to English if still not found */}}
+  {{- if not $item -}}
+    {{- range hugo.Sites -}}
+      {{- if and (not $item) (eq .Language.Lang "en") -}}
+        {{- $item = .GetPage (printf "content/%s" $slug) -}}
+        {{- if $item -}}
+          {{- $isFallback = true -}}
+          {{- $fallbackLang = "en" -}}
+        {{- end -}}
       {{- end -}}
     {{- end -}}
   {{- end -}}
 {{- end -}}
 
 {{- if $item -}}
-<div class="toolkit-embed-card content-embed-card{{ if $isFallback }} is-fallback{{ end }}">
+{{/* Identify regional / context-specific translations for this content item */}}
+{{- $regionalVariants := slice -}}
+{{- range $item.AllTranslations -}}
+  {{- $lCode := .Language.Lang -}}
+  {{- $lMeta := index site.Data.locales $lCode -}}
+  {{- if and (ne $lCode site.Language.Lang) (ne $lMeta nil) (index $lMeta "is_context_locale") -}}
+    {{- $regionalVariants = $regionalVariants | append (dict "page" . "code" $lCode "label" (index $lMeta "native_name" | default (index $lMeta "label")) "context" (index $lMeta "context")) -}}
+  {{- end -}}
+{{- end -}}
+
+<div class="toolkit-embed-card content-embed-card{{ if $isFallback }} is-fallback{{ end }}" data-content-slug="{{ $slug }}">
   <div class="embed-card-header">
     <div class="embed-badges">
       <span class="element-pill" style="background: var(--color-primary-light); color: var(--color-primary-dark); font-weight: 700;">Content Item</span>
@@ -24,8 +57,10 @@
         </span>
       {{ end }}
       {{ if $isFallback }}
-        <span class="element-pill fallback-pill" style="background: #fef3c7; color: #92400e;" title="This content item is showing the English version as it has not yet been translated into this language.">
-          🌐 English version
+        {{ $fMeta := index site.Data.locales $fallbackLang }}
+        {{ $fLabel := cond (ne $fMeta nil) (index $fMeta "native_name" | default (index $fMeta "label")) "English" }}
+        <span class="element-pill fallback-pill" style="background: #fef3c7; color: #92400e;" title="This content item is showing the {{ $fLabel }} version as it has not yet been translated into this language.">
+          🌐 {{ $fLabel }} version
         </span>
       {{ end }}
     </div>
@@ -48,6 +83,20 @@
         {{ . | plainify | truncate 180 }}
       </p>
     {{ end }}
+  {{ end }}
+
+  {{ if gt (len $regionalVariants) 0 }}
+    <div class="activity-regional-callouts">
+      {{ range $regionalVariants }}
+        <a href="{{ .page.RelPermalink }}" 
+           class="regional-variant-badge" 
+           data-variant-locale="{{ .code }}"
+           title="View {{ .label }} version of this content item">
+          <span class="variant-pin-icon" aria-hidden="true">📍</span>
+          <span class="variant-text">Localised version available: <strong>{{ .label }}</strong> &rarr;</span>
+        </a>
+      {{ end }}
+    </div>
   {{ end }}
 
   <div class="embed-card-footer">

@@ -10,3 +10,12 @@ The current draft of the toolkit has been created drawing on work by [Assemblis]
 Find out more about the contributors below. 
 
 > NOTE: Contributors need to fill in the contributor profile form. 
+
+
+## AI Use Statement
+
+Handbook and activity content has been written and edited by hand, with limited use of AI tools to provide editorial suggestions. 
+
+Opportunity information has been sourced through a mixture of manual and AI-assisted research and summarisation. 
+
+AI assisted coding has been used to develop the toolkit website, with step-by-step prompting under close supervision, and review of outputs. 

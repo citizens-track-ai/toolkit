@@ -1,7 +1,6 @@
 {{ define "main" }}
 
 <div class="page-header" style="margin-bottom: 2.5rem;">
-  <span class="collection-badge">Directory</span>
   <h1 class="page-title">Content Collections</h1>
   <p style="font-size: 1.1rem; color: var(--color-slate); margin: 0;">
     Browse all thematic content collections and explore their associated interactive elements and facilitator resources.
@@ -75,10 +74,16 @@
                     <p class="item-card-overview">{{ . }}</p>
                   {{ end }}
                   {{ with .Params.elements }}
+                    {{ $types := slice }}
+                    {{ range . }}
+                      {{ with .type }}
+                        {{ $types = $types | append . }}
+                      {{ end }}
+                    {{ end }}
                     <div class="item-card-elements">
-                      {{ range . }}
-                        <span class="element-pill {{ .type }}">
-                          {{ if eq .type "quiz_question" }}Quiz{{ else if eq .type "statistic" }}Statistic{{ else if eq .type "perspective" }}Perspective{{ else if eq .type "information" }}Info{{ else if eq .type "takeaways" }}Takeaways{{ else }}{{ .type }}{{ end }}
+                      {{ range ($types | uniq) }}
+                        <span class="element-pill {{ . }}">
+                          {{ if eq . "quiz_question" }}Quiz{{ else if eq . "statistic" }}Statistic{{ else if eq . "perspective" }}Perspective{{ else if eq . "information" }}Info{{ else if eq . "takeaways" }}Takeaways{{ else }}{{ . }}{{ end }}
                         </span>
                       {{ end }}
                     </div>

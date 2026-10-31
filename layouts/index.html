@@ -4,115 +4,189 @@
 {{ $allItems := where .Site.RegularPages "Section" "content" }}
 {{ $allActivities := where .Site.RegularPages "Section" "activities" }}
 {{ $allModules := where .Site.RegularPages "Section" "modules" }}
+{{ $allOpportunities := where .Site.RegularPages "Section" "opportunities" }}
 
 <div class="landing-page-wrap">
+  <!-- Test / Machine Translation Notice Banner -->
+  {{ with .Params.translation_notice }}
+    <div class="site-alpha-banner translation-notice-banner" role="status" style="margin-bottom: 2rem; border-radius: 8px; border: 1px solid rgba(64, 169, 255, 0.4); background: #f0f7ff; color: #003a6c;">
+      <div class="alpha-banner-container" style="justify-content: flex-start; gap: 0.75rem;">
+        <span class="alpha-banner-badge" style="background: var(--ct-color-cerulean); color: #ffffff;">Test Translation</span>
+        <span class="alpha-banner-text" style="color: #003a6c; font-weight: 500;">{{ . }}</span>
+      </div>
+    </div>
+  {{ end }}
+
   <!-- Toolkit Hero Section -->
   <header class="handbook-hero">
-    <div class="handbook-hero-tag">
-      <span class="hero-tag-dot"></span>
-      The Citizens' Track on AI // Community Assembly Toolkit
-    </div>
-    <h1 class="handbook-hero-title">Community Assembly Toolkit</h1>
-    <p class="handbook-hero-lead">
-      A structured, practical guide and modular toolkit to prepare, facilitate, and follow up community assemblies and civic deliberations on artificial intelligence.
-    </p>
-
-    <div class="handbook-framing-box">
-      <p class="handbook-framing-quote">
-        “A community assembly is a structured, inclusive space where people come together to discuss issues affecting their communities, learn from one another, and develop practical actions to create positive impact.”
+    {{ with .Params.hero_tag | default "The Citizens' Track on AI // Community Assembly Toolkit" }}
+      <div class="handbook-hero-tag">
+        <span class="hero-tag-dot"></span>
+        {{ . }}
+      </div>
+    {{ end }}
+    <h1 class="handbook-hero-title">{{ .Params.title | default "Community Assembly Toolkit" }}</h1>
+    {{ with .Params.lead | default .Params.description }}
+      <p class="handbook-hero-lead">
+        {{ . }}
       </p>
-      <span class="handbook-framing-source">Source: Assemblis Community Assembly Guide</span>
-    </div>
+    {{ end }}
 
-    <div class="landing-hero-pills">
-      <div class="hero-pill-item">
-        <strong class="pill-title cerulean">Diverse Participation</strong>
-        <span class="pill-desc">Bringing together people with different backgrounds, ages, and perspectives—especially those often excluded from decision-making.</span>
+    {{ with .Params.framing_box }}
+      <div class="handbook-framing-box">
+        <p class="handbook-framing-quote">
+          {{ .quote }}
+        </p>
+        {{ with .source }}
+          <span class="handbook-framing-source">{{ . }}</span>
+        {{ end }}
       </div>
-      <div class="hero-pill-item">
-        <strong class="pill-title teal">Facilitated Dialogue</strong>
-        <span class="pill-desc">Structured, respectful, constructive, and inclusive discussions guided by clear community ground rules.</span>
+    {{ end }}
+
+    {{ with .Params.hero_pills }}
+      <div class="landing-hero-pills">
+        {{ range . }}
+          <div class="hero-pill-item">
+            <strong class="pill-title {{ .color | default "cerulean" }}">{{ .title }}</strong>
+            <span class="pill-desc">{{ .description }}</span>
+          </div>
+        {{ end }}
       </div>
-      <div class="hero-pill-item">
-        <strong class="pill-title gold">Action-Oriented Outcomes</strong>
-        <span class="pill-desc">Producing practical recommendations, community actions, and submissions to national and global AI consultations.</span>
-      </div>
-    </div>
+    {{ end }}
   </header>
+
+  {{ with .Content }}
+    <div class="landing-custom-content" style="margin: 2rem 0; font-size: 1.1rem; line-height: 1.7;">
+      {{ . }}
+    </div>
+  {{ end }}
 
   <!-- 3 Main Pillars Navigation Cards: Register, Guidance, Resources -->
   <section class="landing-sections" aria-label="Toolkit Main Sections">
     <div class="landing-grid">
       <!-- 1. Register (Coral) -->
+      {{ $reg := false }}
+      {{ if .Params.pillars }}
+        {{ $reg = index .Params.pillars "register" }}
+      {{ end }}
       <article class="landing-card card-register">
         <div class="landing-card-header">
           <span class="landing-badge badge-register">
             <span class="landing-badge-dot"></span>
-            Register
+            {{ with $reg }}{{ .badge | default "Register" }}{{ else }}Register{{ end }}
           </span>
-          <h2 class="landing-card-title">Register an Assembly</h2>
+          <h2 class="landing-card-title">{{ with $reg }}{{ .title | default "Register an Assembly" }}{{ else }}Register an Assembly{{ end }}</h2>
         </div>
         <p class="landing-card-desc">
-          Sign up to run a community assembly. Connect your local deliberation to the global Citizens' Track on AI, receive support, and share your community's voice.
+          {{ with $reg }}{{ .description }}{{ else }}Sign up to run a community assembly. Connect your local deliberation to the global Citizens' Track on AI, receive support, and share your community's voice.{{ end }}
         </p>
         <ul class="landing-card-list">
-          <li><strong>Assembly Registration:</strong> Submit your community assembly details</li>
-          <li><strong>Global Network:</strong> Connect with organizers across regions</li>
-          <li><strong>PAVE Data Commons:</strong> Share findings with global forums</li>
+          {{ with $reg }}
+            {{ range .items }}
+              <li><strong>{{ .title }}:</strong> {{ .text }}</li>
+            {{ end }}
+          {{ else }}
+            <li><strong>Assembly Registration:</strong> Submit your community assembly details</li>
+            <li><strong>Global Network:</strong> Connect with organizers across regions</li>
+            <li><strong>PAVE Data Commons:</strong> Share findings with global forums</li>
+          {{ end }}
         </ul>
         <div class="landing-card-footer">
-          <a href="{{ "handbook/register/" | relLangURL }}" class="landing-card-btn btn-register">
-            <span>Register Your Assembly</span>
+          {{ $regPath := "handbook/register" }}
+          {{ with $reg }}{{ with .button_url }}{{ $regPath = . }}{{ end }}{{ end }}
+          <a href="{{ partial "nav-url.html" (dict "path" $regPath "page" $) }}" class="landing-card-btn btn-register">
+            <span>{{ with $reg }}{{ .button_text | default "Register Your Assembly" }}{{ else }}Register Your Assembly{{ end }}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
           </a>
         </div>
       </article>
 
       <!-- 2. Guidance (Fjord Navy) -->
+      {{ $guid := false }}
+      {{ if .Params.pillars }}
+        {{ $guid = index .Params.pillars "guidance" }}
+      {{ end }}
       <article class="landing-card card-guidance">
         <div class="landing-card-header">
           <span class="landing-badge badge-guidance">
             <span class="landing-badge-dot"></span>
-            Guidance
+            {{ with $guid }}{{ .badge | default "Guidance" }}{{ else }}Guidance{{ end }}
           </span>
-          <h2 class="landing-card-title">Assembly Guidance</h2>
+          <h2 class="landing-card-title">{{ with $guid }}{{ .title | default "Assembly Guidance" }}{{ else }}Assembly Guidance{{ end }}</h2>
         </div>
         <p class="landing-card-desc">
-          A step-by-step handbook covering the full lifecycle of hosting an AI assembly, organized into three clear, actionable stages.
+          {{ with $guid }}{{ .description }}{{ else }}A step-by-step handbook covering the full lifecycle of hosting an AI assembly, organized into three clear, actionable stages.{{ end }}
         </p>
         <ul class="landing-card-list">
-          <li><a href="{{ "handbook/prepare/" | relLangURL }}"><strong>Stage 1: Prepare &rarr;</strong> Recruitment, framing, timing &amp; checklist</a></li>
-          <li><a href="{{ "handbook/facilitate/" | relLangURL }}"><strong>Stage 2: Facilitate &rarr;</strong> Ground rules, electricity analogy &amp; methods</a></li>
-          <li><a href="{{ "handbook/follow-up/" | relLangURL }}"><strong>Stage 3: Follow-up &rarr;</strong> PAVE Commons, consultations &amp; outputs</a></li>
+          {{ with $guid }}
+            {{ range .items }}
+              <li>
+                {{ if .url }}
+                  <a href="{{ partial "nav-url.html" (dict "path" .url "page" $) }}"><strong>{{ .title | safeHTML }}</strong> {{ .text }}</a>
+                {{ else }}
+                  <strong>{{ .title | safeHTML }}</strong> {{ .text }}
+                {{ end }}
+              </li>
+            {{ end }}
+          {{ else }}
+            <li><a href="{{ partial "nav-url.html" (dict "path" "handbook/prepare" "page" .) }}"><strong>Stage 1: Prepare &rarr;</strong> Recruitment, framing, timing &amp; checklist</a></li>
+            <li><a href="{{ partial "nav-url.html" (dict "path" "handbook/facilitate" "page" .) }}"><strong>Stage 2: Facilitate &rarr;</strong> Ground rules, electricity analogy &amp; methods</a></li>
+            <li><a href="{{ partial "nav-url.html" (dict "path" "handbook/follow-up" "page" .) }}"><strong>Stage 3: Follow-up &rarr;</strong> PAVE Commons, consultations &amp; outputs</a></li>
+          {{ end }}
         </ul>
         <div class="landing-card-footer">
-          <a href="{{ "handbook/" | relLangURL }}" class="landing-card-btn btn-guidance">
-            <span>Explore Guidance Handbook</span>
+          {{ $guidPath := "handbook" }}
+          {{ with $guid }}{{ with .button_url }}{{ $guidPath = . }}{{ end }}{{ end }}
+          <a href="{{ partial "nav-url.html" (dict "path" $guidPath "page" $) }}" class="landing-card-btn btn-guidance">
+            <span>{{ with $guid }}{{ .button_text | default "Explore Guidance Handbook" }}{{ else }}Explore Guidance Handbook{{ end }}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
           </a>
         </div>
       </article>
 
       <!-- 3. Resources (Pine Teal) -->
+      {{ $res := false }}
+      {{ if .Params.pillars }}
+        {{ $res = index .Params.pillars "resources" }}
+      {{ end }}
       <article class="landing-card card-resources">
         <div class="landing-card-header">
           <span class="landing-badge badge-resources">
             <span class="landing-badge-dot"></span>
-            Resources
+            {{ with $res }}{{ .badge | default "Resources" }}{{ else }}Resources{{ end }}
           </span>
-          <h2 class="landing-card-title">Modular Resources</h2>
+          <h2 class="landing-card-title">{{ with $res }}{{ .title | default "Modular Resources" }}{{ else }}Modular Resources{{ end }}</h2>
         </div>
         <p class="landing-card-desc">
-          Ready-to-use participatory exercises, structured roadmaps, and educational materials tailored for community facilitators.
+          {{ with $res }}{{ .description }}{{ else }}Ready-to-use participatory exercises, structured roadmaps, and educational materials tailored for community facilitators.{{ end }}
         </p>
         <ul class="landing-card-list">
-          <li><a href="{{ "modules/" | relLangURL }}"><strong>Modules ({{ len $allModules }}):</strong> 4-part roadmaps for 2h and 4h workshops</a></li>
-          <li><a href="{{ "activities/" | relLangURL }}"><strong>Activities ({{ len $allActivities }}):</strong> Hands-on group deliberative exercises</a></li>
-          <li><a href="{{ "content-collections/" | relLangURL }}"><strong>Learning ({{ len $allCollections }}):</strong> Card decks, slides &amp; content items</a></li>
+          {{ with $res }}
+            {{ range .items }}
+              <li>
+                {{ if .url }}
+                  <a href="{{ partial "nav-url.html" (dict "path" .url "page" $) }}">
+                    <strong>{{ .title }}
+                      {{ if eq .url "modules/" }}({{ len $allModules }}){{ else if eq .url "activities/" }}({{ len $allActivities }}){{ else if eq .url "content-collections/" }}({{ len $allCollections }}){{ else if eq .url "opportunities/" }}({{ len $allOpportunities }}){{ end }}:
+                    </strong> {{ .text }}
+                  </a>
+                {{ else }}
+                  <strong>{{ .title }}:</strong> {{ .text }}
+                {{ end }}
+              </li>
+            {{ end }}
+          {{ else }}
+            <li><a href="{{ partial "nav-url.html" (dict "path" "modules" "page" .) }}"><strong>Modules ({{ len $allModules }}):</strong> 4-part roadmaps for 2h and 4h workshops</a></li>
+            <li><a href="{{ partial "nav-url.html" (dict "path" "activities" "page" .) }}"><strong>Activities ({{ len $allActivities }}):</strong> Hands-on group deliberative exercises</a></li>
+            <li><a href="{{ partial "nav-url.html" (dict "path" "content-collections" "page" .) }}"><strong>Learning ({{ len $allCollections }}):</strong> Card decks, slides &amp; content items</a></li>
+            <li><a href="{{ partial "nav-url.html" (dict "path" "opportunities" "page" .) }}"><strong>Opportunities ({{ len $allOpportunities }}):</strong> Target consultations for assembly outputs</a></li>
+          {{ end }}
         </ul>
         <div class="landing-card-footer">
-          <a href="{{ "modules/" | relLangURL }}" class="landing-card-btn btn-resources">
-            <span>Browse All Resources</span>
+          {{ $resPath := "modules" }}
+          {{ with $res }}{{ with .button_url }}{{ $resPath = . }}{{ end }}{{ end }}
+          <a href="{{ partial "nav-url.html" (dict "path" $resPath "page" $) }}" class="landing-card-btn btn-resources">
+            <span>{{ with $res }}{{ .button_text | default "Browse All Resources" }}{{ else }}Browse All Resources{{ end }}</span>
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"></path><path d="M12 5l7 7-7 7"></path></svg>
           </a>
         </div>

@@ -1,0 +1,12 @@
+# Netlify Fallback Redirects for Incremental Localisations
+# Note: Rules without "!" are shadow-fallback rules (only triggered when no static file exists on disk).
+# Uses HTTP 302 (Temporary Redirect) to preserve SEO indexability for future translations.
+
+# 1. Regional Context -> Base Language Fallbacks
+/es-uy/*   /es/:splat   302
+/es-gb/*   /es/:splat   302
+
+# 2. Base Language -> Default English Root Fallbacks
+/es/*      /:splat      302
+/fr/*      /:splat      302
+/de/*      /:splat      302

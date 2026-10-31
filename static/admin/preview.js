@@ -653,3 +653,38 @@ if (typeof CMS !== 'undefined') {
   }
 }
 
+// Sveltia CMS Locale Label Enhancer for custom & context-specific locales
+(function() {
+  const LOCALE_LABELS = {
+    'en': 'English',
+    'es': 'Español',
+    'fr': 'Français',
+    'de': 'Deutsch',
+    'es-uy': 'Español (Uruguay)',
+    'es-gb': 'Español (Reino Unido)'
+  };
+
+  function enhanceLocaleLabels() {
+    document.querySelectorAll('[role="tab"], .sui.tab, button, option').forEach(el => {
+      const text = el.textContent ? el.textContent.trim() : '';
+      if (LOCALE_LABELS[text]) {
+        el.textContent = LOCALE_LABELS[text];
+      }
+    });
+  }
+
+  const observer = new MutationObserver(() => {
+    enhanceLocaleLabels();
+  });
+
+  if (document.body) {
+    observer.observe(document.body, { childList: true, subtree: true });
+    enhanceLocaleLabels();
+  } else {
+    document.addEventListener('DOMContentLoaded', () => {
+      observer.observe(document.body, { childList: true, subtree: true });
+      enhanceLocaleLabels();
+    });
+  }
+})();
+

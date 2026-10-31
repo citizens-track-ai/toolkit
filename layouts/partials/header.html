@@ -1,9 +1,19 @@
 {{ $isRegister := or (eq .RelPermalink ("/register/" | relLangURL)) (eq .RelPermalink ("/handbook/register/" | relLangURL)) (eq .RelPermalink ("/pages/register/" | relLangURL)) (eq .Params.group "register") }}
 {{ $isGuidance := and (not $isRegister) (or (eq .Section "handbook") (eq .Section "pages") (eq .Params.group "guidance")) }}
-{{ $isResources := or (eq .Section "modules") (eq .Section "activities") (eq .Section "content-collections") (eq .Section "content") }}
+{{ $isResources := or (eq .Section "modules") (eq .Section "activities") (eq .Section "content-collections") (eq .Section "content") (eq .Section "opportunities") }}
 {{ $isAbout := or (eq .Section "about") (eq .Section "contributors") (eq .RelPermalink ("/about/" | relLangURL)) (eq .RelPermalink "/about/") (and .File (eq .File.BaseFileName "about")) }}
 
 <header class="site-header">
+  <!-- Level 0: Alpha Release Notice Banner -->
+  <div class="site-alpha-banner" role="status" aria-label="Alpha release notice">
+    <div class="alpha-banner-container">
+      <span class="alpha-banner-badge">Alpha</span>
+      <span class="alpha-banner-text">
+        <strong>Alpha release:</strong> this is a work in progress by the co-design cohort and not yet intended for public use.
+      </span>
+    </div>
+  </div>
+
   <!-- Level 1: Primary Header Bar -->
   <div class="header-container">
     <div class="header-brand-wrap">
@@ -16,28 +26,28 @@
     <div class="header-nav-center">
       <nav class="site-nav-sections" aria-label="Primary Navigation">
         <!-- 1. Register (Coral) -->
-        <a href="{{ "handbook/register/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook/register" "page" .) }}" 
            class="nav-link nav-link-register{{ if $isRegister }} active{{ end }}">
           <span class="nav-color-indicator indicator-register" aria-hidden="true"></span>
           <span>Register</span>
         </a>
 
         <!-- 2. Guidance (Fjord Navy) -->
-        <a href="{{ "handbook/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook" "page" .) }}" 
            class="nav-link nav-link-guidance{{ if $isGuidance }} active{{ end }}">
           <span class="nav-color-indicator indicator-guidance" aria-hidden="true"></span>
           <span>Guidance</span>
         </a>
 
         <!-- 3. Resources (Pine Teal) -->
-        <a href="{{ "modules/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "modules" "page" .) }}" 
            class="nav-link nav-link-resources{{ if $isResources }} active{{ end }}">
           <span class="nav-color-indicator indicator-resources" aria-hidden="true"></span>
           <span>Resources</span>
         </a>
 
         <!-- 4. About (Cerulean) -->
-        <a href="{{ "about/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "about" "page" .) }}" 
            class="nav-link nav-link-about{{ if $isAbout }} active{{ end }}">
           <span class="nav-color-indicator indicator-about" aria-hidden="true"></span>
           <span>About</span>
@@ -47,16 +57,7 @@
 
     <div class="site-nav-tools">
       {{ if hugo.IsMultilingual }}
-      <div class="lang-switcher">
-        {{ $currentLang := .Language.Lang }}
-        {{ range hugo.Sites }}
-        <a href="{{ if eq .Language.Lang $currentLang }}#{{ else }}{{ .Home.RelPermalink }}{{ end }}"
-          class="lang-btn{{ if eq .Language.Lang $currentLang }} active{{ end }}"
-          lang="{{ .Language.Lang }}">
-          {{ .Language.Lang }}
-        </a>
-        {{ end }}
-      </div>
+        {{ partial "locale-switcher.html" . }}
       {{ end }}
     </div>
   </div>
@@ -77,22 +78,22 @@
     <div class="sub-nav-container">
       <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
       <div class="sub-nav-content">
-        <a href="{{ "handbook/overview/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook/overview" "page" .) }}" 
            class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/" | relLangURL)) (eq .RelPermalink ("/handbook/overview/" | relLangURL)) (eq .RelPermalink ("/en/handbook/overview/" | relLangURL)) (eq .RelPermalink ("/en/handbook/" | relLangURL)) (eq .RelPermalink ("/pages/" | relLangURL)) (eq .RelPermalink ("/pages/overview/" | relLangURL)) }} active{{ end }}">
           Overview
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "handbook/prepare/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook/prepare" "page" .) }}" 
            class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/prepare/" | relLangURL)) (eq .RelPermalink ("/en/handbook/prepare/" | relLangURL)) (eq .RelPermalink ("/pages/prepare/" | relLangURL)) (eq .Params.chapter "prepare") (eq .Params.parent "prepare") }} active{{ end }}">
           Prepare
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "handbook/facilitate/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook/facilitate" "page" .) }}" 
            class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/facilitate/" | relLangURL)) (eq .RelPermalink ("/en/handbook/facilitate/" | relLangURL)) (eq .RelPermalink ("/pages/facilitate/" | relLangURL)) (eq .Params.chapter "facilitate") (eq .Params.parent "facilitate") }} active{{ end }}">
           Facilitate
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "handbook/follow-up/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "handbook/follow-up" "page" .) }}" 
            class="sub-nav-link{{ if or (eq .RelPermalink ("/handbook/follow-up/" | relLangURL)) (eq .RelPermalink ("/en/handbook/follow-up/" | relLangURL)) (eq .RelPermalink ("/pages/follow-up/" | relLangURL)) (eq .Params.chapter "follow-up") (eq .Params.parent "follow-up") }} active{{ end }}">
           Follow-up
         </a>
@@ -105,19 +106,24 @@
     <div class="sub-nav-container">
       <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
       <div class="sub-nav-content">
-        <a href="{{ "modules/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "modules" "page" .) }}" 
            class="sub-nav-link{{ if eq .Section "modules" }} active{{ end }}">
           Modules
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "activities/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "activities" "page" .) }}" 
            class="sub-nav-link{{ if eq .Section "activities" }} active{{ end }}">
           Activities
         </a>
         <span class="sub-nav-pipe" aria-hidden="true">|</span>
-        <a href="{{ "content-collections/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "content-collections" "page" .) }}" 
            class="sub-nav-link{{ if or (eq .Section "content-collections") (eq .Section "content") }} active{{ end }}">
           Learning
+        </a>
+        <span class="sub-nav-pipe" aria-hidden="true">|</span>
+        <a href="{{ partial "nav-url.html" (dict "path" "opportunities" "page" .) }}" 
+           class="sub-nav-link{{ if eq .Section "opportunities" }} active{{ end }}">
+          Opportunities
         </a>
       </div>
       <div class="sub-nav-tools-spacer" aria-hidden="true"></div>
@@ -128,7 +134,7 @@
     <div class="sub-nav-container">
       <div class="sub-nav-brand-spacer" aria-hidden="true"></div>
       <div class="sub-nav-content">
-        <a href="{{ "about/" | relLangURL }}" 
+        <a href="{{ partial "nav-url.html" (dict "path" "about" "page" .) }}" 
            class="sub-nav-link active">
           About &amp; Contributors
         </a>

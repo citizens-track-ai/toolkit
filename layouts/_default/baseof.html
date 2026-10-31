@@ -9,6 +9,18 @@
       {{ block "main" . }}{{ end }}
     </main>
     {{ partial "footer.html" . }}
+    <script>
+      (function() {
+        try {
+          var pref = localStorage.getItem('ct_preferred_locale');
+          if (pref) {
+            document.querySelectorAll('.regional-variant-badge[data-variant-locale="' + pref + '"]').forEach(function(el) {
+              el.classList.add('is-preferred-match');
+            });
+          }
+        } catch (e) {}
+      })();
+    </script>
   </body>
 </html>
 
