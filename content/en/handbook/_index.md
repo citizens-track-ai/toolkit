@@ -47,7 +47,7 @@ Based on the [Assemblis Community Assembly Guide](https://assemblis.org/en/about
           <a href="/handbook/prepare/">Stage 1: Prepare Your Assembly</a>
         </h3>
         <p style="font-size: 0.95rem; color: var(--color-slate, #4a5565); margin: 0 0 0.75rem; line-height: 1.5;">
-          Five preparation questions: recruitment methods, event framing, module topics, budget &amp; $600 micro-grants, and outputs.
+          Five preparation questions: recruitment methods, event framing, module topics, budget &amp; fundraising and outputs.
         </p>
         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
           <a href="/handbook/prepare/invitations/" style="font-size: 0.85rem; color: var(--ct-color-fjord); background: #fff; border: 1px solid var(--ct-border-default); padding: 0.25rem 0.65rem; border-radius: 6px; text-decoration: none; font-weight: 600;">📄 Invitation Templates &rarr;</a>
@@ -105,7 +105,7 @@ Based on the [Assemblis Community Assembly Guide](https://assemblis.org/en/about
 <div class="handbook-callout teal" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem; margin-top: 2rem;">
   <div>
     <h3 style="margin: 0 0 0.35rem; font-size: 1.15rem; color: #00447C;">Ready to run an assembly in your community?</h3>
-    <p style="margin: 0; font-size: 0.92rem; color: #1e3a5f;">Register your assembly to receive a $600 micro-grant and connect your outputs with global initiatives.</p>
+    <p style="margin: 0; font-size: 0.92rem; color: #1e3a5f;">Let us know about your plans, and support you are seeking.</p>
   </div>
   <a href="/handbook/register/" class="view-item-link" style="background: var(--ct-color-fjord, #00447C); color: #FFFFFF; font-weight: 700; padding: 0.6rem 1.25rem; border-radius: 8px; text-decoration: none;">
     Register Your Assembly &rarr;

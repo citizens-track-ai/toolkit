@@ -3666,6 +3666,14 @@ a:hover {
   margin: 0;
 }
 
+.handbook-callout > :first-child {
+  margin-top: 0;
+}
+
+.handbook-callout > :last-child {
+  margin-bottom: 0;
+}
+
 /* Resource Checklist Grid */
 .checklist-grid {
   display: grid;

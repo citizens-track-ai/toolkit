@@ -8,7 +8,5 @@ url: "/handbook/register/"
 draft: false
 ---
 
-A route to register your community assembly will open here soon.
-
-In the meantime, [make sure you are subscribed to updates form the Citizens' Track on AI](https://www.citizens-track.org/#subscribe) to know when this opportunity is open. 
+<iframe src="https://app.nocodb.com/nc/form/4bedca6e-32ac-4ed3-9b73-a5ddf97cc3d5?nc-theme=light" width="100%" height="3000" style="border: none;"></iframe>
 

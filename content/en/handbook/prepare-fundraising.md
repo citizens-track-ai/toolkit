@@ -1,6 +1,6 @@
 ---
 title: "Fundraising Guidance & Principles"
-description: "Ethical fundraising guidelines, financial transparency standards, and information on the $600 CTAI micro-grant program."
+description: "Ethical fundraising guidelines & financial transparency standards."
 weight: 22
 group: guidance
 chapter: "prepare"
@@ -63,15 +63,3 @@ Early coordination allows the Citizens' Track on AI team to:
 - Share template budgets and facilitator fee schedules;
 - Avoid accidental duplicate funding applications to the same philanthropic foundations.
 
----
-
-## 6. Accessing the $600 CTAI Micro-Grant
-
-The Citizens' Track on AI provides **micro-grants of $600 USD** to support registered community assemblies. These grants are intended to remove financial barriers to delivery by covering:
-
-- Accessible venue rental fees;
-- Healthy food, lunch, and refreshments;
-- High-quality full-colour printing for worksheets and deliberative cards;
-- Local travel reimbursements or childcare assistance for participants.
-
-To apply for a micro-grant, complete the [Community Assembly Registration Form](/handbook/register/) and indicate your funding requirements in the registration checklist.

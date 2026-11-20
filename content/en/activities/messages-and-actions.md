@@ -14,22 +14,29 @@ duration:
 files: []
 agenda:
   - section: 1
-    title: 'Presentation: Who controls the future of AI?'
-    description: 'Introduce the three broad groups that shape AI (private companies & builders, governments, and the public) across local to global levels.'
+    title: 'Canvas: Who controls the future of AI?'
+    description: |-
+      Introduce the goals of this session:
+
+      * To think about the different power-holders who shape decisions about AI
+      * To think about different points of intervention
+      * To identify actions we want to take, and to see others take
+
+      Show the **control canvas** that you are using.
     min_time: 5
     max_time: 5
     content_items:
-      - messages-and-actions
+      - action-canvas
   - section: 2
-    title: 'Brainstorm of power-holders'
-    description: 'Invite participants to brainstorm specific people and institutions able to influence the AI issues discussed earlier.'
+    title: Brainstorm of power-holders
+    description: Invite participants to brainstorm specific people and institutions able to influence the AI issues discussed earlier.
     min_time: 10
     max_time: 15
     content_items:
       - messages-and-actions
   - section: 2
-    title: 'Presentation of power-holders'
-    description: 'Facilitator-led briefing mapping key decision-makers and open public consultation opportunities relevant to your context.'
+    title: Presentation of power-holders
+    description: Facilitator-led briefing mapping key decision-makers and open public consultation opportunities relevant to your context.
     min_time: 5
     max_time: 10
     content_items:
@@ -42,28 +49,28 @@ agenda:
     content_items:
       - messages-and-actions
   - section: 4
-    title: 'Exploring pre-prepared actions'
-    description: 'Review and discuss the template Action Cards together, adding context-specific examples with the "Specifically..." prompts.'
+    title: Exploring pre-prepared actions
+    description: Review and discuss the template Action Cards together, adding context-specific examples with the "Specifically..." prompts.
     min_time: 10
     max_time: 20
     content_items:
       - actions
   - section: 4
-    title: 'Action brainstorm & clustering'
-    description: 'Participants generate their own action cards from scratch and cluster shared ideas around themes.'
+    title: Action brainstorm & clustering
+    description: Participants generate their own action cards from scratch and cluster shared ideas around themes.
     min_time: 15
     max_time: 25
     content_items: []
   - section: 5
-    title: 'Prioritisation & agreement'
-    description: 'Use dot voting or group deliberation to identify the highest-priority collective actions and asks for decision-makers.'
+    title: Prioritisation & agreement
+    description: Use dot voting or group deliberation to identify the highest-priority collective actions and asks for decision-makers.
     min_time: 10
     max_time: 15
     content_items:
       - messages-and-actions
   - section: 6
-    title: 'Take-away and follow-up'
-    description: 'Document individual commitments and clarify how collective recommendations will be shared after the assembly.'
+    title: Take-away and follow-up
+    description: Document individual commitments and clarify how collective recommendations will be shared after the assembly.
     min_time: 5
     max_time: 10
     content_items: []

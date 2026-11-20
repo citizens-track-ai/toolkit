@@ -1,6 +1,6 @@
 ---
 title: "Overview: What is a Community Assembly on AI?"
-description: "A structured, inclusive space where communities come together to learn about artificial intelligence, share diverse lived experiences, and develop concrete actions from local to global levels."
+description: "A Community Assembly on AI is a structured, inclusive space where communities come together to learn about artificial intelligence, share diverse lived experiences, and develop concrete actions from local to global levels."
 weight: 10
 group: guidance
 chapter: "overview"
@@ -22,8 +22,8 @@ draft: false
 > - **Turn deliberation into robust, concrete action**
 >
 > Community assemblies are grounded in the belief that communities already hold valuable knowledge about the challenges they face. By combining lived experience with shared reflection and practical planning, assemblies can generate solutions that are more relevant, trusted, and effective.”
->
-> *— Source: [Assemblis Community Assembly Guide](https://assemblis.org/en/guide/)*
+
+You can find examples of community assemblies that have already taken place on a wide range of topics [on the Assemblis platform](https://assemblis.org/community/reports/).
 
 ---
 
@@ -68,9 +68,11 @@ A community assembly on AI is built around three defining commitments:
 
 ## Connecting Local Deliberation to Global Governance
 
-The Community Assemblies on AI toolkit has a particular focus on helping communities identify **both local actions and key messages to be shared with global decision makers**.
+The Community Assemblies on AI toolkit has a particular focus on helping communities identify **local actions, and actions that they want to see global power-holders take**.
 
 As part of the **Public AI Voice and Engagement (PAVE) Data Commons**, this helps create inclusive evidence and deeper understanding of how artificial intelligence is affecting diverse communities across the world.
+
+<div class="handbook-callout">
 
 ### About the PAVE Data Commons
 
@@ -78,23 +80,22 @@ As part of the **Public AI Voice and Engagement (PAVE) Data Commons**, this help
 
 If your assembly outcomes and recommendations are recorded in the PAVE Data Commons, they can:
 
-- **Feature on the PAVE Global Map of Engagement** shown to decision-makers and delegates at key AI governance summits around the world (including the UN Global Dialogue and Geneva AI Summit);
+- **Feature on the [PAVE Global Map of Engagement](https://www.pavecasebook.org/map/)** shown to decision-makers and delegates at key AI governance summits around the world (including the UN Global Dialogue and Geneva AI Summit);
 - **Feed directly into policy briefs, consultation responses, and reports** highlighting grassroots public priorities for the future of AI;
 - **Form part of the evidence and advocacy work** of the Citizens Track on AI.
 
-> [!NOTE]
-> **The more detail you can provide on your community assembly, its outputs, and outcomes, the more we can help amplify your community's messages.**
+> **The more detail you can provide on your community assembly, its outputs, and outcomes, the more the Citizens' Track on AI can help amplify your community's messages.**
+
+</div>
 
 ---
 
 ## How to Use This Handbook
 
-This handbook is organized into three sequential stages, accompanied by deep-dive sub-guides:
+This handbook is organized into three parts:
 
-1. [**Stage 1: Prepare Your Assembly**](/handbook/prepare/) — Five preparation questions covering recruitment, framing, topic selection, resources (including $600 micro-grants), and output pathways.
-   - [**Invitation & Branding Guidance**](/handbook/prepare/invitations/) — Ready-to-use email templates and CTAI logo rules.
-   - [**Fundraising Guidance & Principles**](/handbook/prepare/fundraising/) — Financial transparency and ethical sponsorship rules.
-2. [**Stage 2: Facilitate the Assembly**](/handbook/facilitate/) — Delivery guidance, offline vs online models, feedback capture, handling misinformation and dominant voices, and evaluation.
-   - [**Toolkit Design Principles**](/handbook/facilitate/design-principles/) — The electricity analogy, rights frameworks, and modular content architecture.
-   - [**Translation & Localisation**](/handbook/facilitate/translation/) — Adapting materials and terminology for local communities.
+1. [**Stage 1: Prepare Your Assembly**](/handbook/prepare/) — Five preparation questions covering recruitment, framing, topic selection, resources, and output pathways.
+
+2. [**Stage 2: Facilitate the Assembly**](/handbook/facilitate/) — Guidance on using our pre-prepared facilitation modules, adapting them to different contexts, and capturing discussions from your sessions.
+
 3. [**Stage 3: Follow-up & Voice to Impact**](/handbook/follow-up/) — Post-assembly checklist, uploading to the PAVE Data Commons, and linking to active global consultations.
