@@ -12,6 +12,7 @@ duration:
   min: 15
   max: 45
 files: []
+agenda: []
 ---
 
 ## Purpose

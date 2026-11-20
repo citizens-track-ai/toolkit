@@ -1,0 +1,602 @@
+{{- $page := . -}}
+{{- $rawAgenda := .Params.agenda -}}
+{{- if and $rawAgenda (gt (len $rawAgenda) 0) -}}
+  {{- $localesData := site.Data.locales -}}
+  {{- $currentLang := site.Language.Lang -}}
+  {{- $currentMeta := index $localesData $currentLang -}}
+  {{- $baseLang := cond (ne $currentMeta nil) (index $currentMeta "base_lang" | default "en") "en" -}}
+
+  {{- /* Resolve Present page URL with locale/base-lang fallback so locales without present.md don't 404 */ -}}
+  {{- $presentPage := $page.Site.GetPage "present" -}}
+  {{- if and (not $presentPage) (ne $baseLang $currentLang) -}}
+    {{- range hugo.Sites -}}
+      {{- if and (not $presentPage) (eq .Language.Lang $baseLang) -}}
+        {{- $presentPage = .GetPage "present" -}}
+      {{- end -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $presentBaseUrl := cond (ne $presentPage nil) $presentPage.RelPermalink ("present/" | relURL) -}}
+
+  {{- /* Translations */ -}}
+  {{- $timedAgendaLabel := i18n "timed_agenda" | default "Timed Agenda" -}}
+  {{- $totalLabel := i18n "agenda_total" | default "Total" -}}
+  {{- $possibleRangeLabel := i18n "agenda_possible_range" | default "across options" -}}
+  {{- $sectionLabel := i18n "agenda_section" | default "Section" -}}
+  {{- $optionLabel := i18n "agenda_option" | default "Option" -}}
+  {{- $orLabel := i18n "agenda_or" | default "OR" -}}
+  {{- $alternativesChooseLabel := i18n "agenda_alternatives_choose" | default "Alternative options — choose 1 of" -}}
+  {{- $choiceInstructionLabel := i18n "agenda_choice_instruction" | default "Select an option in choice sections to update total duration and linked slides." -}}
+  {{- $linkedContentLabel := i18n "agenda_linked_content" | default "Linked content" -}}
+  {{- $presentSlidesLabel := i18n "agenda_present_slides" | default "Present Linked Slides" -}}
+  {{- $deckSingular := i18n "agenda_deck" | default "deck" -}}
+  {{- $deckPlural := i18n "agenda_decks" | default "decks" -}}
+  {{- $minSingular := i18n "agenda_min_singular" | default "min" -}}
+  {{- $minPlural := i18n "agenda_min_plural" | default "mins" -}}
+  {{- $stepSingular := i18n "agenda_step" | default "step" -}}
+  {{- $stepPlural := i18n "agenda_steps" | default "steps" -}}
+  {{- $choiceSingular := i18n "agenda_choice" | default "choice" -}}
+  {{- $choicePlural := i18n "agenda_choices" | default "choices" -}}
+  {{- $missingItemLabel := i18n "agenda_missing_item" | default "Missing content item" -}}
+  {{- $cardsLabel := i18n "agenda_cards" | default "Cards" -}}
+  {{- $slidesLabel := i18n "agenda_slides" | default "Slides" -}}
+  {{- $forLabel := i18n "agenda_for" | default "for" -}}
+
+  {{- /* 1. Normalize entries & collect unique integer section numbers */ -}}
+  {{- $normalizedEntries := slice -}}
+  {{- $sectionNums := slice -}}
+
+  {{- range $idx, $raw := $rawAgenda -}}
+    {{- $secNum := add $idx 1 -}}
+    {{- $rawSec := index $raw "section" -}}
+    {{- if and (ne $rawSec nil) (ne (printf "%v" $rawSec) "") -}}
+      {{- $parsedSec := int $rawSec -}}
+      {{- if gt $parsedSec 0 -}}
+        {{- $secNum = $parsedSec -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $minTime := 0 -}}
+    {{- $rawMin := index $raw "min_time" -}}
+    {{- if and (ne $rawMin nil) (ne (printf "%v" $rawMin) "") -}}
+      {{- $minTime = int $rawMin -}}
+      {{- if lt $minTime 0 -}}{{- $minTime = 0 -}}{{- end -}}
+    {{- end -}}
+
+    {{- $maxTime := $minTime -}}
+    {{- $rawMax := index $raw "max_time" -}}
+    {{- if and (ne $rawMax nil) (ne (printf "%v" $rawMax) "") -}}
+      {{- $maxTime = int $rawMax -}}
+    {{- end -}}
+    {{- if lt $maxTime $minTime -}}
+      {{- $maxTime = $minTime -}}
+    {{- end -}}
+
+    {{- $rawItems := index $raw "content_items" -}}
+    {{- $itemSlugs := slice -}}
+    {{- if reflect.IsSlice $rawItems -}}
+      {{- range $rawItems -}}
+        {{- $s := strings.TrimSpace (printf "%v" .) -}}
+        {{- if $s -}}
+          {{- $itemSlugs = $itemSlugs | append $s -}}
+        {{- end -}}
+      {{- end -}}
+    {{- else if and (ne $rawItems nil) (ne (printf "%v" $rawItems) "") -}}
+      {{- $s := strings.TrimSpace (printf "%v" $rawItems) -}}
+      {{- if $s -}}
+        {{- $itemSlugs = $itemSlugs | append $s -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $resolvedItems := slice -}}
+    {{- $resolvedSlugs := slice -}}
+    {{- range $itemSlugs -}}
+      {{- $slug := . -}}
+      {{- $cPage := $page.Site.GetPage (printf "content/%s" $slug) -}}
+      {{- $isFallback := false -}}
+      {{- $fallbackLabel := "" -}}
+
+      {{- if not $cPage -}}
+        {{- if ne $baseLang $currentLang -}}
+          {{- range hugo.Sites -}}
+            {{- if and (not $cPage) (eq .Language.Lang $baseLang) -}}
+              {{- $cPage = .GetPage (printf "content/%s" $slug) -}}
+              {{- if $cPage -}}
+                {{- $isFallback = true -}}
+                {{- $fMeta := index $localesData $baseLang -}}
+                {{- $fallbackLabel = cond (ne $fMeta nil) (index $fMeta "native_name" | default (index $fMeta "label")) $baseLang -}}
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+
+        {{- if not $cPage -}}
+          {{- range hugo.Sites -}}
+            {{- if and (not $cPage) (eq .Language.Lang "en") -}}
+              {{- $cPage = .GetPage (printf "content/%s" $slug) -}}
+              {{- if $cPage -}}
+                {{- $isFallback = true -}}
+                {{- $fMeta := index $localesData "en" -}}
+                {{- $fallbackLabel = cond (ne $fMeta nil) (index $fMeta "native_name" | default (index $fMeta "label")) "English" -}}
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- if $cPage -}}
+        {{- $elCount := 0 -}}
+        {{- with $cPage.Params.elements -}}
+          {{- $elCount = len . -}}
+        {{- end -}}
+        {{- $resolvedItems = $resolvedItems | append (dict
+          "missing" false
+          "slug" $slug
+          "title" $cPage.Title
+          "permalink" $cPage.RelPermalink
+          "cards_url" (printf "%s#cards" $cPage.RelPermalink)
+          "slides_url" (printf "%s?decks=%s" $presentBaseUrl (urlquery $slug))
+          "element_count" $elCount
+          "is_fallback" $isFallback
+          "fallback_label" $fallbackLabel
+        ) -}}
+        {{- $resolvedSlugs = $resolvedSlugs | append $slug -}}
+      {{- else -}}
+        {{- warnf "Activity agenda: content item %q referenced on %s could not be found." $slug $page.File.Path -}}
+        {{- $resolvedItems = $resolvedItems | append (dict "missing" true "slug" $slug) -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- $entryTitle := index $raw "title" | default "" -}}
+    {{- $entryDesc := index $raw "description" | default "" -}}
+    {{- $normEntry := dict
+      "section" $secNum
+      "title" $entryTitle
+      "description" $entryDesc
+      "min_time" $minTime
+      "max_time" $maxTime
+      "items" $resolvedItems
+      "decks" $resolvedSlugs
+    -}}
+    {{- $normalizedEntries = $normalizedEntries | append $normEntry -}}
+    {{- if not (in $sectionNums $secNum) -}}
+      {{- $sectionNums = $sectionNums | append $secNum -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- /* 2. Numerically sort section integers and group entries */ -}}
+  {{- $sortedSections := sort $sectionNums -}}
+  {{- $sections := slice -}}
+  {{- $selectedMin := 0 -}}
+  {{- $selectedMax := 0 -}}
+  {{- $overallMin := 0 -}}
+  {{- $overallMax := 0 -}}
+  {{- $choiceCount := 0 -}}
+  {{- $hasTimeVariance := false -}}
+  {{- $selectedDecks := slice -}}
+  {{- $anyDecksExist := false -}}
+
+  {{- range $sortedSections -}}
+    {{- $secNum := . -}}
+    {{- $secEntries := slice -}}
+    {{- range $normalizedEntries -}}
+      {{- if eq .section $secNum -}}
+        {{- $secEntries = $secEntries | append . -}}
+        {{- if gt (len .decks) 0 -}}
+          {{- $anyDecksExist = true -}}
+        {{- end -}}
+      {{- end -}}
+    {{- end -}}
+
+    {{- if gt (len $secEntries) 0 -}}
+      {{- $first := index $secEntries 0 -}}
+      {{- $selectedMin = add $selectedMin $first.min_time -}}
+      {{- $selectedMax = add $selectedMax $first.max_time -}}
+      {{- range $first.decks -}}
+        {{- if not (in $selectedDecks .) -}}
+          {{- $selectedDecks = $selectedDecks | append . -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- $secMin := $first.min_time -}}
+      {{- $secMax := $first.max_time -}}
+      {{- if gt (len $secEntries) 1 -}}
+        {{- $choiceCount = add $choiceCount 1 -}}
+        {{- range $secEntries -}}
+          {{- if lt .min_time $secMin -}}{{- $secMin = .min_time -}}{{- end -}}
+          {{- if gt .max_time $secMax -}}{{- $secMax = .max_time -}}{{- end -}}
+          {{- if or (ne .min_time $first.min_time) (ne .max_time $first.max_time) -}}
+            {{- $hasTimeVariance = true -}}
+          {{- end -}}
+        {{- end -}}
+      {{- end -}}
+
+      {{- $overallMin = add $overallMin $secMin -}}
+      {{- $overallMax = add $overallMax $secMax -}}
+      {{- $sections = $sections | append (dict "number" $secNum "entries" $secEntries) -}}
+    {{- end -}}
+  {{- end -}}
+
+  {{- $selectedTotalText := "" -}}
+  {{- if eq $selectedMin $selectedMax -}}
+    {{- $selectedTotalText = printf "%d %s" $selectedMin (cond (eq $selectedMin 1) $minSingular $minPlural) -}}
+  {{- else -}}
+    {{- $selectedTotalText = printf "%d–%d %s" $selectedMin $selectedMax $minPlural -}}
+  {{- end -}}
+
+  {{- $overallRangeText := "" -}}
+  {{- if eq $overallMin $overallMax -}}
+    {{- $overallRangeText = printf "%d %s" $overallMin (cond (eq $overallMin 1) $minSingular $minPlural) -}}
+  {{- else -}}
+    {{- $overallRangeText = printf "%d–%d %s" $overallMin $overallMax $minPlural -}}
+  {{- end -}}
+
+  {{- $stepCount := len $sections -}}
+  {{- $letters := slice "A" "B" "C" "D" "E" "F" "G" "H" "I" "J" "K" "L" "M" "N" "O" "P" "Q" "R" "S" "T" "U" "V" "W" "X" "Y" "Z" -}}
+  {{- $selectedDecksCount := len $selectedDecks -}}
+  {{- $combinedDecksUrl := printf "%s?decks=%s" $presentBaseUrl (delimit $selectedDecks ",") -}}
+
+<section
+  class="element-block agenda-block"
+  aria-labelledby="activity-agenda-heading"
+  data-timed-agenda
+  data-present-base="{{ $presentBaseUrl }}"
+  data-label-min-singular="{{ $minSingular }}"
+  data-label-min-plural="{{ $minPlural }}"
+  data-label-deck="{{ $deckSingular }}"
+  data-label-decks="{{ $deckPlural }}"
+>
+  <div class="element-block-header agenda-header">
+    <div class="agenda-heading-group">
+      <h2 id="activity-agenda-heading" class="agenda-heading">
+        <span class="agenda-heading-icon" aria-hidden="true">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+        </span>
+        <span>{{ $timedAgendaLabel }}</span>
+      </h2>
+      <span class="element-pill agenda-steps-pill">
+        {{ $stepCount }} {{ cond (eq $stepCount 1) $stepSingular $stepPlural }}
+        {{- if gt $choiceCount 0 }} · {{ $choiceCount }} {{ cond (eq $choiceCount 1) $choiceSingular $choicePlural }}{{ end -}}
+      </span>
+    </div>
+
+    <div class="agenda-header-controls">
+      <div class="agenda-total-pill" aria-live="polite" aria-atomic="true">
+        <span class="agenda-total-label">{{ $totalLabel }}:</span>
+        <strong data-agenda-total>{{ $selectedTotalText }}</strong>
+        {{- if $hasTimeVariance -}}
+          <span class="agenda-range-note">({{ $possibleRangeLabel }}: {{ $overallRangeText }})</span>
+        {{- end -}}
+      </div>
+
+      {{- if $anyDecksExist -}}
+        <a
+          href="{{ if gt $selectedDecksCount 0 }}{{ $combinedDecksUrl }}{{ else }}#{{ end }}"
+          class="action-btn primary agenda-present-btn"
+          target="_blank"
+          rel="noopener"
+          data-agenda-present-btn
+          {{ if eq $selectedDecksCount 0 }}hidden{{ end }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          <span>{{ $presentSlidesLabel }}</span>
+          <span class="agenda-present-count" data-agenda-decks-count>({{ $selectedDecksCount }} {{ cond (eq $selectedDecksCount 1) $deckSingular $deckPlural }})</span>
+          <span aria-hidden="true">↗</span>
+        </a>
+      {{- end -}}
+    </div>
+  </div>
+
+  <div class="element-block-content agenda-body">
+    {{- if gt $choiceCount 0 -}}
+      <p class="agenda-choice-hint">{{ $choiceInstructionLabel }}</p>
+    {{- end -}}
+
+    <ol class="agenda-timeline" role="list">
+      {{- range $sec := $sections -}}
+        {{- $secNum := $sec.number -}}
+        {{- $entries := $sec.entries -}}
+        {{- $isChoice := gt (len $entries) 1 -}}
+
+        <li class="agenda-step{{ if $isChoice }} has-alternatives{{ end }}" data-section="{{ $secNum }}">
+          <div class="agenda-step-marker" aria-hidden="true">{{ $secNum }}</div>
+
+          <div class="agenda-step-content">
+            {{- if not $isChoice -}}
+              {{- $entry := index $entries 0 -}}
+              {{- $entryDuration := "" -}}
+              {{- if eq $entry.min_time $entry.max_time -}}
+                {{- $entryDuration = printf "%d %s" $entry.min_time (cond (eq $entry.min_time 1) $minSingular $minPlural) -}}
+              {{- else -}}
+                {{- $entryDuration = printf "%d–%d %s" $entry.min_time $entry.max_time $minPlural -}}
+              {{- end -}}
+
+              <article
+                class="agenda-entry-card"
+                data-agenda-entry
+                data-min="{{ $entry.min_time }}"
+                data-max="{{ $entry.max_time }}"
+                data-decks="{{ delimit $entry.decks "," }}"
+              >
+                <div class="agenda-entry-header">
+                  <div class="agenda-entry-title-wrap">
+                    <span class="visually-hidden">{{ $sectionLabel }} {{ $secNum }}: </span>
+                    <h3 class="agenda-entry-title">{{ $entry.title }}</h3>
+                  </div>
+                  <span class="element-pill agenda-duration-pill">
+                    <span aria-hidden="true">⏱️</span>
+                    <span>{{ $entryDuration }}</span>
+                  </span>
+                </div>
+
+                {{- if $entry.description -}}
+                  <div class="agenda-entry-desc">
+                    {{ $page.RenderString (dict "display" "block") $entry.description }}
+                  </div>
+                {{- end -}}
+
+                {{- if gt (len $entry.items) 0 -}}
+                  <div class="agenda-linked-items">
+                    <div class="agenda-linked-label">{{ $linkedContentLabel }}:</div>
+                    <div class="agenda-linked-list">
+                      {{- range $entry.items -}}
+                        {{- if .missing -}}
+                          <span class="agenda-content-chip is-missing">
+                            <span aria-hidden="true">⚠️</span>
+                            <span>{{ $missingItemLabel }}: <code>{{ .slug }}</code></span>
+                          </span>
+                        {{- else -}}
+                          <div class="agenda-content-chip">
+                            <div class="agenda-content-main">
+                              <a href="{{ .permalink }}" class="agenda-content-title">
+                                <span aria-hidden="true">📑</span>
+                                <span>{{ .title }}</span>
+                              </a>
+                              {{- if gt .element_count 0 -}}
+                                <span class="agenda-content-meta">{{ .element_count }}</span>
+                              {{- end -}}
+                              {{- if .is_fallback -}}
+                                <span class="agenda-content-fallback" title="{{ .fallback_label }}">🌐 {{ .fallback_label }}</span>
+                              {{- end -}}
+                            </div>
+                            <div class="agenda-content-actions">
+                              <a href="{{ .cards_url }}" class="agenda-content-action">
+                                <span aria-hidden="true">🎴</span>
+                                <span>{{ $cardsLabel }}</span>
+                                <span class="visually-hidden"> {{ $forLabel }} {{ .title }}</span>
+                              </a>
+                              <a href="{{ .slides_url }}" class="agenda-content-action" target="_blank" rel="noopener">
+                                <span aria-hidden="true">📽️</span>
+                                <span>{{ $slidesLabel }}</span>
+                                <span class="visually-hidden"> {{ $forLabel }} {{ .title }}</span>
+                                <span aria-hidden="true">↗</span>
+                              </a>
+                            </div>
+                          </div>
+                        {{- end -}}
+                      {{- end -}}
+                    </div>
+                  </div>
+                {{- end -}}
+              </article>
+            {{- else -}}
+              <fieldset class="agenda-alternatives-group" data-section="{{ $secNum }}">
+                <legend class="agenda-alternatives-legend">
+                  <span class="agenda-legend-section">{{ $sectionLabel }} {{ $secNum }}</span>
+                  <span class="element-pill agenda-choice-badge">{{ $alternativesChooseLabel }} {{ len $entries }}</span>
+                </legend>
+
+                <div class="agenda-alternatives-grid" data-option-count="{{ len $entries }}">
+                  {{- range $optIdx, $opt := $entries -}}
+                    {{- if gt $optIdx 0 -}}
+                      <div class="agenda-or-divider" aria-hidden="true">
+                        <span>{{ $orLabel }}</span>
+                      </div>
+                    {{- end -}}
+
+                    {{- $optLetter := cond (lt $optIdx (len $letters)) (index $letters $optIdx) (printf "%d" (add $optIdx 1)) -}}
+                    {{- $radioId := printf "agenda-sec-%d-opt-%d" $secNum $optIdx -}}
+                    {{- $radioName := printf "agenda-section-%d" $secNum -}}
+                    {{- $optDuration := "" -}}
+                    {{- if eq $opt.min_time $opt.max_time -}}
+                      {{- $optDuration = printf "%d %s" $opt.min_time (cond (eq $opt.min_time 1) $minSingular $minPlural) -}}
+                    {{- else -}}
+                      {{- $optDuration = printf "%d–%d %s" $opt.min_time $opt.max_time $minPlural -}}
+                    {{- end -}}
+
+                    <article
+                      class="agenda-option-card{{ if eq $optIdx 0 }} is-selected{{ end }}"
+                      data-agenda-option
+                      data-min="{{ $opt.min_time }}"
+                      data-max="{{ $opt.max_time }}"
+                      data-decks="{{ delimit $opt.decks "," }}"
+                    >
+                      <div class="agenda-entry-header agenda-option-header">
+                        <div class="agenda-option-choice-row">
+                          <input
+                            type="radio"
+                            class="agenda-option-radio"
+                            id="{{ $radioId }}"
+                            name="{{ $radioName }}"
+                            value="{{ $optIdx }}"
+                            {{ if eq $optIdx 0 }}checked{{ end }}
+                          >
+                          <h3 class="agenda-entry-title">
+                            <label class="agenda-option-label" for="{{ $radioId }}">
+                              <span class="agenda-option-tag">{{ $optionLabel }} {{ $optLetter }}:</span>
+                              <span class="agenda-option-title-text">{{ $opt.title }}</span>
+                            </label>
+                          </h3>
+                        </div>
+
+                        <span class="element-pill agenda-duration-pill">
+                          <span aria-hidden="true">⏱️</span>
+                          <span>{{ $optDuration }}</span>
+                        </span>
+                      </div>
+
+                      {{- if $opt.description -}}
+                        <div class="agenda-entry-desc">
+                          {{ $page.RenderString (dict "display" "block") $opt.description }}
+                        </div>
+                      {{- end -}}
+
+                      {{- if gt (len $opt.items) 0 -}}
+                        <div class="agenda-linked-items">
+                          <div class="agenda-linked-label">{{ $linkedContentLabel }}:</div>
+                          <div class="agenda-linked-list">
+                            {{- range $opt.items -}}
+                              {{- if .missing -}}
+                                <span class="agenda-content-chip is-missing">
+                                  <span aria-hidden="true">⚠️</span>
+                                  <span>{{ $missingItemLabel }}: <code>{{ .slug }}</code></span>
+                                </span>
+                              {{- else -}}
+                                <div class="agenda-content-chip">
+                                  <div class="agenda-content-main">
+                                    <a href="{{ .permalink }}" class="agenda-content-title">
+                                      <span aria-hidden="true">📑</span>
+                                      <span>{{ .title }}</span>
+                                    </a>
+                                    {{- if gt .element_count 0 -}}
+                                      <span class="agenda-content-meta">{{ .element_count }}</span>
+                                    {{- end -}}
+                                    {{- if .is_fallback -}}
+                                      <span class="agenda-content-fallback" title="{{ .fallback_label }}">🌐 {{ .fallback_label }}</span>
+                                    {{- end -}}
+                                  </div>
+                                  <div class="agenda-content-actions">
+                                    <a href="{{ .cards_url }}" class="agenda-content-action">
+                                      <span aria-hidden="true">🎴</span>
+                                      <span>{{ $cardsLabel }}</span>
+                                      <span class="visually-hidden"> {{ $forLabel }} {{ .title }}</span>
+                                    </a>
+                                    <a href="{{ .slides_url }}" class="agenda-content-action" target="_blank" rel="noopener">
+                                      <span aria-hidden="true">📽️</span>
+                                      <span>{{ $slidesLabel }}</span>
+                                      <span class="visually-hidden"> {{ $forLabel }} {{ .title }}</span>
+                                      <span aria-hidden="true">↗</span>
+                                    </a>
+                                  </div>
+                                </div>
+                              {{- end -}}
+                            {{- end -}}
+                          </div>
+                        </div>
+                      {{- end -}}
+                    </article>
+                  {{- end -}}
+                </div>
+              </fieldset>
+            {{- end -}}
+          </div>
+        </li>
+      {{- end -}}
+    </ol>
+  </div>
+</section>
+
+<script>
+(function() {
+  if (window.__ctTimedAgendaInit) return;
+  window.__ctTimedAgendaInit = true;
+
+  function recalculateAgenda(root) {
+    const baseUrl = root.dataset.presentBase || '/present/';
+    const minSingular = root.dataset.labelMinSingular || 'min';
+    const minPlural = root.dataset.labelMinPlural || 'mins';
+    const deckSingular = root.dataset.labelDeck || 'deck';
+    const deckPlural = root.dataset.labelDecks || 'decks';
+
+    let totalMin = 0;
+    let totalMax = 0;
+    const decks = [];
+    const seenDecks = new Set();
+
+    root.querySelectorAll('.agenda-step').forEach((step) => {
+      const radios = step.querySelectorAll('.agenda-option-radio');
+      let activeCard = null;
+
+      if (radios.length > 0) {
+        const checkedRadio = step.querySelector('.agenda-option-radio:checked') || radios[0];
+        if (checkedRadio && !checkedRadio.checked) {
+          checkedRadio.checked = true;
+        }
+        activeCard = checkedRadio ? checkedRadio.closest('[data-agenda-option]') : null;
+        step.querySelectorAll('[data-agenda-option]').forEach((card) => {
+          card.classList.toggle('is-selected', card === activeCard);
+        });
+      } else {
+        activeCard = step.querySelector('[data-agenda-entry]');
+      }
+
+      if (!activeCard) return;
+
+      const minVal = parseInt(activeCard.dataset.min || '0', 10) || 0;
+      const maxVal = parseInt(activeCard.dataset.max || '0', 10) || 0;
+      totalMin += minVal;
+      totalMax += Math.max(minVal, maxVal);
+
+      const rawDecks = activeCard.dataset.decks || '';
+      if (rawDecks) {
+        rawDecks.split(',').forEach((slug) => {
+          const clean = slug.trim();
+          if (clean && !seenDecks.has(clean)) {
+            seenDecks.add(clean);
+            decks.push(clean);
+          }
+        });
+      }
+    });
+
+    const totalEl = root.querySelector('[data-agenda-total]');
+    if (totalEl) {
+      if (totalMin === totalMax) {
+        totalEl.textContent = totalMin + ' ' + (totalMin === 1 ? minSingular : minPlural);
+      } else {
+        totalEl.textContent = totalMin + '–' + totalMax + ' ' + minPlural;
+      }
+    }
+
+    const presentBtn = root.querySelector('[data-agenda-present-btn]');
+    if (presentBtn) {
+      if (decks.length === 0) {
+        presentBtn.hidden = true;
+        presentBtn.removeAttribute('href');
+      } else {
+        presentBtn.hidden = false;
+        const sep = baseUrl.includes('?') ? '&' : '?';
+        presentBtn.href = baseUrl + sep + 'decks=' + decks.map(encodeURIComponent).join(',');
+        const countEl = presentBtn.querySelector('[data-agenda-decks-count]');
+        if (countEl) {
+          countEl.textContent = '(' + decks.length + ' ' + (decks.length === 1 ? deckSingular : deckPlural) + ')';
+        }
+      }
+    }
+  }
+
+  document.querySelectorAll('[data-timed-agenda]').forEach((root) => {
+    root.addEventListener('change', (e) => {
+      if (e.target.matches('.agenda-option-radio')) {
+        recalculateAgenda(root);
+      }
+    });
+
+    root.addEventListener('click', (e) => {
+      const card = e.target.closest('[data-agenda-option]');
+      if (!card || !root.contains(card)) return;
+      if (e.target.closest('a, button, input, label, summary, details')) return;
+      const selection = window.getSelection ? window.getSelection().toString() : '';
+      if (selection) return;
+      const radio = card.querySelector('.agenda-option-radio');
+      if (radio && !radio.checked) {
+        radio.checked = true;
+        recalculateAgenda(root);
+      }
+    });
+
+    recalculateAgenda(root);
+  });
+})();
+</script>
+{{- end -}}
+

@@ -114,3 +114,49 @@ content_item:
   other: "Elemento de contenido"
 explore_content:
   other: "Explorar contenido y presentación →"
+timed_agenda:
+  other: "Agenda cronometrada"
+agenda_total:
+  other: "Total"
+agenda_possible_range:
+  other: "según opciones"
+agenda_section:
+  other: "Sección"
+agenda_option:
+  other: "Opción"
+agenda_or:
+  other: "O"
+agenda_alternatives_choose:
+  other: "Opciones alternativas — elige 1 de"
+agenda_choice_instruction:
+  other: "Selecciona una opción en las secciones con alternativas para actualizar la duración total y las diapositivas vinculadas."
+agenda_linked_content:
+  other: "Contenido vinculado"
+agenda_present_slides:
+  other: "Presentar diapositivas vinculadas"
+agenda_deck:
+  other: "presentación"
+agenda_decks:
+  other: "presentaciones"
+agenda_min_singular:
+  other: "min"
+agenda_min_plural:
+  other: "min"
+agenda_step:
+  other: "paso"
+agenda_steps:
+  other: "pasos"
+agenda_choice:
+  other: "elección"
+agenda_choices:
+  other: "elecciones"
+agenda_missing_item:
+  other: "Elemento de contenido no encontrado"
+agenda_cards:
+  other: "Tarjetas"
+agenda_slides:
+  other: "Diapositivas"
+agenda_for:
+  other: "para"
+agenda_step_agenda:
+  other: " pasos en la agenda"

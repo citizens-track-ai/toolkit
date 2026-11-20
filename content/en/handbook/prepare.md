@@ -1,6 +1,6 @@
 ---
 title: "Stage 1: Prepare Your Assembly"
-description: "Answer these five questions to plan your assembly: covering participant recruitment, event framing, topic selection, budget and resources and pathways to impact."
+description: "Answer these five questions to plan your assembly: covering focus topic, participant recruitment, event framing, budget and resources and pathways to impact."
 weight: 20
 group: guidance
 chapter: "prepare"
@@ -10,12 +10,32 @@ url: "/handbook/prepare/"
 draft: false
 ---
 
+## Question 1: What Topic(s) Do You Want to Address?
 
+This toolkit provides ready-made materials and session plans you can use to explore different issues around AI. 
 
+You don't need to be an expert on the topics to facilitate a deliberation. The modules provide all the background you will need. 
+
+Each module can be used to explore an issue in general, or you can focus discussion on a particular question, event or issue that matters to your community.  
+
+| Module Title | Focus &amp; Deliberative Objective | Status &amp; Availability |
+| :--- | :--- | :--- |
+| **Perspectives on AI** | An introduction to AI; exploring community hopes and fears; understanding who can control and shape AI; developing ideas for action. | <span style="background: #E6F7FF; color: #0050B3; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Draft Published</span> |
+| **AI Safety and Security** | Examining current and future risks of AI systems, and measures needed for public safety and security. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Dec 2026</span> |
+| **AI, Data &amp; Data Centres** | Responding to public concerns about data infrastructure, resource use (water/energy), and alternative models. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Dec 2026</span> |
+| **AI, Language and Diversity** | Focusing on the impacts of AI on cultural heritage, regional languages, indigenous knowledge, and diversity. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Jan 2027</span> |
+| **AI in Education** | Supporting student, teacher, and parent conversations about AI in schools, colleges, and universities. | <span style="background: #F5F5F5; color: #595959; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Planned / TBC</span> |
+
+Each module progresses through three lifecycle stages: **Draft** (open for review) &rarr; **Pilot** (field tested in diverse communities) &rarr; **Reviewed** (peer-reviewed and tried-and-tested).
+
+You can also browse our [Voice to Impact Opportunities](/handbook/follow-up/#target-opportunities) to see which active multilateral consultations your assembly can feed into.
+
+> [!IMPORTANT]
+> **Workshop Timing Rule:** Allow **four hours** for an assembly addressing one topic, and at least **two additional hours** for each subsequent topic.
 
 ---
 
-## Question 1: Who are your going to invite and how?
+## Question 2: Who are your going to invite and how?
 
 An assembly could involve anything from 5 to 500 people and could last between 4 hours and 2 days. However, most community assemblies invite **15 to 50 participants** to come together for **one or two days**.
 
@@ -33,7 +53,7 @@ Remember: assemblies work best with diverse participation.
     <tbody>
       <tr style="border-bottom: 1px solid var(--ct-border-subtle, #ECEAE1);">
         <td style="padding: 1rem; font-weight: 700; vertical-align: top; color: var(--ct-color-ebony-clay, #242C36);">
-          1. Run with an existing group
+          1. Run your assembly with an existing group
         </td>
         <td style="padding: 1rem; vertical-align: top;">
           <ul style="margin: 0; padding-inline-start: 1.2rem;">
@@ -107,12 +127,11 @@ Remember: assemblies work best with diverse participation.
   </table>
 </div>
 
-> [!TIP]
-> **Recruitment Worksheet Available:** Page 10 of the [Assemblis Community Assembly Guide](https://assemblis.org/en/guide/) contains a dedicated worksheet to help you map your community and plan your outreach strategy.
+> **Recruitment Worksheet Available:** [Page 10 of the Assemblis Community Assembly Guide](https://assemblis.org/en/guide/) contains a dedicated worksheet to help you map your community and plan your outreach strategy.
 
 ---
 
-## Question 2: How Will You Frame Your Assembly?
+## Question 3: How Will You Focus Your Assembly?
 
 The way an assembly is described influences who chooses to register, how participants perceive the purpose of the day, and what actions follow.
 
@@ -164,27 +183,6 @@ The way an assembly is described influences who chooses to register, how partici
 
 ---
 
-## Question 3: What Topics Do You Want to Address?
-
-> [!IMPORTANT]
-> **Workshop Timing Rule:** Allow **four hours** for an assembly addressing one topic, and at least **two additional hours** for each subsequent topic.
-
-The toolkit provides modular, ready-to-use learning workshops:
-
-| Module Title | Focus &amp; Deliberative Objective | Status &amp; Availability |
-| :--- | :--- | :--- |
-| **Perspectives on AI** | Foundational introduction to AI; exploring hopes, fears, everyday impacts, and community ideas. | <span style="background: #E6F7FF; color: #0050B3; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Draft Published</span> |
-| **AI Safety and Security** | Examining current and future risks of AI systems, and measures needed for public safety and security. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Dec 2026</span> |
-| **AI, Data &amp; Data Centres** | Responding to public concerns about data infrastructure, resource use (water/energy), and alternative models. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Dec 2026</span> |
-| **AI, Language and Diversity** | Focusing on the impacts of AI on cultural heritage, regional languages, indigenous knowledge, and diversity. | <span style="background: #FFF7E6; color: #D46B08; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Coming Jan 2027</span> |
-| **AI in Education** | Supporting student, teacher, and parent conversations about AI in schools, colleges, and universities. | <span style="background: #F5F5F5; color: #595959; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 700; font-size: 0.85rem;">Planned / TBC</span> |
-
-Each module progresses through three lifecycle stages: **Draft** (open for review) &rarr; **Pilot** (field tested in diverse communities) &rarr; **Reviewed** (peer-reviewed and tried-and-tested).
-
-You can also browse our [Voice to Impact Opportunities](/handbook/follow-up/#target-opportunities) to see which active multilateral consultations your assembly can feed into.
-
----
-
 ## Question 4: What Resources Will You Need?
 
 A Community Assembly does not need to be expensive: it can often be delivered by partnering with local organisations and volunteers. Consider the following 10 resource elements:
@@ -232,25 +230,7 @@ A Community Assembly does not need to be expensive: it can often be delivered by
   </div>
 </div>
 
-<div class="handbook-callout teal" style="background: rgba(0, 216, 180, 0.12); border: 2px solid var(--ct-color-reef-teal, #00D8B4); border-radius: var(--radius-md, 12px); padding: 1.5rem 1.75rem; margin: 1.75rem 0;">
-  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-    <div>
-      <span style="background: var(--ct-color-fjord, #00447C); color: #fff; padding: 0.2rem 0.6rem; border-radius: 6px; font-weight: 800; font-size: 0.78rem; text-transform: uppercase;">Funding Support</span>
-      <h3 style="margin: 0.35rem 0 0.25rem; font-size: 1.25rem; color: var(--ct-color-fjord, #00447C);">$600 CTAI Micro-Grants Available</h3>
-      <p style="margin: 0; font-size: 0.95rem; color: var(--ct-color-ebony-clay, #242C36); line-height: 1.5;">
-        The Citizens’ Track on AI provides <strong>micro-grants of $600</strong> to help registered community assemblies cover core delivery costs (refreshments, venue, printing, and participant travel).
-      </p>
-    </div>
-    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
-      <a href="/handbook/register/" class="view-item-link" style="background: var(--ct-color-fjord, #00447C); color: #FFFFFF; font-weight: 700; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none;">
-        Apply via Registration &rarr;
-      </a>
-      <a href="/handbook/prepare/fundraising/" class="view-item-link" style="background: #FFFFFF; border: 1px solid var(--ct-color-fjord); color: var(--ct-color-fjord); font-weight: 700; padding: 0.6rem 1.2rem; border-radius: 8px; text-decoration: none;">
-        Fundraising Principles &rarr;
-      </a>
-    </div>
-  </div>
-</div>
+**ADD FUNDRAISING PRINCIPLES**
 
 ---
 

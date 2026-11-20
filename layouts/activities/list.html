@@ -62,13 +62,32 @@
         </div>
 
         <div class="item-card-footer" style="margin-top: 1.25rem; padding-top: 0.85rem; border-top: 1px solid var(--color-border-subtle);">
-          {{ with .Params.files }}
-            <span style="font-size: 0.75rem; color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.25rem;">
-              📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
-            </span>
-          {{ else }}
-            <span></span>
-          {{ end }}
+          {{- $agendaSections := slice -}}
+          {{- with .Params.agenda -}}
+            {{- range $idx, $entry := . -}}
+              {{- $secNum := add $idx 1 -}}
+              {{- $rawSec := index $entry "section" -}}
+              {{- if and (ne $rawSec nil) (ne (printf "%v" $rawSec) "") -}}
+                {{- $parsedSec := int $rawSec -}}
+                {{- if gt $parsedSec 0 -}}{{- $secNum = $parsedSec -}}{{- end -}}
+              {{- end -}}
+              {{- if not (in $agendaSections $secNum) -}}
+                {{- $agendaSections = $agendaSections | append $secNum -}}
+              {{- end -}}
+            {{- end -}}
+          {{- end -}}
+          <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 0.65rem;">
+            {{ with .Params.files }}
+              <span style="font-size: 0.75rem; color: var(--color-muted); display: inline-flex; align-items: center; gap: 0.25rem;">
+                📁 {{ len . }} {{ if eq (len .) 1 }}resource{{ else }}resources{{ end }}
+              </span>
+            {{ end }}
+            {{ if gt (len $agendaSections) 0 }}
+              <span style="font-size: 0.75rem; color: var(--color-primary); font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                📋 {{ len $agendaSections }}{{ i18n "agenda_step_agenda" | default "-step agenda" }}
+              </span>
+            {{ end }}
+          </div>
           <a href="{{ .RelPermalink }}" class="view-item-link" style="font-weight: 700;">
             View Activity &rarr;
           </a>

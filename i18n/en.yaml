@@ -114,3 +114,49 @@ content_item:
   other: "Content Item"
 explore_content:
   other: "Explore Content & Presentation →"
+timed_agenda:
+  other: "Timed Agenda"
+agenda_total:
+  other: "Total"
+agenda_possible_range:
+  other: "across options"
+agenda_section:
+  other: "Section"
+agenda_option:
+  other: "Option"
+agenda_or:
+  other: "OR"
+agenda_alternatives_choose:
+  other: "Alternative options — choose 1 of"
+agenda_choice_instruction:
+  other: "Select an option in choice sections to update total duration and linked slides."
+agenda_linked_content:
+  other: "Linked content"
+agenda_present_slides:
+  other: "Present Linked Slides"
+agenda_deck:
+  other: "deck"
+agenda_decks:
+  other: "decks"
+agenda_min_singular:
+  other: "min"
+agenda_min_plural:
+  other: "mins"
+agenda_step:
+  other: "step"
+agenda_steps:
+  other: "steps"
+agenda_choice:
+  other: "choice"
+agenda_choices:
+  other: "choices"
+agenda_missing_item:
+  other: "Missing content item"
+agenda_cards:
+  other: "Cards"
+agenda_slides:
+  other: "Slides"
+agenda_for:
+  other: "for"
+agenda_step_agenda:
+  other: "-step agenda"
