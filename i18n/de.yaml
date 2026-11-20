@@ -114,3 +114,49 @@ content_item:
   other: "Inhaltselement"
 explore_content:
   other: "Inhalt & Präsentation erkunden →"
+timed_agenda:
+  other: "Zeitplan"
+agenda_total:
+  other: "Gesamt"
+agenda_possible_range:
+  other: "je nach Auswahl"
+agenda_section:
+  other: "Abschnitt"
+agenda_option:
+  other: "Option"
+agenda_or:
+  other: "ODER"
+agenda_alternatives_choose:
+  other: "Alternative Optionen — wählen Sie 1 von"
+agenda_choice_instruction:
+  other: "Wählen Sie in Abschnitten mit Alternativen eine Option aus, um Gesamtdauer und verknüpfte Folien zu aktualisieren."
+agenda_linked_content:
+  other: "Verknüpfte Inhalte"
+agenda_present_slides:
+  other: "Verknüpfte Folien präsentieren"
+agenda_deck:
+  other: "Foliensatz"
+agenda_decks:
+  other: "Foliensätze"
+agenda_min_singular:
+  other: "Min."
+agenda_min_plural:
+  other: "Min."
+agenda_step:
+  other: "Schritt"
+agenda_steps:
+  other: "Schritte"
+agenda_choice:
+  other: "Auswahl"
+agenda_choices:
+  other: "Auswahlmöglichkeiten"
+agenda_missing_item:
+  other: "Fehlendes Inhaltselement"
+agenda_cards:
+  other: "Karten"
+agenda_slides:
+  other: "Folien"
+agenda_for:
+  other: "für"
+agenda_step_agenda:
+  other: "-Schritte-Zeitplan"

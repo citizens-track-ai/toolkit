@@ -243,6 +243,39 @@ collections:
           - { name: url, label: External URL (optional direct link), widget: string, required: false, i18n: duplicate }
           - { name: description, label: Description / Usage Notes, widget: string, required: false, i18n: true }
 
+      - name: agenda
+        label: Timed Agenda
+        label_singular: Agenda Entry
+        widget: list
+        required: false
+        i18n: true
+        summary: 'Section {{section}}: {{title}} ({{min_time}}–{{max_time}}m)'
+        hint: "Build an ordered timed agenda. Number steps 1, 2, 3… Give two or more entries the same section number to indicate they are alternatives to choose between."
+        fields:
+          - name: section
+            label: Section Number
+            widget: number
+            value_type: int
+            min: 1
+            default: 1
+            i18n: duplicate
+            hint: "Ordered step number (1, 2, 3…). Entries sharing the same section number are shown as alternatives."
+          - { name: title, label: Title, widget: string, i18n: true }
+          - { name: description, label: Description, widget: richtext, required: false, i18n: true, hint: "Brief facilitation notes or steps for this agenda entry." }
+          - { name: min_time, label: Min Time (minutes), widget: number, value_type: int, min: 0, default: 5, i18n: duplicate }
+          - { name: max_time, label: Max Time (minutes), widget: number, value_type: int, min: 0, default: 10, i18n: duplicate }
+          - name: content_items
+            label: Linked Content Item(s)
+            label_singular: Content Item
+            widget: relation
+            collection: content_items
+            multiple: true
+            required: false
+            i18n: duplicate
+            value_field: "{{slug}}"
+            display_fields: ["title"]
+            search_fields: ["title", "facilitator_overview"]
+
       - name: body
         label: Activity Body & Guidance
         widget: richtext

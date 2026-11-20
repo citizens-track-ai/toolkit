@@ -1,6 +1,6 @@
 ---
 title: Behind the Headlines
-draft: true
+draft: false
 creators:
   - name: Socratus
     role: Activity Concept

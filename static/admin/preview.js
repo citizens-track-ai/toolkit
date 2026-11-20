@@ -345,7 +345,106 @@ if (typeof CMS !== 'undefined') {
     `;
   };
 
+  function formatAgendaDuration(min, max) {
+    if (min === max) {
+      return `${min} ${min === 1 ? 'min' : 'mins'}`;
+    }
+    return `${min}–${max} mins`;
+  }
+
+  function buildAgendaModel(rawAgenda, selectedOptions) {
+    if (!Array.isArray(rawAgenda) || rawAgenda.length === 0) return null;
+
+    const sectionMap = new Map();
+    rawAgenda.forEach((raw, idx) => {
+      if (!raw || typeof raw !== 'object') return;
+      const parsedSec = parseInt(raw.section, 10);
+      const section = Number.isFinite(parsedSec) && parsedSec > 0 ? parsedSec : idx + 1;
+      const parsedMin = parseInt(raw.min_time, 10);
+      const minTime = Number.isFinite(parsedMin) && parsedMin >= 0 ? parsedMin : 0;
+      const parsedMax = parseInt(raw.max_time, 10);
+      const maxTime = Number.isFinite(parsedMax) ? Math.max(minTime, parsedMax) : minTime;
+      let contentItems = [];
+      if (Array.isArray(raw.content_items)) {
+        contentItems = raw.content_items.map(s => String(s || '').trim()).filter(Boolean);
+      } else if (raw.content_items != null && String(raw.content_items).trim() !== '') {
+        contentItems = [String(raw.content_items).trim()];
+      }
+      const normalized = {
+        section,
+        title: raw.title || 'Untitled Agenda Entry',
+        description: raw.description || '',
+        minTime,
+        maxTime,
+        contentItems
+      };
+      if (!sectionMap.has(section)) {
+        sectionMap.set(section, []);
+      }
+      sectionMap.get(section).push(normalized);
+    });
+
+    const sortedSectionNums = Array.from(sectionMap.keys()).sort((a, b) => a - b);
+    if (sortedSectionNums.length === 0) return null;
+
+    let selectedMin = 0;
+    let selectedMax = 0;
+    let overallMin = 0;
+    let overallMax = 0;
+    let choiceCount = 0;
+    let hasTimeVariance = false;
+    const selectedDecks = [];
+    const seenDecks = new Set();
+
+    const sections = sortedSectionNums.map((secNum) => {
+      const entries = sectionMap.get(secNum);
+      const rawChoice = selectedOptions[secNum];
+      const activeIdx = (typeof rawChoice === 'number' && rawChoice >= 0 && rawChoice < entries.length) ? rawChoice : 0;
+      const activeEntry = entries[activeIdx];
+
+      selectedMin += activeEntry.minTime;
+      selectedMax += activeEntry.maxTime;
+      activeEntry.contentItems.forEach((slug) => {
+        if (!seenDecks.has(slug)) {
+          seenDecks.add(slug);
+          selectedDecks.push(slug);
+        }
+      });
+
+      let secMin = entries[0].minTime;
+      let secMax = entries[0].maxTime;
+      if (entries.length > 1) {
+        choiceCount += 1;
+        entries.forEach((ent) => {
+          if (ent.minTime < secMin) secMin = ent.minTime;
+          if (ent.maxTime > secMax) secMax = ent.maxTime;
+          if (ent.minTime !== entries[0].minTime || ent.maxTime !== entries[0].maxTime) {
+            hasTimeVariance = true;
+          }
+        });
+      }
+      overallMin += secMin;
+      overallMax += secMax;
+
+      return { number: secNum, entries, activeIdx };
+    });
+
+    return {
+      sections,
+      stepCount: sections.length,
+      choiceCount,
+      selectedMin,
+      selectedMax,
+      overallMin,
+      overallMax,
+      hasTimeVariance,
+      selectedDecks
+    };
+  }
+
   const ActivityPreview = ({ entry }) => {
+    const [selectedOptions, setSelectedOptions] = useState({});
+
     const rawData = entry.get('data');
     const data = normalize(rawData) || {};
     const title = data.title || 'Untitled Activity';
@@ -353,7 +452,12 @@ if (typeof CMS !== 'undefined') {
     const license = data.license || {};
     const creators = Array.isArray(data.creators) ? data.creators : [];
     const files = Array.isArray(data.files) ? data.files : [];
+    const agendaModel = buildAgendaModel(data.agenda, selectedOptions);
     const body = data.body || '';
+
+    const selectOption = (secNum, optIdx) => {
+      setSelectedOptions(prev => ({ ...prev, [secNum]: optIdx }));
+    };
 
     return html`
       <div class="main-wrapper" style="padding: 1.5rem 1.75rem 3rem;">
@@ -451,6 +555,158 @@ if (typeof CMS !== 'undefined') {
               </div>
             </div>
           </div>
+        `}
+
+        ${agendaModel && html`
+          <section class="element-block agenda-block">
+            <div class="element-block-header agenda-header">
+              <div class="agenda-heading-group">
+                <h2 class="agenda-heading">
+                  <span class="agenda-heading-icon" aria-hidden="true">⏱️</span>
+                  <span>Timed Agenda</span>
+                </h2>
+                <span class="element-pill agenda-steps-pill">
+                  ${agendaModel.stepCount} ${agendaModel.stepCount === 1 ? 'step' : 'steps'}
+                  ${agendaModel.choiceCount > 0 ? ` · ${agendaModel.choiceCount} ${agendaModel.choiceCount === 1 ? 'choice' : 'choices'}` : ''}
+                </span>
+              </div>
+
+              <div class="agenda-header-controls">
+                <div class="agenda-total-pill">
+                  <span class="agenda-total-label">Total:</span>
+                  <strong>${formatAgendaDuration(agendaModel.selectedMin, agendaModel.selectedMax)}</strong>
+                  ${agendaModel.hasTimeVariance && html`
+                    <span class="agenda-range-note">(across options: ${formatAgendaDuration(agendaModel.overallMin, agendaModel.overallMax)})</span>
+                  `}
+                </div>
+                ${agendaModel.selectedDecks.length > 0 && html`
+                  <span class="action-btn primary agenda-present-btn">
+                    ▶ Present Linked Slides (${agendaModel.selectedDecks.length} ${agendaModel.selectedDecks.length === 1 ? 'deck' : 'decks'}) ↗
+                  </span>
+                `}
+              </div>
+            </div>
+
+            <div class="element-block-content agenda-body">
+              ${agendaModel.choiceCount > 0 && html`
+                <p class="agenda-choice-hint">Select an option in choice sections to update total duration and linked slides.</p>
+              `}
+
+              <ol class="agenda-timeline" role="list">
+                ${agendaModel.sections.map((sec) => {
+                  const isChoice = sec.entries.length > 1;
+                  return html`
+                    <li key=${sec.number} class="agenda-step ${isChoice ? 'has-alternatives' : ''}">
+                      <div class="agenda-step-marker" aria-hidden="true">${sec.number}</div>
+                      <div class="agenda-step-content">
+                        ${!isChoice ? (() => {
+                          const item = sec.entries[0];
+                          return html`
+                            <article class="agenda-entry-card">
+                              <div class="agenda-entry-header">
+                                <div class="agenda-entry-title-wrap">
+                                  <h3 class="agenda-entry-title">${item.title}</h3>
+                                </div>
+                                <span class="element-pill agenda-duration-pill">
+                                  ⏱️ ${formatAgendaDuration(item.minTime, item.maxTime)}
+                                </span>
+                              </div>
+                              ${item.description && html`
+                                <div class="agenda-entry-desc" dangerouslySetInnerHTML=${{ __html: renderMarkdown(item.description) }} />
+                              `}
+                              ${item.contentItems.length > 0 && html`
+                                <div class="agenda-linked-items">
+                                  <div class="agenda-linked-label">Linked content:</div>
+                                  <div class="agenda-linked-list">
+                                    ${item.contentItems.map((slug, sIdx) => html`
+                                      <div key=${sIdx} class="agenda-content-chip">
+                                        <div class="agenda-content-main">
+                                          <span class="agenda-content-title">📑 ${slug}</span>
+                                        </div>
+                                        <div class="agenda-content-actions">
+                                          <span class="agenda-content-action">🎴 Cards</span>
+                                          <span class="agenda-content-action">📽️ Slides ↗</span>
+                                        </div>
+                                      </div>
+                                    `)}
+                                  </div>
+                                </div>
+                              `}
+                            </article>
+                          `;
+                        })() : html`
+                          <fieldset class="agenda-alternatives-group">
+                            <legend class="agenda-alternatives-legend">
+                              <span class="agenda-legend-section">Section ${sec.number}</span>
+                              <span class="element-pill agenda-choice-badge">Alternative options — choose 1 of ${sec.entries.length}</span>
+                            </legend>
+                            <div class="agenda-alternatives-grid" data-option-count=${sec.entries.length}>
+                              ${sec.entries.map((opt, optIdx) => {
+                                const isSelected = sec.activeIdx === optIdx;
+                                const optLetter = optIdx < 26 ? String.fromCharCode(65 + optIdx) : String(optIdx + 1);
+                                const radioId = `preview-agenda-sec-${sec.number}-opt-${optIdx}`;
+                                return html`
+                                  ${optIdx > 0 && html`<div class="agenda-or-divider" aria-hidden="true"><span>OR</span></div>`}
+                                  <article
+                                    key=${optIdx}
+                                    class="agenda-option-card ${isSelected ? 'is-selected' : ''}"
+                                    onClick=${() => selectOption(sec.number, optIdx)}
+                                  >
+                                    <div class="agenda-entry-header agenda-option-header">
+                                      <div class="agenda-option-choice-row">
+                                        <input
+                                          type="radio"
+                                          class="agenda-option-radio"
+                                          id=${radioId}
+                                          name=${`preview-agenda-sec-${sec.number}`}
+                                          checked=${isSelected}
+                                          onChange=${() => selectOption(sec.number, optIdx)}
+                                        />
+                                        <h3 class="agenda-entry-title">
+                                          <label class="agenda-option-label" htmlFor=${radioId}>
+                                            <span class="agenda-option-tag">Option ${optLetter}:</span>
+                                            <span class="agenda-option-title-text">${opt.title}</span>
+                                          </label>
+                                        </h3>
+                                      </div>
+                                      <span class="element-pill agenda-duration-pill">
+                                        ⏱️ ${formatAgendaDuration(opt.minTime, opt.maxTime)}
+                                      </span>
+                                    </div>
+                                    ${opt.description && html`
+                                      <div class="agenda-entry-desc" dangerouslySetInnerHTML=${{ __html: renderMarkdown(opt.description) }} />
+                                    `}
+                                    ${opt.contentItems.length > 0 && html`
+                                      <div class="agenda-linked-items">
+                                        <div class="agenda-linked-label">Linked content:</div>
+                                        <div class="agenda-linked-list">
+                                          ${opt.contentItems.map((slug, sIdx) => html`
+                                            <div key=${sIdx} class="agenda-content-chip">
+                                              <div class="agenda-content-main">
+                                                <span class="agenda-content-title">📑 ${slug}</span>
+                                              </div>
+                                              <div class="agenda-content-actions">
+                                                <span class="agenda-content-action">🎴 Cards</span>
+                                                <span class="agenda-content-action">📽️ Slides ↗</span>
+                                              </div>
+                                            </div>
+                                          `)}
+                                        </div>
+                                      </div>
+                                    `}
+                                  </article>
+                                `;
+                              })}
+                            </div>
+                          </fieldset>
+                        `}
+                      </div>
+                    </li>
+                  `;
+                })}
+              </ol>
+            </div>
+          </section>
         `}
 
         <div class="element-block" style="margin-bottom: 2.5rem;">

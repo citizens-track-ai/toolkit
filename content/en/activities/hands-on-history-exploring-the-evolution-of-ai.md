@@ -12,6 +12,34 @@ duration:
   min: 25
   max: 45
 files: []
+agenda:
+  - section: 1
+    title: Quiz & introduction
+    description: Use the History of AI quiz to start the session and explain that participants will explore different AI tools to research the evolution of AI from the 1950s to today.
+    min_time: 5
+    max_time: 5
+    content_items:
+      - history-of-ai-quiz
+  - section: 2
+    title: Hands-on learning in small groups
+    description: Split into small groups of 2–5 with devices and assign different AI tools (or stations) to prepare a short presentation on the phases of AI development since 1950.
+    min_time: 15
+    max_time: 30
+    content_items: []
+  - section: 2
+    title: Facilitator live demos
+    description: 'Alternative when hands-on devices are unavailable: run live demos prompting an AI model, showing voice Q&A, or demonstrating a locally hosted AI tool.'
+    min_time: 10
+    max_time: 20
+    content_items:
+      - history-of-ai-branches-and-timeline
+  - section: 3
+    title: Group reflection & recap
+    description: Invite groups to share which tools they tried and what they learnt, then recap key eras using the Branches and Timeline slides.
+    min_time: 10
+    max_time: 20
+    content_items:
+      - history-of-ai-branches-and-timeline
 ---
 
 ## Purpose

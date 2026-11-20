@@ -114,3 +114,49 @@ content_item:
   other: "Élément de contenu"
 explore_content:
   other: "Explorer le contenu et la présentation →"
+timed_agenda:
+  other: "Programme minuté"
+agenda_total:
+  other: "Total"
+agenda_possible_range:
+  other: "selon les options"
+agenda_section:
+  other: "Section"
+agenda_option:
+  other: "Option"
+agenda_or:
+  other: "OU"
+agenda_alternatives_choose:
+  other: "Options alternatives — choisissez 1 sur"
+agenda_choice_instruction:
+  other: "Sélectionnez une option dans les sections à choix pour mettre à jour la durée totale et les diapositives liées."
+agenda_linked_content:
+  other: "Contenu lié"
+agenda_present_slides:
+  other: "Présenter les diapositives liées"
+agenda_deck:
+  other: "jeu"
+agenda_decks:
+  other: "jeux"
+agenda_min_singular:
+  other: "min"
+agenda_min_plural:
+  other: "min"
+agenda_step:
+  other: "étape"
+agenda_steps:
+  other: "étapes"
+agenda_choice:
+  other: "choix"
+agenda_choices:
+  other: "choix"
+agenda_missing_item:
+  other: "Élément de contenu introuvable"
+agenda_cards:
+  other: "Cartes"
+agenda_slides:
+  other: "Diapositives"
+agenda_for:
+  other: "pour"
+agenda_step_agenda:
+  other: " étapes au programme"

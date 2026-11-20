@@ -8,17 +8,15 @@ description: An introductory session that provides an overview of artificial int
 welcome: |-
   Start the session by creating a welcoming, low-pressure space. Welcome participants and explain that no prior technical background in computer science or mathematics is required. Everyone's lived experience with technology and digital systems is valid and valuable.
 
-  Review housekeeping rules, introduce the facilitation team, and run the following icebreaker activity to gauge the room's mood and expectations:
+  Review housekeeping rules, introduce the facilitation team, and run the following icebreaker activity to gauge the room's mood and expectations.
+
+  Choose between
 
   {{< activity "ai-in-the-picture" >}}
+
+  {{< activity "behind-the-headlines" >}}
 learning: |-
   The goal of this section is to demystify what Artificial Intelligence actually is, how it evolved from early algorithmic rules to large-scale data models, and dispel common science-fiction myths.
-
-  Present the core timeline and quiz questions together as a group to spark curiosity and active recall:
-
-  {{< content-item "history-of-ai-quiz" >}}
-
-  {{< content-item "history-of-ai-branches-and-timeline" >}}
 
   {{< activity "hands-on-history-exploring-the-evolution-of-ai" >}}
 discussion: |-
@@ -32,15 +30,7 @@ discussion: |-
   * What benefits or conveniences feel real to you, and what concerns give you pause?
   * Who is currently making the rules for these systems, and who is affected by them?
 action: |-
-  (Early draft: activities to come)
+  In the final section of the session you should work to identify priority **actions and messages** from the group for different audiences.
 
-  In the last 30 minutes of the session you should work to identify priority **messages** from the group for different audiences.
-
-  Use the 'Messages and Actions' slide show.
-
-  {{< content-item "messages-and-actions" >}}
-
-  Print the actions cards.
-
-  {{< content-item "actions" >}}
+  {{< activity "messages-and-actions" >}}
 ---
